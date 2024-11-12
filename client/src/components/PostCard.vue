@@ -36,7 +36,12 @@
         alt=""
         class="object-contain rounded-lg"
         crossOrigin="anonymous"
+        @load="imageLoaded"
       />
+      <div
+        v-if="!isImageLoaded"
+        class="bg-black opacity-30 rounded-lg h-96 w-full"
+      ></div>
     </div>
     <div
       v-else
@@ -71,7 +76,7 @@ import CommentIcon from "./icons/CommentIcon.vue";
 import ChevronRightIcon from "./icons/ChevronRightIcon.vue";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { FastAverageColor } from "fast-average-color";
 
 dayjs.extend(relativeTime);
@@ -79,6 +84,12 @@ dayjs.extend(relativeTime);
 const props = defineProps({
   post: Object,
 });
+
+const isImageLoaded = ref(false);
+
+function imageLoaded() {
+  isImageLoaded = true;
+}
 
 onMounted(() => {
   const fac = new FastAverageColor();

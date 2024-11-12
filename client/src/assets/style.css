@@ -6,4 +6,16 @@
   .scrollable {
     @apply scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-neutral-300 scrollbar-track-neutral-50 dark:scrollbar-thumb-neutral-600 dark:scrollbar-track-neutral-900 overflow-y-auto;
   }
+
+  .bg-responsive {
+    @apply bg-white dark:bg-neutral-900 dark:text-white;
+  }
+
+  .border-responsive {
+    @apply border-neutral-200 dark:border-neutral-600;
+  }
+
+  .hr-responsive {
+    @apply h-px bg-neutral-300 border-0 dark:bg-neutral-700;
+  }
 }

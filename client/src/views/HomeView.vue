@@ -19,16 +19,16 @@
         </select>
       </form>
     </div>
-    <hr class="h-px my-0 bg-neutral-300 border-0 dark:bg-neutral-700" />
+    <hr class="my-0 hr-responsive" />
     <!-- feed -->
     <div v-for="post in posts">
       <PostCard :post="post" />
-      <hr class="h-px my-0 bg-neutral-300 border-0 dark:bg-neutral-700" />
+      <hr class="my-0 hr-responsive" />
     </div>
 
     <!-- right pane -->
     <div
-      class="hidden md:fixed md:left-[80%] md:w-1/5 md:p-2 md:pb-10 md:border-s md:top-16 md:right-0 dark:md:border-neutral-600 md:border-neutral-200 md:max-h-[92vh] scrollable md:flex md:flex-col md:gap-4"
+      class="hidden md:fixed md:left-[80%] md:w-1/5 md:p-2 md:pb-10 md:border-s md:top-16 md:right-0 border-responsive md:max-h-[92vh] scrollable md:flex md:flex-col md:gap-4"
     >
       <!-- ad space -->
       <div class="flex flex-col gap-2">

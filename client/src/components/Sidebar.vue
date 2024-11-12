@@ -11,7 +11,7 @@
           <QuestionIcon /> What is Mesh?
         </SidebarButton>
       </div>
-      <hr class="h-px my-4 bg-neutral-300 border-0 dark:bg-neutral-700" />
+      <hr class="my-4 hr-responsive" />
       <div class="flex flex-col justify-start items-start mt-4 gap-0">
         <div class="flex gap-2 font-bold text-lg items-center mb-2">
           <BuildingIcon /> COLLEGES
@@ -28,7 +28,7 @@
           <ChevronUpIcon />Show less
         </SidebarButton>
       </div>
-      <hr class="h-px my-4 bg-neutral-300 border-0 dark:bg-neutral-700" />
+      <hr class="my-4 hr-responsive" />
       <div class="flex flex-col justify-start items-start mt-4 gap-0">
         <div class="flex gap-2 font-bold text-lg items-center mb-2">
           <AcademicIcon /> COURSE GROUPS

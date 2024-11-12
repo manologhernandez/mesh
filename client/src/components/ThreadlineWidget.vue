@@ -4,7 +4,7 @@
     :class="{
       'h-28': isScrolledDown,
       'h-44': !isScrolledDown,
-      'overflow-x-auto': !isScrolledDown,
+      'overflow-x-scroll': !isScrolledDown,
       'overflow-hidden': isScrolledDown,
     }"
     class="transition-all ease-in-out duration-300 flex gap-4 items-center px-4 scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-neutral-300 scrollbar-track-neutral-50 dark:scrollbar-thumb-neutral-600 dark:scrollbar-track-neutral-900"
@@ -16,7 +16,7 @@
     <!-- News Ticker when minimized -->
     <div
       v-if="isScrolledDown"
-      class="fixed z-20 top-16 left-0 md:left-[20%] w-full md:w-3/5 text-center py-2 bg-white dark:bg-neutral-900 border-0 border-b dark:border-neutral-600 dark:md:border-neutral-600"
+      class="fixed z-20 top-16 left-0 md:left-[20%] w-full md:w-3/5 text-center py-2 bg-responsive border-0 border-b border-responsive"
     >
       <div class="w-full overflow-hidden">
         <div class="flex animate-marquee shrink-0">

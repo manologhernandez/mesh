@@ -1,6 +1,6 @@
 <template>
   <nav
-    class="bg-white dark:bg-neutral-900 fixed h-16 w-full z-50 top-0 start-0 border-b border-neutral-200 dark:border-neutral-600"
+    class="bg-responsive fixed h-16 w-full z-50 top-0 start-0 border-b border-responsive"
   >
     <div
       class="max-w-full flex flex-wrap items-center justify-between mx-4 h-full md:mx-16"
@@ -18,27 +18,34 @@
           <span class="sr-only">Open sidebar</span>
           <HamburgerIcon />
         </button>
-        <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+        <RouterLink
+          to="/"
+          class="flex items-center space-x-3 rtl:space-x-reverse w-full text-nowrap"
+        >
           <img src="/logo.png" class="h-8 dark:invert" alt="Mesh Logo" />
           <span
             class="hidden md:inline-flex self-center text-2xl font-semibold whitespace-nowrap dark:text-white"
             >Mesh</span
           >
-        </a>
+        </RouterLink>
       </div>
       <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-        <button
-          type="button"
-          class="text-black focus:outline-none font-medium px-4 py-2 text-center rounded-lg dark:text-white"
-        >
-          Log In
-        </button>
-        <button
-          type="button"
-          class="text-white bg-neutral-700 active:bg-neutral-900 md:hover:bg-neutral-900 focus:ring-4 focus:outline-none focus:ring-neutral-300 font-medium rounded-lg px-4 py-2 text-center dark:bg-neutral-600 dark:active:bg-neutral-800 dark:md:hover:bg-neutral-800 dark:focus:ring-neutral-800"
-        >
-          Sign Up
-        </button>
+        <RouterLink to="/login" class="w-full text-nowrap">
+          <button
+            type="button"
+            class="text-black focus:outline-none font-medium px-4 py-2 text-center rounded-lg dark:text-white"
+          >
+            Log In
+          </button>
+        </RouterLink>
+        <RouterLink to="/signup" class="w-full text-nowrap">
+          <button
+            type="button"
+            class="text-white bg-neutral-700 active:bg-neutral-900 md:hover:bg-neutral-900 focus:ring-4 focus:outline-none focus:ring-neutral-300 font-medium rounded-lg px-4 py-2 text-center dark:bg-neutral-600 dark:active:bg-neutral-800 dark:md:hover:bg-neutral-800 dark:focus:ring-neutral-800"
+          >
+            Sign Up
+          </button>
+        </RouterLink>
         <button
           data-collapse-toggle="search-container"
           type="button"
@@ -53,11 +60,11 @@
         </button>
       </div>
       <div
-        class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+        class="absolute z-20 top-16 left-0 right-0 md:relative md:top-0 items-center justify-between hidden w-full md:flex md:w-auto md:order-1 bg-responsive p-2 md:p-0 border-b border-responsive md:border-0"
         id="search-container"
       >
         <div
-          class="flex px-4 rounded-full border border-neutral-200 active:border-neutral-600 md:hover:border-neutral-600 dark:border-neutral-600 dark:active:border-neutral-200 md:dark:hover:border-neutral-200 overflow-hidden mt-4 md:mt-0 items-center"
+          class="flex px-4 rounded-full border border-responsive active:border-neutral-600 md:hover:border-neutral-600 dark:active:border-neutral-200 md:dark:hover:border-neutral-200 overflow-hidden md:mt-0 items-center"
         >
           <input
             type="email"

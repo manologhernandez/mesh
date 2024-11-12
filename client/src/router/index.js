@@ -3,6 +3,8 @@ import HomeView from "../views/HomeView.vue";
 import DiscoverView from "@/views/DiscoverView.vue";
 import AboutView from "@/views/AboutView.vue";
 import BulletinBoardsView from "@/views/BulletinBoardsView.vue";
+import SignUpView from "@/views/SignUpView.vue";
+import LoginView from "@/views/LoginView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +28,16 @@ const router = createRouter({
       path: "/bulletin-boards",
       name: "bulletinboards",
       component: BulletinBoardsView,
+    },
+    {
+      path: "/signup",
+      name: "signup",
+      component: SignUpView,
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: LoginView,
     },
   ],
 });

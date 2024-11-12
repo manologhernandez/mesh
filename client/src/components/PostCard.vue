@@ -88,7 +88,7 @@ const props = defineProps({
 const isImageLoaded = ref(false);
 
 function imageLoaded() {
-  isImageLoaded = true;
+  isImageLoaded.value = true;
 }
 
 onMounted(() => {

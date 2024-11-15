@@ -10,9 +10,15 @@
           <Sidebar />
         </div>
 
-        <div class="">
+        <div>
           <RouterView
-            class="absolute w-full md:left-[20%] md:w-4/5 flex flex-col gap-0 p-2"
+            class="absolute w-full md:left-[20%] md:w-3/5 flex flex-col gap-0 p-2"
+          />
+        </div>
+        <div>
+          <RouterView
+            name="rightPane"
+            class="absolute w-full md:left-[80%] md:w-1/5 flex flex-col gap-0 p-2"
           />
         </div>
       </div>

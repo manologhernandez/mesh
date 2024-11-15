@@ -23,16 +23,18 @@
           <span class="mr-4 font-semibold text-nowrap"
             >Today's Threadlines:
           </span>
-          <div class="whitespace-nowrap flex">
+          <RouterLink
+            :to="`/post/${threadline.id}`"
+            class="whitespace-nowrap flex"
+            v-for="(threadline, index) in threadlines"
+            :key="'1-' + index"
+          >
             <div
-              v-for="(threadline, index) in threadlines"
-              :key="'1-' + index"
               class="mr-4 md:mr-8 w-[180px] md:w-[360px] truncate cursor-pointer active:underline md:hover:underline"
             >
               {{ threadline.title }}
             </div>
-          </div>
-          <span></span>
+          </RouterLink>
         </div>
       </div>
     </div>

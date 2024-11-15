@@ -42,7 +42,7 @@
     </p>
 
     <div
-      class="text-center mt-4 bg-neutral-700 w-fit self-center p-4 rounded-lg flex flex-col gap-2 items-center"
+      class="text-center mt-4 bg-neutral-300 dark:bg-neutral-700 w-fit self-center p-4 rounded-lg flex flex-col gap-2 items-center"
     >
       <span class="text-nowrap"> 😀 Manolo, Dustin, Chino, Bea, and Miggy</span>
     </div>

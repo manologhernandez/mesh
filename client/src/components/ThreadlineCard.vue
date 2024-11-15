@@ -1,21 +1,23 @@
 <template>
-  <div class="story-card cursor-pointer group">
-    <div
-      class="relative bg-cover bg-center p-4 h-32 rounded-lg flex justify-center items-end"
-      :style="`background-image: url(${threadline.imageSrc}); -webkit-mask-image: linear-gradient(to right, #fff, #fff);`"
-    >
+  <RouterLink :to="`/post/${threadline.id}`">
+    <div class="story-card cursor-pointer group">
       <div
-        class="absolute left-0 right-0 bottom-0 font-semibold text-white z-20 p-2"
+        class="relative bg-cover bg-center p-4 h-32 rounded-lg flex justify-center items-end"
+        :style="`background-image: url(${threadline.imageSrc}); -webkit-mask-image: linear-gradient(to right, #fff, #fff);`"
       >
-        <span
-          class="line-clamp-2 group-active:underline md:group-hover:underline"
+        <div
+          class="absolute left-0 right-0 bottom-0 font-semibold text-white z-20 p-2"
         >
-          {{ threadline.title }}
-        </span>
+          <span
+            class="line-clamp-2 group-active:underline md:group-hover:underline"
+          >
+            {{ threadline.title }}
+          </span>
+        </div>
+        <div class="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
       </div>
-      <div class="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
     </div>
-  </div>
+  </RouterLink>
 </template>
 
 <script setup>

@@ -1,73 +1,75 @@
 <template>
-  <div
-    class="rounded-lg active:bg-neutral-100 dark:active:bg-neutral-800 md:hover:bg-neutral-100 dark:md:hover:bg-neutral-800 p-4 flex flex-col gap-2 w-full cursor-pointer"
-  >
-    <!-- breadcrumbs and date -->
-    <div class="flex justify-between text-neutral-700 dark:text-neutral-300">
-      <div class="text-sm flex items-center max-w-[70%] overflow-x-auto">
-        <div
-          class="flex items-center flex-nowrap"
-          v-for="(breadcrumb, index) in post.breadcrumbs"
-        >
-          <ChevronRightIcon v-if="index > 0" />
-          <a
-            :href="breadcrumb.link"
-            class="active:text-blue-500 md:hover:text-blue-500 text-nowrap"
-            >{{ breadcrumb.title }}</a
+  <RouterLink :to="`/post/${post.id}`" class="">
+    <div
+      class="rounded-lg active:bg-neutral-100 dark:active:bg-neutral-800 md:hover:bg-neutral-100 dark:md:hover:bg-neutral-800 p-4 flex flex-col gap-2 w-full cursor-pointer"
+    >
+      <!-- breadcrumbs and date -->
+      <div class="flex justify-between text-neutral-700 dark:text-neutral-300">
+        <div class="text-sm flex items-center max-w-[70%] overflow-x-auto">
+          <div
+            class="flex items-center flex-nowrap"
+            v-for="(breadcrumb, index) in post.breadcrumbs"
           >
+            <ChevronRightIcon v-if="index > 0" />
+            <a
+              :href="breadcrumb.link"
+              class="active:text-blue-500 md:hover:text-blue-500 text-nowrap"
+              >{{ breadcrumb.title }}</a
+            >
+          </div>
+        </div>
+        <div class="text-sm line-clamp-1">
+          {{ dayjs(post.dateCreated).fromNow() }}
         </div>
       </div>
-      <div class="text-sm line-clamp-1">
-        {{ dayjs(post.dateCreated).fromNow() }}
-      </div>
-    </div>
 
-    <!-- post title -->
-    <div class="text-xl font-bold line-clamp-1">{{ post.title }}</div>
+      <!-- post title -->
+      <div class="text-xl font-bold line-clamp-1">{{ post.title }}</div>
 
-    <!-- post body -->
-    <div
-      v-if="post.hasImage"
-      class="flex justify-center max-h-96 rounded-lg mt-2"
-      :class="`image-container-${post.id}`"
-    >
-      <img
-        :src="post.image"
-        alt=""
-        class="object-contain rounded-lg"
-        crossOrigin="anonymous"
-        @load="imageLoaded"
-      />
+      <!-- post body -->
       <div
-        v-if="!isImageLoaded"
-        class="bg-black opacity-30 rounded-lg h-96 w-full"
-      ></div>
-    </div>
-    <div
-      v-else
-      class="line-clamp-3 md:line-clamp-5 text-neutral-700 dark:text-neutral-300"
-    >
-      {{ post.text }}
-    </div>
-
-    <!-- like and comment count -->
-    <div
-      class="flex gap-2 justify-center text-sm items-center align-middle text-neutral-700 dark:text-neutral-300 pt-2"
-    >
-      <div
-        class="flex gap-1 items-center md:hover:text-yellow-400 active:text-yellow-400"
+        v-if="post.hasImage"
+        class="flex justify-center max-h-96 rounded-lg mt-2"
+        :class="`image-container-${post.id}`"
       >
-        <span>{{ post.likesCount }}</span>
-        <StarIcon />
+        <img
+          :src="post.image"
+          alt=""
+          class="object-contain rounded-lg"
+          crossOrigin="anonymous"
+          @load="imageLoaded"
+        />
+        <div
+          v-if="!isImageLoaded"
+          class="bg-black opacity-30 rounded-lg h-96 w-full"
+        ></div>
       </div>
       <div
-        class="flex gap-1 items-center md:hover:text-red-500 active:text-red-500"
+        v-else
+        class="line-clamp-3 md:line-clamp-5 text-neutral-700 dark:text-neutral-300"
       >
-        <span>{{ post.commentsCount }}</span>
-        <CommentIcon />
+        {{ post.text }}
+      </div>
+
+      <!-- like and comment count -->
+      <div
+        class="flex gap-2 justify-center text-sm items-center align-middle text-neutral-700 dark:text-neutral-300 pt-2"
+      >
+        <div
+          class="flex gap-1 items-center md:hover:text-yellow-400 active:text-yellow-400"
+        >
+          <span>{{ post.likesCount }}</span>
+          <StarIcon />
+        </div>
+        <div
+          class="flex gap-1 items-center md:hover:text-red-500 active:text-red-500"
+        >
+          <span>{{ post.commentsCount }}</span>
+          <CommentIcon />
+        </div>
       </div>
     </div>
-  </div>
+  </RouterLink>
 </template>
 
 <script setup>

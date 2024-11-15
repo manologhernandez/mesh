@@ -1,28 +1,28 @@
 <template>
-  <RouterLink :to="`/post/${post.id}`" class="">
-    <div
-      class="rounded-lg active:bg-neutral-100 dark:active:bg-neutral-800 md:hover:bg-neutral-100 dark:md:hover:bg-neutral-800 p-4 flex flex-col gap-2 w-full cursor-pointer"
-    >
-      <!-- breadcrumbs and date -->
-      <div class="flex justify-between text-neutral-700 dark:text-neutral-300">
-        <div class="text-sm flex items-center max-w-[70%] overflow-x-auto">
-          <div
-            class="flex items-center flex-nowrap"
-            v-for="(breadcrumb, index) in post.breadcrumbs"
+  <div
+    class="rounded-lg active:bg-neutral-100 dark:active:bg-neutral-800 md:hover:bg-neutral-100 dark:md:hover:bg-neutral-800 p-4 flex flex-col gap-2 w-full"
+  >
+    <!-- breadcrumbs and date -->
+    <div class="flex justify-between text-neutral-700 dark:text-neutral-300">
+      <div class="text-sm flex items-center max-w-[70%] overflow-x-auto">
+        <div
+          class="flex items-center flex-nowrap"
+          v-for="(breadcrumb, index) in post.breadcrumbs"
+        >
+          <ChevronRightIcon v-if="index > 0" />
+          <a
+            :href="breadcrumb.link"
+            class="active:text-blue-500 md:hover:text-blue-500 text-nowrap"
+            >{{ breadcrumb.title }}</a
           >
-            <ChevronRightIcon v-if="index > 0" />
-            <a
-              :href="breadcrumb.link"
-              class="active:text-blue-500 md:hover:text-blue-500 text-nowrap"
-              >{{ breadcrumb.title }}</a
-            >
-          </div>
-        </div>
-        <div class="text-sm line-clamp-1">
-          {{ dayjs(post.dateCreated).fromNow() }}
         </div>
       </div>
+      <div class="text-sm line-clamp-1">
+        {{ dayjs(post.dateCreated).fromNow() }}
+      </div>
+    </div>
 
+    <RouterLink :to="`/post/${post.id}`" class="cursor-pointer">
       <!-- post title -->
       <div class="text-xl font-bold line-clamp-1">{{ post.title }}</div>
 
@@ -44,42 +44,40 @@
           class="bg-black opacity-30 rounded-lg h-96 w-full"
         ></div>
       </div>
-      <div
-        v-else
-        class="line-clamp-3 md:line-clamp-5 text-neutral-700 dark:text-neutral-300"
-      >
+      <div v-else class="line-clamp-5 text-neutral-700 dark:text-neutral-300">
         {{ post.text }}
       </div>
+    </RouterLink>
 
-      <!-- like and comment count -->
-      <div
-        class="flex gap-2 justify-center text-sm items-center align-middle text-neutral-700 dark:text-neutral-300 pt-2"
+    <!-- like and comment count -->
+    <div
+      class="flex gap-4 justify-center text-sm items-center align-middle text-neutral-700 dark:text-neutral-300 pt-2"
+    >
+      <Like
+        :likesCount="post.likesCount"
+        @increment="postLiked()"
+        @decrement="postUnliked()"
+      />
+
+      <RouterLink
+        :to="`/post/${post.id}`"
+        class="flex gap-1 items-center md:hover:text-red-500 active:text-red-500"
       >
-        <div
-          class="flex gap-1 items-center md:hover:text-yellow-400 active:text-yellow-400"
-        >
-          <span>{{ post.likesCount }}</span>
-          <StarIcon />
-        </div>
-        <div
-          class="flex gap-1 items-center md:hover:text-red-500 active:text-red-500"
-        >
-          <span>{{ post.commentsCount }}</span>
-          <CommentIcon />
-        </div>
-      </div>
+        <CommentIcon />
+        <span>{{ post.commentsCount }}</span>
+      </RouterLink>
     </div>
-  </RouterLink>
+  </div>
 </template>
 
 <script setup>
-import StarIcon from "./icons/StarIcon.vue";
 import CommentIcon from "./icons/CommentIcon.vue";
 import ChevronRightIcon from "./icons/ChevronRightIcon.vue";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { onMounted, ref } from "vue";
 import { FastAverageColor } from "fast-average-color";
+import Like from "./Like.vue";
 
 dayjs.extend(relativeTime);
 
@@ -91,6 +89,13 @@ const isImageLoaded = ref(false);
 
 function imageLoaded() {
   isImageLoaded.value = true;
+}
+
+function postLiked() {
+  alert(`Post liked`);
+}
+function postUnliked() {
+  alert(`Post unliked`);
 }
 
 onMounted(() => {

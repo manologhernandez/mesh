@@ -12,16 +12,16 @@
 
       <!-- Action Buttons -->
       <div class="flex items-center gap-4 mt-2 text-sm">
-        <button
-          @click="likeComment"
-          class="text-neutral-800 dark:text-neutral-400 flex gap-2 items-center"
-        >
-          <StarIcon /> {{ likes }}
-        </button>
+        <Like
+          :likesCount="likes"
+          @increment="likeComment"
+          @decrement="unlikeComment"
+        />
+
         <button
           v-if="isRootComment"
           @click="replyToComment"
-          class="text-neutral-800 dark:text-neutral-400 flex gap-2 items-center"
+          class="flex gap-2 items-center"
         >
           <CommentIcon /> Reply
         </button>
@@ -65,7 +65,7 @@
 
 <script setup>
 import { ref, computed } from "vue";
-import StarIcon from "./icons/StarIcon.vue";
+import Like from "./Like.vue";
 import CommentIcon from "./icons/CommentIcon.vue";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -107,6 +107,9 @@ function toggleShowMore() {
 
 function likeComment() {
   likes.value += 1; // Increment likes count
+}
+function unlikeComment() {
+  likes.value -= 1; // Increment likes count
 }
 
 function replyToComment() {

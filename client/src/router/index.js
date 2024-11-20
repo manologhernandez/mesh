@@ -3,14 +3,23 @@ import HomeView from "../views/HomeView.vue";
 import DiscoverView from "@/views/DiscoverView.vue";
 import AboutView from "@/views/AboutView.vue";
 import BulletinBoardsView from "@/views/BulletinBoardsView.vue";
-import SignUpView from "@/views/SignUpView.vue";
-import LoginView from "@/views/LoginView.vue";
 import PostView from "@/views/PostView.vue";
-import HomeRightPane from "@/components/HomeRightPane.vue";
+import HomeRightPane from "@/components/rightpanes/HomeRightPane.vue";
 import Page404View from "@/views/Page404View.vue";
+import CollegeView from "@/views/CollegeView.vue";
+import CollegeRightPane from "@/components/rightpanes/CollegeRightPane.vue";
+import CourseGroupView from "@/views/CourseGroupView.vue";
+import CourseGroupRightPane from "@/components/rightpanes/CourseGroupRightPane.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    } else {
+      return { top: 0 };
+    }
+  },
   routes: [
     {
       path: "/",
@@ -36,19 +45,27 @@ const router = createRouter({
       component: BulletinBoardsView,
     },
     {
-      path: "/signup",
-      name: "Signup",
-      component: SignUpView,
-    },
-    {
-      path: "/login",
-      name: "Login",
-      component: LoginView,
-    },
-    {
       path: "/post/:id",
       name: "PostSingle",
       component: PostView,
+      props: true,
+    },
+    {
+      path: "/college/:id",
+      name: "CollegeSingle",
+      components: {
+        rightPane: CollegeRightPane,
+        default: CollegeView,
+      },
+      props: true,
+    },
+    {
+      path: "/coursegroup/:id",
+      name: "CourseGroupSingle",
+      components: {
+        rightPane: CourseGroupRightPane,
+        default: CourseGroupView,
+      },
       props: true,
     },
     { path: "/:pathMatch(.*)*", name: "notfound", component: Page404View },

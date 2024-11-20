@@ -65,31 +65,39 @@ export const posts = [
 ];
 
 export const COURSE_GROUPS = [
-  "Agriculture",
-  "Architecture and Design",
-  "Business",
-  "Education",
-  "Engineering",
-  "Formal Sciences",
-  "Health Sciences",
-  "Humanities",
-  "Media and Communication",
-  "Natural Sciences",
-  "Nutrition",
-  "Public Administration",
-  "Social Sciences",
-  "Transportation",
+  { id: 1, name: "Agriculture" },
+  { id: 2, name: "Architecture and Design" },
+  { id: 3, name: "Business" },
+  { id: 4, name: "Education" },
+  { id: 5, name: "Engineering" },
+  { id: 6, name: "Formal Sciences" },
+  { id: 7, name: "Health Sciences" },
+  { id: 8, name: "Humanities" },
+  { id: 9, name: "Media and Communication" },
+  { id: 10, name: "Natural Sciences" },
+  { id: 11, name: "Nutrition" },
+  { id: 12, name: "Public Administration" },
+  { id: 13, name: "Social Sciences" },
+  { id: 14, name: "Transportation" },
 ];
 
 export const COLLEGES = [
-  "ADMU",
-  "DLSU",
-  "UPD",
-  "UST",
-  "ADU",
-  "UE",
-  "NU",
-  "FEU",
+  {
+    id: "admu",
+    name: "ADMU",
+  },
+  {
+    id: "dlsu",
+    name: "DLSU",
+  },
+  {
+    id: "up",
+    name: "UP",
+  },
+  {
+    id: "ust",
+    name: "UST",
+  },
 ];
 
 export const BBPosts = [
@@ -238,3 +246,76 @@ export const post1 = {
   ],
   dateCreated: "2024-11-07T00:00:00Z",
 };
+
+export const college1 = {
+  id: "up",
+  name: "University of the Philippines",
+  meshers: 2000,
+  followers: 4000,
+  imgSrc:
+    "https://upload.wikimedia.org/wikipedia/en/3/3d/University_of_The_Philippines_seal.svg",
+  aboutText:
+    "The University of the Philippines (UP) is the national university of the Philippines, recognized as the country’s premier institution of higher learning. Established in 1908, UP has a rich tradition of academic excellence and service to the nation. UP consists of a system of eight constituent universities located across the Philippines, with the flagship campus at UP Diliman in Quezon City. As of 2023, UP has over 60,000 students enrolled across its campuses, spanning undergraduate, graduate, and postgraduate programs.",
+  mainCampus:
+    "University of the Philippines Diliman Quezon Hall, Osmeña Avenue UP Diliman, Quezon City 1101 Metro Manila, Philippines",
+  telephone: "+63 2 8981-8500",
+  email: "info@up.edu.ph",
+  website: "https://up.edu.ph",
+};
+
+export const course1 = {
+  id: 1,
+  name: "Engineering",
+  meshers: 1234,
+  followers: 6000,
+  aboutText: "All things engineering",
+  imgSrc: "https://em-content.zobj.net/source/apple/391/gear_2699-fe0f.png",
+};
+
+export const interestsChoices = [
+  {
+    id: "funny",
+    text: "Funny",
+    icon: "https://em-content.zobj.net/source/apple/391/face-with-tears-of-joy_1f602.png",
+  },
+  {
+    id: "food",
+    text: "Food",
+    icon: "https://em-content.zobj.net/source/apple/391/fork-and-knife-with-plate_1f37d-fe0f.png",
+  },
+  {
+    id: "acads",
+    text: "Acads",
+    icon: "https://em-content.zobj.net/source/apple/391/books_1f4da.png",
+  },
+  {
+    id: "nsfw",
+    text: "NSFW",
+    icon: "https://em-content.zobj.net/source/apple/391/no-one-under-eighteen_1f51e.png",
+  },
+  {
+    id: "opinions",
+    text: "Opinions",
+    icon: "https://em-content.zobj.net/source/apple/391/clown-face_1f921.png",
+  },
+  {
+    id: "politics",
+    text: "Politics",
+    icon: "https://em-content.zobj.net/source/apple/391/speaking-head_1f5e3-fe0f.png",
+  },
+  {
+    id: "sports",
+    text: "Sports",
+    icon: "https://em-content.zobj.net/source/apple/391/people-wrestling_1f93c.png",
+  },
+  {
+    id: "orgs",
+    text: "Orgs",
+    icon: "https://em-content.zobj.net/source/apple/391/handshake_1f91d.png",
+  },
+  {
+    id: "confessions",
+    text: "Confessions",
+    icon: "https://em-content.zobj.net/source/apple/391/shushing-face_1f92b.png",
+  },
+];

@@ -16,6 +16,10 @@
   }
 
   .hr-responsive {
-    @apply h-px bg-neutral-300 border-0 dark:bg-neutral-700;
+    @apply min-h-px h-px max-h-px bg-neutral-300 border-0 dark:bg-neutral-700;
+  }
+
+  .signup-checkbox-item {
+    @apply inline-flex items-center justify-center w-full p-2 text-neutral-700 bg-white border border-neutral-300 rounded-lg cursor-pointer dark:hover:text-neutral-300 dark:border-neutral-600 peer-checked:border-blue-600 peer-checked:border-2 hover:text-neutral-600 dark:peer-checked:text-neutral-300 peer-checked:text-neutral-600 hover:bg-neutral-50 dark:text-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800;
   }
 }

@@ -22,4 +22,16 @@
   .signup-checkbox-item {
     @apply inline-flex items-center justify-center w-full p-2 text-neutral-700 bg-white border border-neutral-300 rounded-lg cursor-pointer dark:hover:text-neutral-300 dark:border-neutral-600 peer-checked:border-blue-600 peer-checked:border-2 hover:text-neutral-600 dark:peer-checked:text-neutral-300 peer-checked:text-neutral-600 hover:bg-neutral-50 dark:text-neutral-200 dark:bg-neutral-900 dark:hover:bg-neutral-800;
   }
+
+  .modal-overlay {
+    @apply fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-white dark:bg-opacity-10 bg-opacity-30 backdrop-blur-sm;
+  }
+
+  .modal-container {
+    @apply h-full lg:h-auto relative bg-white dark:bg-neutral-900 dark:text-white lg:rounded-lg shadow-lg scrollable w-full lg:max-w-lg;
+  }
+
+  .modal-close-btn {
+    @apply absolute top-2 right-2 text-neutral-500 lg:hover:text-neutral-900 active:text-neutral-900 dark:lg:hover:text-neutral-700 dark:active:text-neutral-700;
+  }
 }

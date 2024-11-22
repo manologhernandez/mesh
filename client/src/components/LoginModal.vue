@@ -2,14 +2,13 @@
   <!-- Modal Overlay -->
   <div
     @click.self="closeModal"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-white dark:bg-opacity-10 bg-opacity-30 backdrop-blur-sm">
+    class="modal-overlay">
     <!-- Modal Container -->
-    <div
-      class="h-full lg:h-auto lg:max-h-[88vh] relative bg-white dark:bg-neutral-900 dark:text-white lg:rounded-lg shadow-lg scrollable w-full max-w-md lg:max-w-lg">
+    <div class="modal-container">
       <!-- Close Button -->
       <button
         @click="closeModal"
-        class="absolute top-2 right-2 text-neutral-500 lg:hover:text-neutral-900 active:text-neutral-900 dark:lg:hover:text-neutral-700 dark:active:text-neutral-700">
+        class="modal-close-btn">
         <CloseIcon />
       </button>
 

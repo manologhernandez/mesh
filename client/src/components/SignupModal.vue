@@ -2,14 +2,13 @@
   <!-- Modal Overlay -->
   <div
     @click.self="closeModal"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black dark:bg-white dark:bg-opacity-10 bg-opacity-30 backdrop-blur-sm">
+    class="modal-overlay">
     <!-- Modal Container -->
-    <div
-      class="h-full lg:h-auto relative bg-white dark:bg-neutral-900 dark:text-white lg:rounded-lg shadow-lg scrollable w-full max-w-md lg:max-w-lg">
+    <div class="modal-container">
       <!-- Close Button -->
       <button
         @click="closeModal"
-        class="absolute top-2 right-2 text-neutral-500 lg:hover:text-neutral-900 active:text-neutral-900 dark:lg:hover:text-neutral-700 dark:active:text-neutral-700">
+        class="modal-close-btn">
         <CloseIcon />
       </button>
       <!-- CONTENT -->
@@ -24,7 +23,8 @@
             will be anonymous.
             <RouterLink
               to="/about"
-              class="font-semibold underline underline-offset-2">
+              class="font-semibold underline underline-offset-2"
+              @click="closeModal">
               Read how we protect our users.
             </RouterLink>
           </span>
@@ -33,12 +33,14 @@
             <RouterLink
               to="/about"
               class="underline underline-offset-2"
+              @click="closeModal"
               >Privacy Policy</RouterLink
             >
             and
             <RouterLink
               to="/about"
-              class="underline underline-offset-2">
+              class="underline underline-offset-2"
+              @click="closeModal">
               Terms of Agreement.
             </RouterLink>
           </span>

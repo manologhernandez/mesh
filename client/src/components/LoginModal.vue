@@ -87,10 +87,12 @@
 <script setup>
   import { ref } from "vue";
   import CloseIcon from "./icons/CloseIcon.vue";
+  import { useRouter } from "vue-router";
 
   const username = ref("");
   const password = ref("");
   const errors = ref({});
+  const router = useRouter();
 
   const emit = defineEmits(["closeModal", "openSignup"]);
 
@@ -112,7 +114,9 @@
         password: password.value,
       });
       alert("Login successful!");
+      localStorage.setItem("mesh_token", "myaccesstoken");
       closeModal(); // Close modal
+      router.go(0);
     }
   };
 

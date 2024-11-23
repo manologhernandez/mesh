@@ -303,6 +303,7 @@
   import CloseIcon from "./icons/CloseIcon.vue";
   import { interestsChoices } from "@/tools/sampledata";
   import { ref, computed } from "vue";
+  import { useRouter } from "vue-router";
 
   const email = ref("");
   const errors = ref({});
@@ -314,6 +315,7 @@
   const passwordConfirm = ref("");
   const degree = ref("");
   const interests = ref([]);
+  const router = useRouter();
 
   const emit = defineEmits(["closeModal", "openLogin"]);
 
@@ -391,7 +393,10 @@
       };
       alert("Received account info: " + JSON.stringify(accountInfo, null, 2));
       // Add API call and logic here
-      closeModal();
+
+      localStorage.setItem("mesh_token", "myaccesstoken");
+      closeModal(); // Close modal
+      router.go(0);
     }
   };
 

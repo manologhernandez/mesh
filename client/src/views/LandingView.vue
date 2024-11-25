@@ -1,20 +1,30 @@
 <template>
-  <!-- Modal Overlay -->
   <div
-    @click.self="closeModal"
-    class="modal-overlay">
-    <!-- Modal Container -->
-    <div class="modal-container">
-      <!-- Close Button -->
-      <button
-        @click="closeModal"
-        class="modal-close-btn">
-        <CloseIcon />
-      </button>
+    class="w-full min-h-screen bg-cover bg-center flex flex-col gap-8 items-center pt-32 lg:pt-36"
+    :style="true ? `background-image: url(/landing_bg.svg)` : ''">
+    <div
+      class="backdrop-blur-sm bg-white/60 shadow-[rgba(0,0,0,0.3)_0px_0px_15px_6px] p-10 rounded-lg w-sm lg:w-md">
+      <!-- Text Content -->
+      <div class="flex flex-col gap-4 justify-center items-center">
+        <div class="flex gap-4 items-center">
+          <img
+            src="/logo.png"
+            alt="Mesh Logo"
+            class="aspect-square h-16 lg:h-20 dark:invert" />
+          <span
+            class="text-6xl lg:text-7xl font-extrabold text-neutral-900 dark:text-white">
+            Mesh
+          </span>
+        </div>
+        <div>
+          <span class="lg:text-lg text-nowrap"
+            >an anonymous college social network</span
+          >
+        </div>
+      </div>
 
-      <!-- Login Content -->
-      <div class="p-6 lg:p-12 flex flex-col gap-4 h-screen lg:h-auto">
-        <h2 class="text-3xl font-bold">Log In</h2>
+      <!-- Login-->
+      <div class="flex flex-col gap-8 w-full lg:px-0 mt-4">
         <form
           @submit.prevent="handleLogin"
           class="flex flex-col gap-4">
@@ -81,20 +91,32 @@
         </div>
       </div>
     </div>
+    <SignupModal
+      v-if="showSignupModal"
+      @close-modal="hideSignupModal" />
   </div>
 </template>
 
 <script setup>
   import { ref } from "vue";
-  import CloseIcon from "./icons/CloseIcon.vue";
+  import SignupModal from "@/components/SignupModal.vue";
   import { useRouter } from "vue-router";
+
+  const router = useRouter();
 
   const username = ref("");
   const password = ref("");
-  const errors = ref({});
-  const router = useRouter();
 
-  const emit = defineEmits(["closeModal", "openSignup"]);
+  const errors = ref([]);
+  const showSignupModal = ref(false);
+
+  function openSignupModal() {
+    showSignupModal.value = true;
+  }
+
+  function hideSignupModal() {
+    showSignupModal.value = false;
+  }
 
   const validateForm = () => {
     errors.value = {};
@@ -115,20 +137,12 @@
       });
       alert("Login successful!");
       localStorage.setItem("mesh_token", "myaccesstoken");
-      closeModal(); // Close modal
+
       router.go(0);
     }
-  };
-
-  const closeModal = () => {
-    emit("closeModal");
-  };
-
-  const openSignupModal = () => {
-    emit("openSignup");
   };
 </script>
 
 <style scoped>
-  /* Tailwind handles styling */
+  /* Add any specific styles if needed */
 </style>

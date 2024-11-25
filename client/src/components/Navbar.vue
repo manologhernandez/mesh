@@ -31,29 +31,8 @@
         </RouterLink>
       </div>
       <!-- NAVBAR BUTTONS -->
-      <!-- LOGIN AND SIGNUP BUTTONS -->
-      <div class="flex lg:order-2 space-x-3 lg:space-x-0 rtl:space-x-reverse">
-        <div
-          @click="openLoginModal"
-          class="w-full text-nowrap"
-          v-if="!isUserLoggedIn">
-          <button
-            type="button"
-            class="text-black focus:outline-none font-medium px-4 py-2 text-center rounded-lg dark:text-white">
-            Log In
-          </button>
-        </div>
-        <div
-          @click="openSignupModal"
-          class="w-full text-nowrap"
-          v-if="!isUserLoggedIn">
-          <button
-            type="button"
-            class="text-white bg-neutral-900 active:bg-neutral-800 lg:hover:bg-neutral-800 font-medium rounded-lg px-4 py-2 text-center dark:bg-neutral-700 dark:active:bg-neutral-800 dark:lg:hover:bg-neutral-800">
-            Sign Up
-          </button>
-        </div>
-
+      <div
+        class="flex items-center h-full lg:order-2 space-x-0 lg:space-x-0 rtl:space-x-reverse">
         <!-- SEARCH BUTTON -->
         <button
           data-collapse-toggle="search-container"
@@ -66,14 +45,25 @@
           <span class="sr-only">Open searchbar</span>
           <SearchIcon />
         </button>
-        <!-- USER DROPDOWN BUTTON -->
 
+        <!-- CREATE POST BUTTON -->
+        <div
+          @click="openCreatePostModal"
+          class="text-nowrap">
+          <button
+            type="button"
+            class="flex gap-2 lg:hover:bg-neutral-200 font-medium rounded-full px-2 lg:px-4 py-2 text-center dark:lg:hover:bg-neutral-800">
+            <PlusIcon /> {{ isMobile ? "" : "Post" }}
+          </button>
+        </div>
+
+        <!-- USER DROPDOWN BUTTON -->
         <button
           id="dropdownUserAvatarButton"
           data-dropdown-toggle="dropdownAvatar"
-          class="flex justify-center items-center text-sm rounded-full ms-0 focus:ring-4 focus:ring-neutral-300 dark:focus:ring-neutral-600"
+          class="h-full text-sm rounded-full ms-0 p-2"
           type="button"
-          v-if="isUserLoggedIn">
+          @click="empty">
           <span class="sr-only">Open user menu</span>
           <img
             class="h-10 rounded-full"
@@ -84,7 +74,7 @@
         <!-- USER DROPDOWN MENU -->
         <div
           id="dropdownAvatar"
-          class="z-10 hidden bg-white divide-y divide-neutral-100 rounded-lg shadow w-44 dark:bg-neutral-700 dark:divide-neutral-600">
+          class="z-10 hidden bg-white divide-y divide-neutral-100 rounded-lg shadow-xl w-44 dark:bg-neutral-700 dark:divide-neutral-600">
           <div class="px-4 py-3 text-sm text-neutral-900 dark:text-white">
             <div>Mesh User</div>
             <div class="font-medium truncate">user@email.edu.ph</div>
@@ -141,57 +131,24 @@
       </div>
     </div>
   </nav>
-  <LoginModal
-    v-if="showLoginModal"
-    @close-modal="hideLoginModal"
-    @open-signup="openSignupModal" />
-  <SignupModal
-    v-if="showSignupModal"
-    @close-modal="hideSignupModal"
-    @open-login="openLoginModal" />
 </template>
 
 <script setup>
   import { Collapse } from "flowbite";
   import SearchIcon from "./icons/SearchIcon.vue";
-  import LoginModal from "./LoginModal.vue";
   import HamburgerIcon from "./icons/HamburgerIcon.vue";
   import { ref, computed } from "vue";
-  import SignupModal from "./SignupModal.vue";
   import { useRouter } from "vue-router";
+  import PlusIcon from "./icons/PlusIcon.vue";
 
   // as per https://stackoverflow.com/questions/33074160/bootstrap-collapse-half-working-on-iphone
   // assign empty onclick handler for iphone collapse support
   const empty = () => {};
   const router = useRouter();
-  const showLoginModal = ref(false);
-  const showSignupModal = ref(false);
 
-  const isUserLoggedIn = computed(() => {
-    var token = localStorage.getItem("mesh_token");
-    if (token) {
-      return true;
-    }
-    return false;
+  const isMobile = computed(() => {
+    return screen.width <= 1024;
   });
-
-  function openLoginModal() {
-    showSignupModal.value = false;
-    showLoginModal.value = true;
-  }
-
-  function openSignupModal() {
-    showLoginModal.value = false;
-    showSignupModal.value = true;
-  }
-
-  function hideLoginModal() {
-    showLoginModal.value = false;
-  }
-
-  function hideSignupModal() {
-    showSignupModal.value = false;
-  }
 
   function signOutUser() {
     localStorage.removeItem("mesh_token");

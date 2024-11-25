@@ -19,29 +19,13 @@
         <h2 class="text-3xl font-bold">Join Mesh</h2>
         <div class="text-sm flex flex-col gap-2">
           <span>
-            Don't worry, we don't store your email. All activity you do on Mesh
-            will be anonymous.
+            Don't worry, we never store emails. All activity you do on Mesh will
+            be anonymous.
             <RouterLink
               to="/about"
               class="font-semibold underline underline-offset-2"
               @click="closeModal">
               Read how we protect our users.
-            </RouterLink>
-          </span>
-          <span>
-            By signing up, you agree to our
-            <RouterLink
-              to="/about"
-              class="underline underline-offset-2"
-              @click="closeModal"
-              >Privacy Policy</RouterLink
-            >
-            and
-            <RouterLink
-              to="/about"
-              class="underline underline-offset-2"
-              @click="closeModal">
-              Terms of Agreement.
             </RouterLink>
           </span>
         </div>
@@ -72,21 +56,30 @@
             </p>
           </div>
 
+          <span class="text-xs mt-4">
+            By signing up, you agree to our
+            <RouterLink
+              to="/about"
+              class="underline underline-offset-2"
+              @click="closeModal"
+              >Privacy Policy</RouterLink
+            >
+            and
+            <RouterLink
+              to="/about"
+              class="underline underline-offset-2"
+              @click="closeModal">
+              Terms of Agreement.
+            </RouterLink>
+          </span>
+
           <!-- Submit Button -->
           <button
             type="submit"
-            class="w-full mt-4 p-4 bg-black text-white dark:bg-white dark:text-black font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800 dark:lg:hover:bg-neutral-200 dark:active:bg-neutral-200">
+            class="w-full p-4 bg-black text-white dark:bg-white dark:text-black font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800 dark:lg:hover:bg-neutral-200 dark:active:bg-neutral-200">
             Continue
           </button>
         </form>
-        <div class="flex gap-1 justify-center text-nowrap">
-          <span>Already have an account?</span>
-          <span
-            @click="openLoginModal"
-            class="text-blue-600 cursor-pointer font-semibold">
-            Log in
-          </span>
-        </div>
       </div>
       <!-- Step 2: Email Verification OTP -->
       <div
@@ -317,7 +310,7 @@
   const interests = ref([]);
   const router = useRouter();
 
-  const emit = defineEmits(["closeModal", "openLogin"]);
+  const emit = defineEmits(["closeModal"]);
 
   const isCodeComplete = computed(() => {
     return codes.value.every((digit) => digit !== "");
@@ -402,10 +395,6 @@
 
   const closeModal = () => {
     emit("closeModal");
-  };
-
-  const openLoginModal = () => {
-    emit("openLogin");
   };
 </script>
 

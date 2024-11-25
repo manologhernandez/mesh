@@ -3,7 +3,7 @@
     <div class="me-4">
       <!-- MAIN PAGES -->
       <div class="flex flex-col justify-start items-start mt-4 gap-0">
-        <SidebarButton route="/"> <HomeIcon /> Feed </SidebarButton>
+        <SidebarButton route="/feed"> <HomeIcon /> Feed </SidebarButton>
         <SidebarButton route="/discover"> <MapIcon /> Discover </SidebarButton>
         <SidebarButton route="/bulletin-boards">
           <DiscoverIcon /> Bulletin Boards

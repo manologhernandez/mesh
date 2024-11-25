@@ -34,4 +34,8 @@
   .modal-close-btn {
     @apply absolute top-2 right-2 text-neutral-500 lg:hover:text-neutral-900 active:text-neutral-900 dark:lg:hover:text-neutral-700 dark:active:text-neutral-700;
   }
+
+  .sidebar-responsive {
+    @apply hidden fixed bg-responsive w-full z-40 lg:w-1/5 ps-4 lg:block lg:border-e lg:border-responsive;
+  }
 }

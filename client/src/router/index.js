@@ -10,6 +10,7 @@ import CollegeView from "@/views/CollegeView.vue";
 import CollegeRightPane from "@/components/rightpanes/CollegeRightPane.vue";
 import CourseGroupView from "@/views/CourseGroupView.vue";
 import CourseGroupRightPane from "@/components/rightpanes/CourseGroupRightPane.vue";
+import LandingView from "@/views/LandingView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,16 +24,24 @@ const router = createRouter({
   routes: [
     {
       path: "/",
+      name: "Landing",
+      component: LandingView,
+    },
+    {
+      path: "/feed",
       name: "Home",
-      components: {
-        rightPane: HomeRightPane,
-        default: HomeView,
+      component: HomeView,
+      meta: {
+        requiresAuth: true,
       },
     },
     {
       path: "/discover",
       name: "Discover",
       component: DiscoverView,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: "/about",
@@ -43,33 +52,68 @@ const router = createRouter({
       path: "/bulletin-boards",
       name: "BulletinBoards",
       component: BulletinBoardsView,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: "/post/:id",
       name: "PostSingle",
       component: PostView,
       props: true,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: "/college/:id",
       name: "CollegeSingle",
-      components: {
-        rightPane: CollegeRightPane,
-        default: CollegeView,
-      },
+      component: CollegeView,
       props: true,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: "/coursegroup/:id",
       name: "CourseGroupSingle",
-      components: {
-        rightPane: CourseGroupRightPane,
-        default: CourseGroupView,
-      },
+      component: CourseGroupView,
       props: true,
+      meta: {
+        requiresAuth: true,
+      },
     },
     { path: "/:pathMatch(.*)*", name: "notfound", component: Page404View },
   ],
 });
+
+// Auth route protection
+router.beforeEach((to, from, next) => {
+  if (to.path == "/") {
+    if (userIsLoggedIn()) {
+      next("/feed");
+    } else {
+      next();
+    }
+  } else {
+    if (to.meta.requiresAuth) {
+      if (userIsLoggedIn()) {
+        next();
+      } else {
+        // User is not authenticated, redirect to login
+        next("/");
+      }
+    } else {
+      // Non-protected route, allow access
+      next();
+    }
+  }
+});
+
+function userIsLoggedIn() {
+  const token = localStorage.getItem("mesh_token");
+  //TODO: verify if token is valid here
+  return token && token != "";
+}
 
 export default router;

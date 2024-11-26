@@ -21,7 +21,8 @@
             v-for="comment in post.comments"
             :key="comment.id"
             :comment="comment"
-            :level="0" />
+            :level="0"
+          />
         </div>
       </div>
     </div>
@@ -32,7 +33,6 @@
 </template>
 
 <script setup>
-  import Sidebar from "@/components/Sidebar.vue";
   import { post1 as post } from "@/tools/sampledata";
   import Comment from "@/components/Comment.vue";
   import dayjs from "dayjs";

@@ -1,11 +1,13 @@
 <template>
   <div
     class="flex gap-1 items-center lg:hover:text-yellow-400 active:text-yellow-400 cursor-pointer"
-    @click="likeClicked">
+    @click="likeClicked"
+  >
     <StarIcon v-if="!liked" />
     <StarIconFilled
       v-else
-      class="text-yellow-400" />
+      class="text-yellow-400"
+    />
     <span>{{ likesCount }}</span>
   </div>
 </template>

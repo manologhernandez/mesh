@@ -1,12 +1,14 @@
 <template>
   <div
-    class="rounded-lg active:bg-neutral-100 dark:active:bg-neutral-800 lg:hover:bg-neutral-100 dark:lg:hover:bg-neutral-800 p-4 flex flex-col gap-2 w-full">
+    class="rounded-lg active:bg-neutral-100 dark:active:bg-neutral-800 lg:hover:bg-neutral-100 dark:lg:hover:bg-neutral-800 p-4 flex flex-col gap-2 w-full"
+  >
     <!-- breadcrumbs and date -->
     <div class="flex justify-between text-neutral-700 dark:text-neutral-300">
       <div class="text-sm flex items-center max-w-[70%] overflow-x-auto">
         <div
           class="flex items-center flex-nowrap"
-          v-for="(breadcrumb, index) in post.breadcrumbs">
+          v-for="(breadcrumb, index) in post.breadcrumbs"
+        >
           <ChevronRightIcon v-if="index > 0" />
           <a
             :href="breadcrumb.link"
@@ -22,7 +24,8 @@
 
     <RouterLink
       :to="`/post/${post.id}`"
-      class="cursor-pointer">
+      class="cursor-pointer"
+    >
       <!-- post title -->
       <div class="text-xl font-bold line-clamp-1">{{ post.title }}</div>
 
@@ -30,35 +33,42 @@
       <div
         v-if="post.hasImage"
         class="flex justify-center max-h-96 rounded-lg mt-2"
-        :class="`image-container-${post.id}`">
+        :class="`image-container-${post.id}`"
+      >
         <img
           :src="post.image"
           alt=""
           class="object-contain rounded-lg"
           crossOrigin="anonymous"
-          @load="imageLoaded" />
+          @load="imageLoaded"
+        />
         <div
           v-if="!isImageLoaded"
-          class="bg-black opacity-30 rounded-lg h-96 w-full"></div>
+          class="bg-black opacity-30 rounded-lg h-96 w-full"
+        ></div>
       </div>
       <div
         v-else
-        class="line-clamp-5 text-neutral-700 dark:text-neutral-300">
+        class="line-clamp-5 text-neutral-700 dark:text-neutral-300"
+      >
         {{ post.text }}
       </div>
     </RouterLink>
 
     <!-- like and comment count -->
     <div
-      class="flex gap-4 justify-center text-sm items-center align-middle text-neutral-700 dark:text-neutral-300 pt-2">
+      class="flex gap-4 justify-center text-sm items-center align-middle text-neutral-700 dark:text-neutral-300 pt-2"
+    >
       <Like
         :likesCount="post.likesCount"
         @increment="postLiked()"
-        @decrement="postUnliked()" />
+        @decrement="postUnliked()"
+      />
 
       <RouterLink
         :to="`/post/${post.id}`"
-        class="flex gap-1 items-center lg:hover:text-red-500 active:text-red-500">
+        class="flex gap-1 items-center lg:hover:text-red-500 active:text-red-500"
+      >
         <CommentIcon />
         <span>{{ post.commentsCount }}</span>
       </RouterLink>

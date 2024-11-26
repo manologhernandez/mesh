@@ -5,17 +5,20 @@
       <div class="flex flex-col justify-start items-start mt-4 gap-0">
         <SidebarButton
           route="/feed"
-          @clicked="handleButtonClicked">
+          @clicked="handleButtonClicked"
+        >
           <HomeIcon /> Feed
         </SidebarButton>
         <SidebarButton
           route="/discover"
-          @clicked="handleButtonClicked">
+          @clicked="handleButtonClicked"
+        >
           <MapIcon /> Discover
         </SidebarButton>
         <SidebarButton
           route="/bulletin-boards"
-          @clicked="handleButtonClicked">
+          @clicked="handleButtonClicked"
+        >
           <DiscoverIcon /> Bulletin Boards
         </SidebarButton>
       </div>
@@ -28,20 +31,23 @@
         <SidebarButton
           :route="`/college/${college.id}`"
           @clicked="handleButtonClicked"
-          v-for="college in collegesList">
+          v-for="college in collegesList"
+        >
           {{ college.name }}
         </SidebarButton>
 
         <template v-if="COLLEGES.length > MAX_SHOWN_COLLEGES">
           <SidebarButton
             @click="showAllColleges()"
-            v-if="!isShowFullCollegeList">
+            v-if="!isShowFullCollegeList"
+          >
             <ChevronDownIcon />Show more
           </SidebarButton>
 
           <SidebarButton
             @click="showLessColleges()"
-            v-if="isShowFullCollegeList">
+            v-if="isShowFullCollegeList"
+          >
             <ChevronUpIcon />Show less
           </SidebarButton>
         </template>
@@ -56,20 +62,23 @@
         <SidebarButton
           :route="`/coursegroup/${courseGroup.id}`"
           @clicked="handleButtonClicked"
-          v-for="courseGroup in courseGroupList">
+          v-for="courseGroup in courseGroupList"
+        >
           {{ courseGroup.name }}
         </SidebarButton>
 
         <template v-if="COURSE_GROUPS.length > MAX_SHOWN_COURSE_GROUPS">
           <SidebarButton
             @click="showAllCourseGroups()"
-            v-if="!isShowFullCourseGroupList">
+            v-if="!isShowFullCourseGroupList"
+          >
             <ChevronDownIcon />Show more
           </SidebarButton>
 
           <SidebarButton
             @click="showLessCourseGroups()"
-            v-if="isShowFullCourseGroupList">
+            v-if="isShowFullCourseGroupList"
+          >
             <ChevronUpIcon />Show less
           </SidebarButton>
         </template>

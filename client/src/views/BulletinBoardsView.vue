@@ -4,14 +4,13 @@
       Bulletin Board page
     </div>
     <div
-      class="hidden absolute w-full lg:left-[80%] lg:w-1/5 lg:flex flex-col gap-0 p-2">
+      class="hidden absolute w-full lg:left-[80%] lg:w-1/5 lg:flex flex-col gap-0 p-2"
+    >
       Right pane
     </div>
   </div>
 </template>
 
-<script setup>
-  import Sidebar from "@/components/Sidebar.vue";
-</script>
+<script setup></script>
 
 <style lang="scss" scoped></style>

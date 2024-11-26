@@ -21,9 +21,9 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  post: Object,
-});
+  const props = defineProps({
+    post: Object,
+  });
 </script>
 
 <style lang="scss" scoped></style>

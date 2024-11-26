@@ -29,7 +29,10 @@
     </div>
 
     <!-- Replies (if within allowed nesting level) -->
-    <div v-if="isRootComment && comment.replies.length" class="mt-4">
+    <div
+      v-if="isRootComment && comment.replies.length"
+      class="mt-4"
+    >
       <Comment
         v-for="(reply, index) in visibleReplies"
         :key="reply.id"
@@ -64,60 +67,60 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import Like from "./Like.vue";
-import CommentIcon from "./icons/CommentIcon.vue";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-dayjs.extend(relativeTime);
+  import { ref, computed } from "vue";
+  import Like from "./Like.vue";
+  import CommentIcon from "./icons/CommentIcon.vue";
+  import dayjs from "dayjs";
+  import relativeTime from "dayjs/plugin/relativeTime";
+  dayjs.extend(relativeTime);
 
-// Props
-const props = defineProps({
-  comment: Object,
-  level: Number,
-  maxDepth: {
-    type: Number,
-    default: 1, // Limit nesting to 1 level only
-  },
-});
+  // Props
+  const props = defineProps({
+    comment: Object,
+    level: Number,
+    maxDepth: {
+      type: Number,
+      default: 1, // Limit nesting to 1 level only
+    },
+  });
 
-// Local state
-const showAllReplies = ref(false);
-const likes = ref(props.comment.likes || 0);
+  // Local state
+  const showAllReplies = ref(false);
+  const likes = ref(props.comment.likes || 0);
 
-const MAX_SHOWN_REPLIES = 2;
+  const MAX_SHOWN_REPLIES = 2;
 
-// Computed properties
-const isRootComment = computed(() => props.level === 0);
-const nestedCommentClass = computed(() =>
-  props.level > 0 ? `ml-${props.level * 4}` : ""
-);
+  // Computed properties
+  const isRootComment = computed(() => props.level === 0);
+  const nestedCommentClass = computed(() =>
+    props.level > 0 ? `ml-${props.level * 4}` : ""
+  );
 
-// Visible replies based on "Show More" state
-const visibleReplies = computed(() => {
-  return showAllReplies.value
-    ? props.comment.replies
-    : props.comment.replies.slice(0, MAX_SHOWN_REPLIES);
-});
+  // Visible replies based on "Show More" state
+  const visibleReplies = computed(() => {
+    return showAllReplies.value
+      ? props.comment.replies
+      : props.comment.replies.slice(0, MAX_SHOWN_REPLIES);
+  });
 
-// Methods
-function toggleShowMore() {
-  showAllReplies.value = !showAllReplies.value;
-}
+  // Methods
+  function toggleShowMore() {
+    showAllReplies.value = !showAllReplies.value;
+  }
 
-function likeComment() {
-  likes.value += 1; // Increment likes count
-}
-function unlikeComment() {
-  likes.value -= 1; // Increment likes count
-}
+  function likeComment() {
+    likes.value += 1; // Increment likes count
+  }
+  function unlikeComment() {
+    likes.value -= 1; // Increment likes count
+  }
 
-function replyToComment() {
-  // Trigger reply action, which can be handled in the parent component
-  alert(`Reply to comment by ${props.comment.author}`);
-}
+  function replyToComment() {
+    // Trigger reply action, which can be handled in the parent component
+    alert(`Reply to comment by ${props.comment.author}`);
+  }
 </script>
 
 <style scoped>
-/* Additional styling if needed */
+  /* Additional styling if needed */
 </style>

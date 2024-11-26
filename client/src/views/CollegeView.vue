@@ -7,7 +7,8 @@
           <div class="rounded-full h-24 lg:h-32 aspect-square bg-transparent">
             <img
               :src="college1.imgSrc"
-              class="object-cover" />
+              class="object-cover"
+            />
           </div>
           <div class="flex flex-col gap-2">
             <div class="text-xl lg:text-2xl font-bold">
@@ -17,7 +18,8 @@
               <div>Meshers: {{ college1.meshers }}</div>
               <div>Followers: {{ college1.followers }}</div>
               <div
-                class="bg-neutral-200 dark:bg-neutral-700 px-4 py-1 rounded-md cursor-pointer font-semibold">
+                class="bg-neutral-200 dark:bg-neutral-700 px-4 py-1 rounded-md cursor-pointer font-semibold"
+              >
                 Follow
               </div>
             </div>
@@ -26,7 +28,8 @@
 
         <!-- Tabbed Menu -->
         <div
-          class="text-sm font-medium text-center text-neutral-500 mb-2 border-b border-neutral-200 dark:text-neutral-400 dark:border-neutral-700">
+          class="text-sm font-medium text-center text-neutral-500 mb-2 border-b border-neutral-200 dark:text-neutral-400 dark:border-neutral-700"
+        >
           <ul class="flex flex-wrap -mb-px">
             <li class="me-2">
               <div
@@ -36,7 +39,8 @@
                   showingFeed
                     ? 'text-neutral-800 border-neutral-800 dark:text-neutral-200 dark:border-neutral-200'
                     : 'border-transparent lg:hover:text-neutral-800 lg:hover:border-neutral-800 dark:lg:hover:text-neutral-200 active:text-neutral-800 active:border-neutral-800 dark:active:text-neutral-200'
-                ">
+                "
+              >
                 Feed
               </div>
             </li>
@@ -48,7 +52,8 @@
                   showingInfo
                     ? 'text-neutral-800 border-neutral-800 dark:text-neutral-200 dark:border-neutral-200'
                     : 'border-transparent lg:hover:text-neutral-800 lg:hover:border-neutral-800 dark:lg:hover:text-neutral-200 active:text-neutral-800 active:border-neutral-800 dark:active:text-neutral-200'
-                ">
+                "
+              >
                 Information
               </div>
             </li>
@@ -61,7 +66,8 @@
         </div>
         <div
           v-show="showingInfo"
-          class="p-4">
+          class="p-4"
+        >
           <div class="mb-4">
             <strong>Main Campus:</strong>
             {{ college1.mainCampus }}
@@ -71,7 +77,8 @@
           </div>
 
           <div
-            class="flex flex-col gap-0 lg:flex-row lg:gap-4 lg:justify-center">
+            class="flex flex-col gap-0 lg:flex-row lg:gap-4 lg:justify-center"
+          >
             <div><strong>Telephone: </strong> {{ college1.telephone }}</div>
 
             <div>
@@ -99,7 +106,6 @@
 
 <script setup>
   import Feed from "@/components/Feed.vue";
-  import Sidebar from "@/components/Sidebar.vue";
   import { ref } from "vue";
 
   import { posts, college1 } from "@/tools/sampledata";

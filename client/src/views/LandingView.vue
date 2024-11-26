@@ -2,9 +2,11 @@
   <div class="max-h-svh overflow-y-scroll snap-y">
     <!-- LOG IN AND SIGNUP -->
     <div
-      class="snap-start w-full bg-white min-h-svh bg-cover bg-center flex flex-col gap-8 justify-center items-center bg-[url('/landing_bg.svg')]">
+      class="snap-start w-full bg-white min-h-svh bg-cover bg-center flex flex-col gap-8 justify-center items-center bg-[url('/landing_bg.svg')]"
+    >
       <div
-        class="backdrop-blur-sm bg-white/60 shadow-[rgba(0,0,0,0.3)_0px_0px_15px_6px] p-10 rounded-lg mx-4 max-w-full md:w-[450px] md:max-w-[450px] text-black dark:text-black">
+        class="backdrop-blur-sm bg-white/60 shadow-[rgba(0,0,0,0.3)_0px_0px_15px_6px] p-10 rounded-lg mx-4 max-w-full md:w-[450px] md:max-w-[450px] text-black dark:text-black"
+      >
         <div v-if="!showSignupModal">
           <!-- Text Content -->
           <div class="flex flex-col gap-4 justify-center items-center">
@@ -12,7 +14,8 @@
               <img
                 src="/logo.png"
                 alt="Mesh Logo"
-                class="aspect-square h-16 lg:h-20" />
+                class="aspect-square h-16 lg:h-20"
+              />
               <span class="text-6xl lg:text-7xl font-extrabold"> Mesh </span>
             </div>
             <div>
@@ -26,12 +29,14 @@
           <div class="flex flex-col gap-8 w-full lg:px-0 mt-4">
             <form
               @submit.prevent="handleLogin"
-              class="flex flex-col gap-4">
+              class="flex flex-col gap-4"
+            >
               <!-- Username -->
               <div>
                 <label
                   for="username"
-                  class="block text-sm font-semibold">
+                  class="block text-sm font-semibold"
+                >
                   Username
                 </label>
                 <input
@@ -42,10 +47,12 @@
                     'border-red-500': errors.username,
                     'border-neutral-300 ': !errors.username,
                   }"
-                  class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" />
+                  class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm"
+                />
                 <span
                   v-if="errors.username"
-                  class="mt-1 text-sm text-red-500">
+                  class="mt-1 text-sm text-red-500"
+                >
                   {{ errors.username }}
                 </span>
               </div>
@@ -54,7 +61,8 @@
               <div>
                 <label
                   for="password"
-                  class="block text-sm font-semibold">
+                  class="block text-sm font-semibold"
+                >
                   Password
                 </label>
                 <input
@@ -65,10 +73,12 @@
                     'border-red-500': errors.password,
                     'border-neutral-300': !errors.password,
                   }"
-                  class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" />
+                  class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm"
+                />
                 <span
                   v-if="errors.password"
-                  class="mt-1 text-sm text-red-500">
+                  class="mt-1 text-sm text-red-500"
+                >
                   {{ errors.password }}
                 </span>
               </div>
@@ -76,7 +86,8 @@
               <!-- Submit Button -->
               <button
                 type="submit"
-                class="w-full mt-4 p-4 bg-black text-white font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800">
+                class="w-full mt-4 p-4 bg-black text-white font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800"
+              >
                 Login
               </button>
             </form>
@@ -96,7 +107,8 @@
           <!-- Step 1: School Email -->
           <div
             class="flex flex-col gap-4"
-            v-if="currentSignupStep == 1">
+            v-if="currentSignupStep == 1"
+          >
             <h2 class="text-3xl font-bold">Join Mesh</h2>
             <div class="text-sm flex flex-col gap-2">
               <span>
@@ -104,19 +116,22 @@
                 will be anonymous.
                 <RouterLink
                   to="/about"
-                  class="font-semibold underline underline-offset-2">
+                  class="font-semibold underline underline-offset-2"
+                >
                   Read how we protect our users.
                 </RouterLink>
               </span>
             </div>
             <form
               @submit.prevent="handleEmailSignUp"
-              class="flex flex-col gap-4">
+              class="flex flex-col gap-4"
+            >
               <!-- Email -->
               <div>
                 <label
                   for="email"
-                  class="block text-sm font-semibold">
+                  class="block text-sm font-semibold"
+                >
                   Please use your school email to get full access
                 </label>
                 <input
@@ -128,10 +143,12 @@
                     'border-red-500': errors.email,
                     'border-neutral-300': !errors.email,
                   }"
-                  class="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm" />
+                  class="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm"
+                />
                 <p
                   v-if="errors.email"
-                  class="mt-1 text-sm text-red-500">
+                  class="mt-1 text-sm text-red-500"
+                >
                   {{ errors.email }}
                 </p>
               </div>
@@ -146,7 +163,8 @@
                 and
                 <RouterLink
                   to="/about"
-                  class="underline underline-offset-2">
+                  class="underline underline-offset-2"
+                >
                   Terms of Agreement.
                 </RouterLink>
               </span>
@@ -154,7 +172,8 @@
               <!-- Submit Button -->
               <button
                 type="submit"
-                class="w-full p-4 bg-black text-white font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800">
+                class="w-full p-4 bg-black text-white font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800"
+              >
                 Continue
               </button>
             </form>
@@ -167,7 +186,8 @@
           <!-- Step 2: Email Verification OTP -->
           <div
             class="flex flex-col gap-4"
-            v-else-if="currentSignupStep == 2">
+            v-else-if="currentSignupStep == 2"
+          >
             <h2 class="text-3xl font-bold">Validate your email</h2>
             <div class="text-sm flex flex-col gap-2">
               <span>
@@ -180,7 +200,8 @@
             </div>
             <form
               @submit.prevent="handleCodeVerification"
-              class="flex flex-col gap-4">
+              class="flex flex-col gap-4"
+            >
               <!-- OTP -->
               <div class="flex justify-evenly">
                 <input
@@ -192,14 +213,16 @@
                   class="w-12 h-12 text-center border-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   :ref="(el) => (inputs[index] = el)"
                   @input="moveToNextCodeInput(index)"
-                  @keydown.backspace="moveToPreviousCodeInput(index, $event)" />
+                  @keydown.backspace="moveToPreviousCodeInput(index, $event)"
+                />
               </div>
 
               <!-- Submit Code Button -->
               <button
                 type="submit"
                 class="w-full mt-4 p-4 bg-black text-white font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800 disabled:bg-neutral-500 disabled:active:bg-neutral-500 disabled:lg:hover:bg-neutral-500"
-                :disabled="!isCodeComplete">
+                :disabled="!isCodeComplete"
+              >
                 Continue
               </button>
             </form>
@@ -208,20 +231,23 @@
           <!-- Step 3: User Details -->
           <div
             class="flex flex-col gap-4 max-h-[600px] scrollable"
-            v-else-if="currentSignupStep == 3">
+            v-else-if="currentSignupStep == 3"
+          >
             <h2 class="text-3xl font-bold">Create Account</h2>
             <div class="text-sm flex flex-col gap-2">
               <span>Let's finish setting up your account.</span>
             </div>
             <form
               @submit.prevent="handleAccountInfo"
-              class="flex flex-col gap-4">
+              class="flex flex-col gap-4"
+            >
               <div class="flex flex-col gap-4">
                 <!-- Username -->
                 <div>
                   <label
                     for="username"
-                    class="block text-sm font-semibold">
+                    class="block text-sm font-semibold"
+                  >
                     Username
                   </label>
                   <input
@@ -232,10 +258,12 @@
                       'border-red-500': errors.username,
                       'border-neutral-300': !errors.username,
                     }"
-                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" />
+                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm"
+                  />
                   <span
                     v-if="errors.username"
-                    class="mt-1 text-sm text-red-500">
+                    class="mt-1 text-sm text-red-500"
+                  >
                     {{ errors.username }}
                   </span>
                 </div>
@@ -244,7 +272,8 @@
                 <div>
                   <label
                     for="password"
-                    class="block text-sm font-semibold">
+                    class="block text-sm font-semibold"
+                  >
                     Password
                   </label>
                   <input
@@ -255,10 +284,12 @@
                       'border-red-500': errors.password,
                       'border-neutral-300': !errors.password,
                     }"
-                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" />
+                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm"
+                  />
                   <span
                     v-if="errors.password"
-                    class="mt-1 text-sm text-red-500">
+                    class="mt-1 text-sm text-red-500"
+                  >
                     {{ errors.password }}
                   </span>
                 </div>
@@ -267,7 +298,8 @@
                 <div>
                   <label
                     for="passwordConfirm"
-                    class="block text-sm font-semibold">
+                    class="block text-sm font-semibold"
+                  >
                     Confirm Password
                   </label>
                   <input
@@ -278,10 +310,12 @@
                       'border-red-500': errors.passwordConfirm,
                       'border-neutral-300': !errors.passwordConfirm,
                     }"
-                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm" />
+                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm"
+                  />
                   <span
                     v-if="errors.passwordConfirm"
-                    class="mt-1 text-sm text-red-500">
+                    class="mt-1 text-sm text-red-500"
+                  >
                     {{ errors.passwordConfirm }}
                   </span>
                 </div>
@@ -305,16 +339,19 @@
                 <div>
                   <label
                     for="degree"
-                    class="block text-sm font-semibold">
+                    class="block text-sm font-semibold"
+                  >
                     Degree
                   </label>
                   <select
                     id="degree"
                     v-model="degree"
-                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm border-neutral-300">
+                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm border-neutral-300"
+                  >
                     <option
                       selected
-                      disabled>
+                      disabled
+                    >
                       Please select a course group
                     </option>
                     <option>Architecture</option>
@@ -333,23 +370,28 @@
                   >
                   <ul
                     id="topics"
-                    class="grid w-full gap-4 grid-cols-2 lg:grid-cols-3">
+                    class="grid w-full gap-4 grid-cols-2 lg:grid-cols-3"
+                  >
                     <li v-for="interest in interestsChoices">
                       <input
                         type="checkbox"
                         :id="interest.id"
                         :value="interest.id"
                         class="hidden peer"
-                        v-model="interests" />
+                        v-model="interests"
+                      />
                       <label
                         :for="interest.id"
-                        class="signup-checkbox-item">
+                        class="signup-checkbox-item"
+                      >
                         <div
-                          class="flex w-full gap-1 items-center justify-center">
+                          class="flex w-full gap-1 items-center justify-center"
+                        >
                           <img
                             :src="interest.icon"
                             class="h-5"
-                            alt="" />
+                            alt=""
+                          />
                           <div class="font-semibold text-sm">
                             {{ interest.text }}
                           </div>
@@ -363,7 +405,8 @@
               <!-- Submit Code Button -->
               <button
                 type="submit"
-                class="w-full mt-4 p-4 bg-black text-white font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800 disabled:bg-neutral-500 disabled:active:bg-neutral-500 disabled:lg:hover:bg-neutral-500">
+                class="w-full mt-4 p-4 bg-black text-white font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800 disabled:bg-neutral-500 disabled:active:bg-neutral-500 disabled:lg:hover:bg-neutral-500"
+              >
                 Create Account
               </button>
             </form>
@@ -374,17 +417,21 @@
 
     <!-- WHAT IS MESH -->
     <div
-      class="snap-start w-full bg-neutral-800 min-h-svh py-16 lg:py-24 bg-cover bg-center flex flex-col gap-8 px-4 lg:px-10 justify-center items-center bg-[url('/landing_bg_black.svg')]">
+      class="snap-start w-full bg-neutral-800 min-h-svh py-16 lg:py-24 bg-cover bg-center flex flex-col gap-8 px-4 lg:px-10 justify-center items-center bg-[url('/landing_bg_black.svg')]"
+    >
       <div
-        class="backdrop-blur-sm bg-neutral-950/60 shadow-[rgba(0,0,0,0.3)_0px_0px_15px_6px] p-10 rounded-lg max-w-full text-white dark:text-white flex flex-col gap-4">
+        class="backdrop-blur-sm bg-neutral-950/60 shadow-[rgba(0,0,0,0.3)_0px_0px_15px_6px] p-10 rounded-lg max-w-full text-white dark:text-white flex flex-col gap-4"
+      >
         <div
-          class="w-full lg:max-w-6xl text-3xl !leading-snug lg:text-6xl font-light">
+          class="w-full lg:max-w-6xl text-3xl !leading-snug lg:text-6xl font-light"
+        >
           <span class="font-extrabold">Welcome to Mesh - </span>the social
           network that's designed exclusively for college students in the
           country.
         </div>
         <div
-          class="w-full lg:max-w-6xl text-3xl !leading-snug lg:text-6xl font-light">
+          class="w-full lg:max-w-6xl text-3xl !leading-snug lg:text-6xl font-light"
+        >
           At Mesh, we believe in the power of authentic, open conversations. Our
           platform is built around the concepts of anonymity and free speech to
           achieve just that.
@@ -394,9 +441,11 @@
 
     <!-- HOW ANONYMITY WORKS -->
     <div
-      class="snap-start w-full bg-white min-h-svh py-16 lg:py-24 bg-cover bg-center flex flex-col gap-8 px-4 lg:px-10 justify-center items-center bg-[url('/landing_bg.svg')]">
+      class="snap-start w-full bg-white min-h-svh py-16 lg:py-24 bg-cover bg-center flex flex-col gap-8 px-4 lg:px-10 justify-center items-center bg-[url('/landing_bg.svg')]"
+    >
       <div
-        class="backdrop-blur-sm bg-white/60 shadow-[rgba(0,0,0,0.3)_0px_0px_15px_6px] p-10 rounded-lg max-w-full text-black dark:text-black flex flex-col gap-4">
+        class="backdrop-blur-sm bg-white/60 shadow-[rgba(0,0,0,0.3)_0px_0px_15px_6px] p-10 rounded-lg max-w-full text-black dark:text-black flex flex-col gap-4"
+      >
         <div class="w-full lg:max-w-6xl font-light flex flex-col gap-6">
           <div class="text-3xl lg:text-6xl font-extrabold">
             Anonymity meets

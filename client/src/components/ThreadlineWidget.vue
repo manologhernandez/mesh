@@ -7,17 +7,20 @@
       'overflow-x-scroll': !isScrolledDown,
       'overflow-hidden': isScrolledDown,
     }"
-    class="transition-all ease-in-out duration-300 flex gap-4 items-center px-4 scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-neutral-300 scrollbar-track-neutral-50 dark:scrollbar-thumb-neutral-600 dark:scrollbar-track-neutral-900">
+    class="transition-all ease-in-out duration-300 flex gap-4 items-center px-4 scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-neutral-300 scrollbar-track-neutral-50 dark:scrollbar-thumb-neutral-600 dark:scrollbar-track-neutral-900"
+  >
     <div
       v-for="(threadline, index) in threadlines"
-      :key="index">
+      :key="index"
+    >
       <ThreadlineCard :threadline="threadline" />
     </div>
 
     <!-- News Ticker when minimized -->
     <div
       v-if="isScrolledDown"
-      class="fixed z-10 top-16 left-0 lg:left-[20%] w-full lg:w-3/5 text-center py-2 bg-responsive border-0 border-b border-responsive">
+      class="fixed z-10 top-16 left-0 lg:left-[20%] w-full lg:w-3/5 text-center py-2 bg-responsive border-0 border-b border-responsive"
+    >
       <div class="w-full overflow-hidden">
         <div class="flex animate-marquee shrink-0">
           <span class="mr-4 font-semibold text-nowrap"
@@ -27,9 +30,11 @@
             :to="`/post/${threadline.id}`"
             class="whitespace-nowrap flex"
             v-for="(threadline, index) in threadlines"
-            :key="'1-' + index">
+            :key="'1-' + index"
+          >
             <div
-              class="mr-4 lg:mr-8 w-[180px] lg:w-[360px] truncate cursor-pointer active:underline lg:hover:underline">
+              class="mr-4 lg:mr-8 w-[180px] lg:w-[360px] truncate cursor-pointer active:underline lg:hover:underline"
+            >
               {{ threadline.title }}
             </div>
           </RouterLink>

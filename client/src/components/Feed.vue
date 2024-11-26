@@ -13,10 +13,12 @@
         >
         <select
           id="sortBy"
-          class="bg-neutral-100 border-0 text-sm rounded-lg w-full p-2.5 focus:ring-0 cursor-pointer active:bg-neutral-200 lg:hover:bg-neutral-200 dark:bg-neutral-700 dark:placeholder-neutral-400 dark:active:bg-neutral-900 dark:lg:hover:bg-neutral-900">
+          class="bg-neutral-100 border-0 text-sm rounded-lg w-full p-2.5 focus:ring-0 cursor-pointer active:bg-neutral-200 lg:hover:bg-neutral-200 dark:bg-neutral-700 dark:placeholder-neutral-400 dark:active:bg-neutral-900 dark:lg:hover:bg-neutral-900"
+        >
           <option
             value="0"
-            selected>
+            selected
+          >
             Trending
           </option>
           <option value="1">Top</option>

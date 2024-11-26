@@ -10,12 +10,12 @@
 </template>
 
 <script setup>
-import { BBPosts } from "@/tools/sampledata";
-import BBWidgetCard from "./BBWidgetCard.vue";
+  import { BBPosts } from "@/tools/sampledata";
+  import BBWidgetCard from "./BBWidgetCard.vue";
 
-const props = defineProps({
-  BBPosts: Array,
-});
+  const props = defineProps({
+    BBPosts: Array,
+  });
 </script>
 
 <style lang="scss" scoped></style>

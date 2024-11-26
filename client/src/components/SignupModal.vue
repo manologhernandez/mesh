@@ -2,20 +2,23 @@
   <!-- Modal Overlay -->
   <div
     @click.self="closeModal"
-    class="modal-overlay">
+    class="modal-overlay"
+  >
     <!-- Modal Container -->
     <div class="modal-container">
       <!-- Close Button -->
       <button
         @click="closeModal"
-        class="modal-close-btn">
+        class="modal-close-btn"
+      >
         <CloseIcon />
       </button>
       <!-- CONTENT -->
       <!-- Step 1: School Email -->
       <div
         class="p-6 lg:p-12 flex flex-col gap-4 h-screen lg:h-auto"
-        v-if="currentSignupStep == 1">
+        v-if="currentSignupStep == 1"
+      >
         <h2 class="text-3xl font-bold">Join Mesh</h2>
         <div class="text-sm flex flex-col gap-2">
           <span>
@@ -24,19 +27,22 @@
             <RouterLink
               to="/about"
               class="font-semibold underline underline-offset-2"
-              @click="closeModal">
+              @click="closeModal"
+            >
               Read how we protect our users.
             </RouterLink>
           </span>
         </div>
         <form
           @submit.prevent="handleEmailSignUp"
-          class="flex flex-col gap-4">
+          class="flex flex-col gap-4"
+        >
           <!-- Email -->
           <div>
             <label
               for="email"
-              class="block text-sm font-semibold">
+              class="block text-sm font-semibold"
+            >
               Please use your school email to get full access
             </label>
             <input
@@ -48,10 +54,12 @@
                 'border-red-500': errors.email,
                 'border-neutral-300 dark:border-neutral-600': !errors.email,
               }"
-              class="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm dark:bg-neutral-900" />
+              class="mt-1 block w-full px-3 py-2 border rounded-lg shadow-sm dark:bg-neutral-900"
+            />
             <p
               v-if="errors.email"
-              class="mt-1 text-sm text-red-500">
+              class="mt-1 text-sm text-red-500"
+            >
               {{ errors.email }}
             </p>
           </div>
@@ -68,7 +76,8 @@
             <RouterLink
               to="/about"
               class="underline underline-offset-2"
-              @click="closeModal">
+              @click="closeModal"
+            >
               Terms of Agreement.
             </RouterLink>
           </span>
@@ -76,7 +85,8 @@
           <!-- Submit Button -->
           <button
             type="submit"
-            class="w-full p-4 bg-black text-white dark:bg-white dark:text-black font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800 dark:lg:hover:bg-neutral-200 dark:active:bg-neutral-200">
+            class="w-full p-4 bg-black text-white dark:bg-white dark:text-black font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800 dark:lg:hover:bg-neutral-200 dark:active:bg-neutral-200"
+          >
             Continue
           </button>
         </form>
@@ -84,7 +94,8 @@
       <!-- Step 2: Email Verification OTP -->
       <div
         class="p-6 lg:p-12 flex flex-col gap-4 h-screen lg:h-auto"
-        v-else-if="currentSignupStep == 2">
+        v-else-if="currentSignupStep == 2"
+      >
         <h2 class="text-3xl font-bold">Validate your email</h2>
         <div class="text-sm flex flex-col gap-2">
           <span>
@@ -97,7 +108,8 @@
         </div>
         <form
           @submit.prevent="handleCodeVerification"
-          class="flex flex-col gap-4">
+          class="flex flex-col gap-4"
+        >
           <!-- OTP -->
           <div class="flex justify-evenly">
             <input
@@ -109,14 +121,16 @@
               class="w-12 h-12 text-center border-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-neutral-900 dark:text-white"
               :ref="(el) => (inputs[index] = el)"
               @input="moveToNextCodeInput(index)"
-              @keydown.backspace="moveToPreviousCodeInput(index, $event)" />
+              @keydown.backspace="moveToPreviousCodeInput(index, $event)"
+            />
           </div>
 
           <!-- Submit Code Button -->
           <button
             type="submit"
             class="w-full mt-4 p-4 bg-black text-white dark:bg-white dark:text-black font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800 dark:lg:hover:bg-neutral-200 dark:active:bg-neutral-200 disabled:bg-neutral-500 disabled:active:bg-neutral-500 disabled:lg:hover:bg-neutral-500"
-            :disabled="!isCodeComplete">
+            :disabled="!isCodeComplete"
+          >
             Continue
           </button>
         </form>
@@ -125,21 +139,25 @@
       <!-- Step 3: User Details -->
       <div
         class="p-6 lg:p-12 flex flex-col gap-4 h-screen lg:h-auto"
-        v-else-if="currentSignupStep == 3">
+        v-else-if="currentSignupStep == 3"
+      >
         <h2 class="text-3xl font-bold">Create Account</h2>
         <div class="text-sm flex flex-col gap-2">
           <span>Let's finish setting up your account.</span>
         </div>
         <form
           @submit.prevent="handleAccountInfo"
-          class="flex flex-col gap-4">
+          class="flex flex-col gap-4"
+        >
           <div
-            class="flex flex-col gap-4 max-h-[70vh] lg:max-h-[60vh] scrollable">
+            class="flex flex-col gap-4 max-h-[70vh] lg:max-h-[60vh] scrollable"
+          >
             <!-- Username -->
             <div>
               <label
                 for="username"
-                class="block text-sm font-semibold">
+                class="block text-sm font-semibold"
+              >
                 Username
               </label>
               <input
@@ -151,10 +169,12 @@
                   'border-neutral-300 dark:border-neutral-600':
                     !errors.username,
                 }"
-                class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900" />
+                class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900"
+              />
               <span
                 v-if="errors.username"
-                class="mt-1 text-sm text-red-500">
+                class="mt-1 text-sm text-red-500"
+              >
                 {{ errors.username }}
               </span>
             </div>
@@ -163,7 +183,8 @@
             <div>
               <label
                 for="password"
-                class="block text-sm font-semibold">
+                class="block text-sm font-semibold"
+              >
                 Password
               </label>
               <input
@@ -175,10 +196,12 @@
                   'border-neutral-300 dark:border-neutral-600':
                     !errors.password,
                 }"
-                class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900" />
+                class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900"
+              />
               <span
                 v-if="errors.password"
-                class="mt-1 text-sm text-red-500">
+                class="mt-1 text-sm text-red-500"
+              >
                 {{ errors.password }}
               </span>
             </div>
@@ -187,7 +210,8 @@
             <div>
               <label
                 for="passwordConfirm"
-                class="block text-sm font-semibold">
+                class="block text-sm font-semibold"
+              >
                 Confirm Password
               </label>
               <input
@@ -199,10 +223,12 @@
                   'border-neutral-300 dark:border-neutral-600':
                     !errors.passwordConfirm,
                 }"
-                class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900" />
+                class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900"
+              />
               <span
                 v-if="errors.passwordConfirm"
-                class="mt-1 text-sm text-red-500">
+                class="mt-1 text-sm text-red-500"
+              >
                 {{ errors.passwordConfirm }}
               </span>
             </div>
@@ -226,16 +252,19 @@
             <div>
               <label
                 for="degree"
-                class="block text-sm font-semibold">
+                class="block text-sm font-semibold"
+              >
                 Degree
               </label>
               <select
                 id="degree"
                 v-model="degree"
-                class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900 border-neutral-300 dark:border-neutral-600">
+                class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900 border-neutral-300 dark:border-neutral-600"
+              >
                 <option
                   selected
-                  disabled>
+                  disabled
+                >
                   Please select a course group
                 </option>
                 <option>Architecture</option>
@@ -254,22 +283,26 @@
               >
               <ul
                 id="topics"
-                class="grid w-full gap-4 grid-cols-2 lg:grid-cols-3">
+                class="grid w-full gap-4 grid-cols-2 lg:grid-cols-3"
+              >
                 <li v-for="interest in interestsChoices">
                   <input
                     type="checkbox"
                     :id="interest.id"
                     :value="interest.id"
                     class="hidden peer"
-                    v-model="interests" />
+                    v-model="interests"
+                  />
                   <label
                     :for="interest.id"
-                    class="signup-checkbox-item">
+                    class="signup-checkbox-item"
+                  >
                     <div class="flex w-full gap-1 items-center justify-center">
                       <img
                         :src="interest.icon"
                         class="h-5"
-                        alt="" />
+                        alt=""
+                      />
                       <div class="font-semibold text-sm">
                         {{ interest.text }}
                       </div>
@@ -283,7 +316,8 @@
           <!-- Submit Code Button -->
           <button
             type="submit"
-            class="w-full mt-4 p-4 bg-black text-white dark:bg-white dark:text-black font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800 dark:lg:hover:bg-neutral-200 dark:active:bg-neutral-200 disabled:bg-neutral-500 disabled:active:bg-neutral-500 disabled:lg:hover:bg-neutral-500">
+            class="w-full mt-4 p-4 bg-black text-white dark:bg-white dark:text-black font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800 dark:lg:hover:bg-neutral-200 dark:active:bg-neutral-200 disabled:bg-neutral-500 disabled:active:bg-neutral-500 disabled:lg:hover:bg-neutral-500"
+          >
             Create Account
           </button>
         </form>

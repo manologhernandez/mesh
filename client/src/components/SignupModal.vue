@@ -259,7 +259,7 @@
               <select
                 id="degree"
                 v-model="degree"
-                class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900 border-neutral-300 dark:border-neutral-600"
+                class="appearance-none mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900 border-neutral-300 dark:border-neutral-600"
               >
                 <option
                   selected

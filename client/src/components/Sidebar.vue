@@ -1,5 +1,5 @@
 <template>
-  <div class="scrollable max-h-[92vh] pb-20 lg:pb-4">
+  <div class="scrollable h-full pb-36">
     <div class="me-4">
       <!-- MAIN PAGES -->
       <div class="flex flex-col justify-start items-start mt-4 gap-0">

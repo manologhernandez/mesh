@@ -49,8 +49,8 @@
         </button>
 
         <!-- CREATE POST BUTTON -->
-        <div
-          @click="openCreatePostModal"
+        <RouterLink
+          to="/create"
           class="text-nowrap"
         >
           <button
@@ -59,7 +59,7 @@
           >
             <PlusIcon /> {{ isMobile ? "" : "Post" }}
           </button>
-        </div>
+        </RouterLink>
 
         <!-- USER DROPDOWN BUTTON -->
         <button

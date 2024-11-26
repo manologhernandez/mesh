@@ -7,6 +7,7 @@ import Page404View from "@/views/Page404View.vue";
 import CollegeView from "@/views/CollegeView.vue";
 import CourseGroupView from "@/views/CourseGroupView.vue";
 import LandingView from "@/views/LandingView.vue";
+import CreatePostView from "@/views/CreatePostView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -71,6 +72,14 @@ const router = createRouter({
       name: "CourseGroupSingle",
       component: CourseGroupView,
       props: true,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/create",
+      name: "CreatePost",
+      component: CreatePostView,
       meta: {
         requiresAuth: true,
       },

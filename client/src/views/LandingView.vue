@@ -346,13 +346,13 @@
                   <select
                     id="degree"
                     v-model="degree"
-                    class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm border-neutral-300"
+                    class="appearance-none mt-1 block w-full px-3 py-2 border rounded-md shadow-sm border-neutral-300"
                   >
                     <option
                       selected
                       disabled
                     >
-                      Please select a course group
+                      Click to select a course group
                     </option>
                     <option>Architecture</option>
                     <option>Business</option>
@@ -619,25 +619,25 @@
     0% {
       color: #7b1113;
     }
-    24% {
+    20% {
       color: #7b1113;
     }
     25% {
       color: #00703c;
     }
-    49% {
+    45% {
       color: #00703c;
     }
     50% {
       color: #003a6c;
     }
-    74% {
+    70% {
       color: #003a6c;
     }
     75% {
       color: #fec00f;
     }
-    99% {
+    95% {
       color: #fec00f;
     }
     100% {
@@ -648,25 +648,25 @@
     0% {
       color: #7b1113;
     }
-    24% {
+    20% {
       color: #7b1113;
     }
     25% {
       color: #00703c;
     }
-    49% {
+    45% {
       color: #00703c;
     }
     50% {
       color: #003a6c;
     }
-    74% {
+    70% {
       color: #003a6c;
     }
     75% {
       color: #fec00f;
     }
-    99% {
+    95% {
       color: #fec00f;
     }
     100% {
@@ -677,25 +677,25 @@
     0% {
       color: #7b1113;
     }
-    24% {
+    20% {
       color: #7b1113;
     }
     25% {
       color: #00703c;
     }
-    49% {
+    45% {
       color: #00703c;
     }
     50% {
       color: #003a6c;
     }
-    74% {
+    70% {
       color: #003a6c;
     }
     75% {
       color: #fec00f;
     }
-    99% {
+    95% {
       color: #fec00f;
     }
     100% {
@@ -706,25 +706,25 @@
     0% {
       color: #7b1113;
     }
-    24% {
+    20% {
       color: #7b1113;
     }
     25% {
       color: #00703c;
     }
-    49% {
+    45% {
       color: #00703c;
     }
     50% {
       color: #003a6c;
     }
-    74% {
+    70% {
       color: #003a6c;
     }
     75% {
       color: #fec00f;
     }
-    99% {
+    95% {
       color: #fec00f;
     }
     100% {
@@ -735,25 +735,25 @@
     0% {
       color: #7b1113;
     }
-    24% {
+    20% {
       color: #7b1113;
     }
     25% {
       color: #00703c;
     }
-    49% {
+    45% {
       color: #00703c;
     }
     50% {
       color: #003a6c;
     }
-    74% {
+    70% {
       color: #003a6c;
     }
     75% {
       color: #fec00f;
     }
-    99% {
+    95% {
       color: #fec00f;
     }
     100% {

@@ -2,17 +2,20 @@
   <div class="">
     <Navbar
       v-if="userIsLoggedIn"
-      @toggle-sidebar="toggleSidebar" />
+      @toggle-sidebar="toggleSidebar"
+    />
 
     <div
       class="relative min-h-screen"
-      :class="userIsLoggedIn ? 'pt-16' : ''">
+      :class="userIsLoggedIn ? 'mt-16' : ''"
+    >
       <Sidebar
         id="sidebar-container"
         class="fixed bg-responsive w-full z-40 lg:w-1/5 ps-4 lg:block lg:border-e lg:border-responsive"
         :class="!showSidebarMobile ? 'hidden' : ''"
         @close-sidebar="closeSidebar"
-        v-if="userIsLoggedIn" />
+        v-if="userIsLoggedIn"
+      />
       <div>
         <RouterView />
       </div>

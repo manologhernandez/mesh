@@ -34,30 +34,37 @@
                 >
                   <span class="text-red-500 font-bold">* </span>Subtopic
                 </label>
-                <select
-                  id="subtopic"
-                  v-model="subtopic"
-                  class="appearance-none mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900 border-neutral-300 dark:border-neutral-600 cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                  :class="{
-                    'border-red-500': errors.subtopic,
-                    'border-neutral-300 dark:border-neutral-600':
-                      !errors.subtopic,
-                  }"
-                >
-                  <option
-                    selected
-                    value=""
-                    disabled
+                <div class="flex gap-4 items-center">
+                  <select
+                    id="subtopic"
+                    v-model="subtopic"
+                    class="appearance-none bg-white mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900 border-neutral-300 dark:border-neutral-600 cursor-pointer lg:hover:bg-neutral-100 dark:lg:hover:bg-neutral-800 active:bg-neutral-100 dark:active:bg-neutral-800"
+                    :class="{
+                      'border-red-500': errors.subtopic,
+                      'border-neutral-300 dark:border-neutral-600':
+                        !errors.subtopic,
+                    }"
                   >
-                    Click to select a subtopic
-                  </option>
-                  <option
-                    :value="interest.id"
-                    v-for="interest in interestsChoices"
-                  >
-                    {{ interest.text }}
-                  </option>
-                </select>
+                    <option
+                      selected
+                      value=""
+                      disabled
+                    >
+                      Click to select a subtopic
+                    </option>
+                    <option
+                      :value="interest.id"
+                      v-for="interest in interestsChoices"
+                    >
+                      {{ interest.text }}
+                    </option>
+                  </select>
+                  <InfoIcon
+                    v-if="chosenSubtopic"
+                    class="lg:hidden"
+                    @click="showSubtopicModal"
+                  />
+                </div>
                 <span
                   v-if="errors.subtopic"
                   class="mt-1 text-sm text-red-500"
@@ -74,25 +81,32 @@
                 >
                   Course Group
                 </label>
-                <select
-                  id="courseGroup"
-                  v-model="courseGroup"
-                  class="appearance-none mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900 border-neutral-300 dark:border-neutral-600 cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                >
-                  <option
-                    selected
-                    value=""
-                    disabled
+                <div class="flex gap-4 items-center">
+                  <select
+                    id="courseGroup"
+                    v-model="courseGroup"
+                    class="appearance-none mt-1 block w-full px-3 py-2 border rounded-md shadow-sm bg-white dark:bg-neutral-900 border-neutral-300 dark:border-neutral-600 cursor-pointer lg:hover:bg-neutral-100 dark:lg:hover:bg-neutral-800 active:bg-neutral-100 dark:active:bg-neutral-800"
                   >
-                    Click to select a relevant course group
-                  </option>
-                  <option>Architecture</option>
-                  <option>Business</option>
-                  <option>Computer Science</option>
-                  <option>Engineering</option>
-                  <option>Nursing</option>
-                  <option>Others</option>
-                </select>
+                    <option
+                      selected
+                      value=""
+                      disabled
+                    >
+                      Click to select a relevant course group
+                    </option>
+                    <option
+                      v-for="course in COURSE_GROUPS"
+                      :value="course.id"
+                    >
+                      {{ course.name }}
+                    </option>
+                  </select>
+                  <InfoIcon
+                    v-if="chosenCourseGroup"
+                    class="lg:hidden"
+                    @click="showCourseGroupModal"
+                  />
+                </div>
               </div>
             </div>
             <!-- TITLE -->
@@ -178,6 +192,8 @@
                 {{ errors.file }}
               </span>
             </div>
+
+            <!-- Image Upload -->
             <div
               class="flex items-center justify-center w-full"
               v-else
@@ -206,7 +222,6 @@
                     class="mb-2 text-sm text-neutral-500 dark:text-neutral-400"
                   >
                     <span class="font-semibold">Click to upload an image</span>
-                    or drag and drop here
                   </p>
                   <p class="text-xs text-neutral-500 dark:text-neutral-400">
                     Maximum file size: 5MB
@@ -234,18 +249,146 @@
       </div>
     </div>
 
+    <!-- DESKTOP RIGHT SIDEPANE -->
     <div
       class="hidden absolute w-full lg:left-[80%] lg:w-1/5 lg:flex flex-col gap-0 p-2"
     >
-      Right pane
+      <!-- SUBTOPIC DESCRIPTION AND RULES -->
+      <div class="px-2 pt-8">
+        <div
+          class="rounded-lg border border-neutral-300 dark:border-neutral-600 px-4 py-4 flex flex-col gap-2"
+          v-if="chosenSubtopic"
+        >
+          <div class="flex items-center gap-2">
+            <img
+              :src="chosenSubtopic.icon"
+              alt=""
+              class="h-6"
+            />
+            <span class="font-semibold">{{ chosenSubtopic.text }}</span>
+          </div>
+          <div>
+            {{ chosenSubtopic.description }}
+          </div>
+          <div class="font-semibold">Rules</div>
+          <ol class="">
+            <li
+              v-for="(rule, index) in chosenSubtopic.rules"
+              :key="index"
+              class="pb-2"
+            >
+              <button
+                class="rounded-lg w-full text-left px-4 py-2 font-semibold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+                @click="toggleRule(index)"
+              >
+                {{ index + 1 }}. {{ rule.title }}
+              </button>
+              <div
+                v-if="expandedRuleIndex === index"
+                class="px-4 py-2"
+              >
+                {{ rule.description }}
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- COURSE GROUP DESCRIPTION -->
+      <div class="px-2 pt-8">
+        <div
+          class="rounded-lg border border-neutral-300 dark:border-neutral-600 px-4 py-4"
+          v-if="chosenCourseGroup"
+        >
+          <div class="flex items-center gap-2">
+            <img
+              src="https://em-content.zobj.net/source/apple/391/gear_2699-fe0f.png"
+              alt=""
+              class="h-6"
+            />
+            <span class="font-semibold">{{ chosenCourseGroup.name }}</span>
+          </div>
+          <div class="mt-2">{{ chosenCourseGroup.description }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOBILE SUBTOPIC INFO MODAL -->
+    <div
+      class="modal-container"
+      v-if="isShowSubtopicModal"
+    >
+      <CloseIcon
+        @click="hideSubtopicModal"
+        class="absolute top-4 right-4"
+      />
+      <div class="h-screen mt-4 px-6 py-4">
+        <div class="flex items-center gap-2">
+          <img
+            :src="chosenSubtopic.icon"
+            alt=""
+            class="h-6"
+          />
+          <span class="text-xl font-semibold">{{ chosenSubtopic.text }}</span>
+        </div>
+        <div class="pt-4">
+          {{ chosenSubtopic.description }}
+        </div>
+        <div class="font-semibold py-4">Rules</div>
+        <ol class="">
+          <li
+            v-for="(rule, index) in chosenSubtopic.rules"
+            :key="index"
+            class="pb-4"
+          >
+            <button
+              class="rounded-lg w-full text-left px-4 py-2 font-semibold bg-neutral-100 hover:bg-neutral-200 dark:bg-neutral-800 dark:hover:bg-neutral-700"
+              @click="toggleRule(index)"
+            >
+              {{ index + 1 }}. {{ rule.title }}
+            </button>
+            <div
+              v-if="expandedRuleIndex === index"
+              class="px-4 py-2"
+            >
+              {{ rule.description }}
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- MOBILE COURSE GROUP INFO MODAL -->
+    <div
+      class="modal-container"
+      v-if="isShowCourseGroupModal"
+    >
+      <CloseIcon
+        @click="hideCourseGroupModal"
+        class="absolute top-4 right-4"
+      />
+      <div class="h-screen mt-4 px-6 py-4">
+        <div class="flex items-center gap-2">
+          <img
+            src="https://em-content.zobj.net/source/apple/391/gear_2699-fe0f.png"
+            alt=""
+            class="h-6"
+          />
+          <span class="text-xl font-semibold">{{
+            chosenCourseGroup.name
+          }}</span>
+        </div>
+        <div class="mt-4">{{ chosenCourseGroup.description }}</div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-  import { ref } from "vue";
-  import { interestsChoices } from "@/tools/sampledata";
+  import { computed, ref } from "vue";
+  import { COURSE_GROUPS, interestsChoices } from "@/tools/sampledata";
   import CloseIcon from "@/components/icons/CloseIcon.vue";
+  import InfoIcon from "@/components/icons/InfoIcon.vue";
 
   const errors = ref([]);
   const college = ref("University of the Philippines");
@@ -253,6 +396,10 @@
   const courseGroup = ref("");
   const title = ref("");
   const post = ref("");
+  const expandedRuleIndex = ref(null);
+  const isShowSubtopicModal = ref(false);
+  const isShowCourseGroupModal = ref(false);
+
   // State Management
   const selectedFile = ref(null);
   const imagePreview = ref(null);
@@ -312,6 +459,44 @@
       // Add API post call and logic here
     }
   }
+
+  function toggleRule(index) {
+    expandedRuleIndex.value = expandedRuleIndex.value === index ? null : index;
+  }
+
+  function hideSubtopicModal() {
+    isShowSubtopicModal.value = false;
+  }
+
+  function showSubtopicModal() {
+    isShowSubtopicModal.value = true;
+  }
+
+  function hideCourseGroupModal() {
+    isShowCourseGroupModal.value = false;
+  }
+
+  function showCourseGroupModal() {
+    isShowCourseGroupModal.value = true;
+  }
+
+  const chosenSubtopic = computed(() => {
+    if (subtopic.value) {
+      return interestsChoices.filter(
+        (interest) => interest.id === subtopic.value
+      )[0];
+    }
+    return null;
+  });
+
+  const chosenCourseGroup = computed(() => {
+    if (courseGroup.value) {
+      return COURSE_GROUPS.filter(
+        (course) => course.id === courseGroup.value
+      )[0];
+    }
+    return null;
+  });
 </script>
 
 <style lang="scss" scoped></style>

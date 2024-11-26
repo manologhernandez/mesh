@@ -65,20 +65,90 @@ export const posts = [
 ];
 
 export const COURSE_GROUPS = [
-  { id: 1, name: "Agriculture" },
-  { id: 2, name: "Architecture and Design" },
-  { id: 3, name: "Business" },
-  { id: 4, name: "Education" },
-  { id: 5, name: "Engineering" },
-  { id: 6, name: "Formal Sciences" },
-  { id: 7, name: "Health Sciences" },
-  { id: 8, name: "Humanities" },
-  { id: 9, name: "Media and Communication" },
-  { id: 10, name: "Natural Sciences" },
-  { id: 11, name: "Nutrition" },
-  { id: 12, name: "Public Administration" },
-  { id: 13, name: "Social Sciences" },
-  { id: 14, name: "Transportation" },
+  {
+    id: 1,
+    name: "Agriculture",
+    description:
+      "A field focusing on farming, crop science, livestock management, and sustainable agricultural practices.",
+  },
+  {
+    id: 2,
+    name: "Architecture and Design",
+    description:
+      "A discipline that combines art and engineering to create functional, aesthetic, and innovative structures and spaces.",
+  },
+  {
+    id: 3,
+    name: "Business",
+    description:
+      "A broad area covering entrepreneurship, management, finance, marketing, and organizational strategy.",
+  },
+  {
+    id: 4,
+    name: "Education",
+    description:
+      "A field centered on teaching, curriculum development, educational psychology, and training future educators.",
+  },
+  {
+    id: 5,
+    name: "Engineering",
+    description:
+      "A technical domain that applies science and mathematics to design and build machines, systems, and structures.",
+  },
+  {
+    id: 6,
+    name: "Formal Sciences",
+    description:
+      "An abstract field that includes mathematics, logic, statistics, and computer science as foundational disciplines.",
+  },
+  {
+    id: 7,
+    name: "Health Sciences",
+    description:
+      "A multidisciplinary area encompassing medicine, nursing, pharmacy, public health, and clinical research.",
+  },
+  {
+    id: 8,
+    name: "Humanities",
+    description:
+      "A diverse field exploring human culture, history, language, literature, and philosophical thought.",
+  },
+  {
+    id: 9,
+    name: "Media and Communication",
+    description:
+      "A domain focused on journalism, public relations, broadcasting, and the creation of media content.",
+  },
+  {
+    id: 10,
+    name: "Natural Sciences",
+    description:
+      "A branch of science dealing with the study of the physical world, including biology, chemistry, and physics.",
+  },
+  {
+    id: 11,
+    name: "Nutrition",
+    description:
+      "A specialized area examining diet, food science, and the role of nutrition in health and disease prevention.",
+  },
+  {
+    id: 12,
+    name: "Public Administration",
+    description:
+      "A field focused on governance, public policy, and administrative practices in the public sector.",
+  },
+  {
+    id: 13,
+    name: "Social Sciences",
+    description:
+      "An area studying human behavior, societies, and interactions through fields like sociology, psychology, and anthropology.",
+  },
+  {
+    id: 14,
+    name: "Transportation",
+    description:
+      "A discipline covering transportation systems, logistics, and the planning of efficient movement for goods and people.",
+  },
 ];
 
 export const COLLEGES = [
@@ -276,46 +346,307 @@ export const interestsChoices = [
   {
     id: "funny",
     text: "Funny",
+    description:
+      "Bring laughter to campus with your funniest memes, jokes, and stories.",
     icon: "https://em-content.zobj.net/source/apple/391/face-with-tears-of-joy_1f602.png",
+    rules: [
+      {
+        title: "Keep it Humorous",
+        description:
+          "Posts must aim to be funny, lighthearted, or entertaining. Non-humorous content may be removed.",
+      },
+      {
+        title: "No Offensive Humor",
+        description:
+          "Jokes or content that promote hate speech, discrimination, or harm against any individual or group are not allowed.",
+      },
+      {
+        title: "No Explicit Content",
+        description:
+          "Avoid posting content with explicit language, nudity, or graphic violence, as this is a student-friendly space.",
+      },
+      {
+        title: "No Spam or Advertising",
+        description:
+          "Avoid posting irrelevant content, promotional materials, or clickbait under the guise of humor.",
+      },
+      {
+        title: "No Overposting",
+        description:
+          "Limit posts to avoid flooding the subtopic. Let everyone have a chance to share their humor.",
+      },
+    ],
   },
   {
     id: "food",
     text: "Food",
+    description:
+      "From recipes to restaurant reviews, share everything delicious with fellow foodies.",
     icon: "https://em-content.zobj.net/source/apple/391/fork-and-knife-with-plate_1f37d-fe0f.png",
+    rules: [
+      {
+        title: "Share Food-Related Content",
+        description:
+          "Posts should be about food, recipes, reviews, or dining experiences. Non-food-related posts will be removed.",
+      },
+      {
+        title: "No Food Shaming",
+        description:
+          "Respect others' food preferences and choices. Avoid negative comments about personal tastes or cultural dishes.",
+      },
+      {
+        title: "No Spam or Promotions",
+        description:
+          "Promotional content or ads for restaurants are not allowed unless approved by moderators.",
+      },
+      {
+        title: "Avoid Explicit Content",
+        description:
+          "Posts should remain appropriate and not include graphic or inappropriate imagery.",
+      },
+      {
+        title: "Original or Credited Content",
+        description:
+          "Prefer original posts. If sharing food photos or recipes from others, give proper credit.",
+      },
+    ],
   },
   {
     id: "acads",
     text: "Acads",
+    description:
+      "A space to share tips, resources, and support for navigating student life.",
     icon: "https://em-content.zobj.net/source/apple/391/books_1f4da.png",
+    rules: [
+      {
+        title: "Stay On Topic",
+        description:
+          "Posts should focus on academic life, study tips, resources, or discussions related to learning.",
+      },
+      {
+        title: "No Cheating Requests",
+        description:
+          "Do not post requests for exam answers, assignments, or other dishonest practices.",
+      },
+      {
+        title: "Respect Privacy",
+        description:
+          "Avoid sharing identifiable information about professors, classmates, or academic staff.",
+      },
+      {
+        title: "Be Supportive",
+        description:
+          "Encourage constructive and helpful advice. Avoid discouraging or unhelpful comments.",
+      },
+      {
+        title: "No Spam or Irrelevant Posts",
+        description:
+          "Posts unrelated to academics or student life will be removed.",
+      },
+    ],
   },
   {
     id: "nsfw",
     text: "NSFW",
+    description:
+      "Explore mature content respectfully and responsibly, with anonymity.",
     icon: "https://em-content.zobj.net/source/apple/391/no-one-under-eighteen_1f51e.png",
+    rules: [
+      {
+        title: "Mark Content Appropriately",
+        description:
+          "All posts must be labeled as NSFW and adhere to platform guidelines.",
+      },
+      {
+        title: "Consent is Key",
+        description:
+          "Ensure all shared content respects privacy and consent. Non-consensual or exploitative content is strictly prohibited.",
+      },
+      {
+        title: "No Illegal Content",
+        description:
+          "Posts must comply with local laws and community standards. Illegal content will be removed and reported.",
+      },
+      {
+        title: "No Hate Speech or Harassment",
+        description:
+          "NSFW content must not promote discrimination, harassment, or harm toward any individual or group.",
+      },
+      {
+        title: "Respect Anonymity",
+        description:
+          "Do not attempt to identify or reveal personal information of others.",
+      },
+    ],
   },
   {
     id: "opinions",
     text: "Opinions",
+    description:
+      "Speak your mind, debate, and share your thoughts in a respectful space.",
     icon: "https://em-content.zobj.net/source/apple/391/clown-face_1f921.png",
+    rules: [
+      {
+        title: "Encourage Healthy Debate",
+        description:
+          "Discussions should remain respectful, even when opinions differ.",
+      },
+      {
+        title: "No Personal Attacks",
+        description:
+          "Criticize ideas, not individuals. Avoid name-calling or hostility.",
+      },
+      {
+        title: "Stay On Topic",
+        description:
+          "Posts should be relevant to the subtopic and avoid unrelated tangents.",
+      },
+      {
+        title: "No Hate Speech",
+        description:
+          "Avoid discriminatory language or opinions that harm or marginalize others.",
+      },
+      {
+        title: "Be Open-Minded",
+        description:
+          "Respect that others may have different perspectives, even if you disagree.",
+      },
+    ],
   },
   {
     id: "politics",
     text: "Politics",
+    description:
+      "Discuss the issues that matter while respecting diverse viewpoints.",
     icon: "https://em-content.zobj.net/source/apple/391/speaking-head_1f5e3-fe0f.png",
+    rules: [
+      {
+        title: "Respect Different Opinions",
+        description:
+          "Political discussions should be respectful and free of personal attacks.",
+      },
+      {
+        title: "Fact-Check Before Posting",
+        description:
+          "Ensure shared information is accurate and from reliable sources.",
+      },
+      {
+        title: "No Hate Speech or Incitement",
+        description:
+          "Avoid posts that promote violence, hate, or discrimination.",
+      },
+      {
+        title: "Stay Relevant",
+        description:
+          "Posts should relate to political topics that are significant or relevant to the audience.",
+      },
+      {
+        title: "No Spam or Propaganda",
+        description:
+          "Avoid repetitive posts or content that aims to manipulate or mislead others.",
+      },
+    ],
   },
   {
     id: "sports",
     text: "Sports",
+    description:
+      "Cheer, debate, and share your passion for sports and games with fellow fans.",
     icon: "https://em-content.zobj.net/source/apple/391/people-wrestling_1f93c.png",
+    rules: [
+      {
+        title: "Keep It Sports-Related",
+        description:
+          "Posts should focus on sports, athletes, games, or related events.",
+      },
+      {
+        title: "Respect All Teams and Fans",
+        description:
+          "Avoid unnecessary trash talk or insults toward teams, players, or fans.",
+      },
+      {
+        title: "No Spoilers Without Warnings",
+        description:
+          "When discussing recent games, include a spoiler warning if revealing game results.",
+      },
+      {
+        title: "No Spam or Irrelevant Content",
+        description:
+          "Posts unrelated to sports or overly promotional content are not allowed.",
+      },
+      {
+        title: "Be Inclusive",
+        description:
+          "Ensure discussions are welcoming to fans of all sports and skill levels.",
+      },
+    ],
   },
   {
     id: "orgs",
     text: "Orgs",
+    description:
+      "Highlight campus organization events, achievements, and opportunities for involvement.",
     icon: "https://em-content.zobj.net/source/apple/391/handshake_1f91d.png",
+    rules: [
+      {
+        title: "Focus on Organization Activities",
+        description:
+          "Posts should highlight events, achievements, or news related to campus organizations.",
+      },
+      {
+        title: "No Unauthorized Promotions",
+        description:
+          "Promoting unrelated businesses or external organizations is not allowed.",
+      },
+      {
+        title: "Respect All Organizations",
+        description:
+          "Avoid negative comments or comparisons between campus groups.",
+      },
+      {
+        title: "Stay Relevant",
+        description:
+          "Content should directly relate to campus or student organizations.",
+      },
+      {
+        title: "Encourage Participation",
+        description:
+          "Posts should encourage student involvement and showcase positive aspects of organizational life.",
+      },
+    ],
   },
   {
     id: "confessions",
     text: "Confessions",
+    description:
+      "Share your secrets, stories, and truths anonymously in a judgment-free zone.",
     icon: "https://em-content.zobj.net/source/apple/391/shushing-face_1f92b.png",
+    rules: [
+      {
+        title: "Respect Anonymity",
+        description:
+          "Do not reveal or speculate about the identity of the poster or subjects of the confession.",
+      },
+      {
+        title: "No Hate Speech or Harassment",
+        description:
+          "Confessions must not target individuals or groups in a harmful or hateful way.",
+      },
+      {
+        title: "No Illegal Content",
+        description:
+          "Avoid confessions that mention illegal activities or encourage others to break the law.",
+      },
+      {
+        title: "Keep it Constructive",
+        description:
+          "Encourage responses that are supportive or helpful, not judgmental.",
+      },
+      {
+        title: "Stay Within Community Guidelines",
+        description:
+          "Ensure all posts align with the platform's rules and standards.",
+      },
+    ],
   },
 ];

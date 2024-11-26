@@ -6,13 +6,10 @@
       <div class="flex gap-2">
         <!-- SIDEBAR HAMBURGER -->
         <button
-          data-collapse-toggle="sidebar-container"
           type="button"
-          class="cursor-pointer inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-neutral-500 rounded-lg lg:hidden active:bg-neutral-100 lg:hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-200 dark:text-neutral-400 dark:active:bg-neutral-700 dark:lg:hover:bg-neutral-700 dark:focus:ring-neutral-600"
-          aria-controls="sidebar-container"
-          aria-expanded="false"
+          class="cursor-pointer inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-neutral-500 rounded-lg lg:hidden active:bg-neutral-100 lg:hover:bg-neutral-100 dark:text-neutral-400 dark:active:bg-neutral-700 dark:lg:hover:bg-neutral-700"
           id="hamburger"
-          @click="empty">
+          @click="toggleSidebar">
           <span class="sr-only">Open sidebar</span>
           <HamburgerIcon />
         </button>
@@ -35,15 +32,13 @@
         class="flex items-center h-full lg:order-2 space-x-0 lg:space-x-0 rtl:space-x-reverse">
         <!-- SEARCH BUTTON -->
         <button
-          data-collapse-toggle="search-container"
           type="button"
-          class="cursor-pointer inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-neutral-500 rounded-lg lg:hidden active:bg-neutral-100 lg:hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-200 dark:text-neutral-400 dark:active:bg-neutral-700 dark:lg:hover:bg-neutral-700 dark:focus:ring-neutral-600"
-          aria-controls="search-container"
-          aria-expanded="false"
+          class="cursor-pointer inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-neutral-500 rounded-lg lg:hidden active:bg-neutral-100 lg:hover:bg-neutral-100 dark:text-neutral-400 dark:active:bg-neutral-700 dark:lg:hover:bg-neutral-700"
           id="searchIcon"
-          @click="empty">
+          @click="toggleSearch">
           <span class="sr-only">Open searchbar</span>
-          <SearchIcon />
+          <SearchIcon v-if="!showSearchbar" />
+          <CloseIcon v-else />
         </button>
 
         <!-- CREATE POST BUTTON -->
@@ -60,10 +55,9 @@
         <!-- USER DROPDOWN BUTTON -->
         <button
           id="dropdownUserAvatarButton"
-          data-dropdown-toggle="dropdownAvatar"
           class="h-full text-sm rounded-full ms-0 p-2"
           type="button"
-          @click="empty">
+          @click="toggleDropdownAvatar">
           <span class="sr-only">Open user menu</span>
           <img
             class="h-10 rounded-full"
@@ -74,7 +68,8 @@
         <!-- USER DROPDOWN MENU -->
         <div
           id="dropdownAvatar"
-          class="z-10 hidden bg-white divide-y divide-neutral-100 rounded-lg shadow-xl w-44 dark:bg-neutral-700 dark:divide-neutral-600">
+          class="z-10 bg-white divide-y divide-neutral-100 rounded-lg shadow-[rgba(0,0,0,0.2)_0px_0px_15px_6px] w-44 dark:bg-neutral-700 dark:divide-neutral-600"
+          :class="!showDropdownAvatar ? 'hidden' : 'absolute top-16 right-4'">
           <div class="px-4 py-3 text-sm text-neutral-900 dark:text-white">
             <div>Mesh User</div>
             <div class="font-medium truncate">user@email.edu.ph</div>
@@ -117,7 +112,8 @@
 
       <!-- SEARCH INPUT -->
       <div
-        class="absolute z-10 top-16 left-0 right-0 lg:relative lg:top-0 items-center justify-between hidden w-full lg:flex lg:w-auto lg:order-1 bg-responsive p-2 lg:p-0 border-b border-responsive lg:border-0"
+        class="absolute z-10 top-16 left-0 right-0 lg:relative lg:top-0 items-center justify-between w-full lg:flex lg:w-auto lg:order-1 bg-responsive p-2 lg:p-0 border-b border-responsive lg:border-0"
+        :class="!showSearchbar ? 'hidden' : ''"
         id="search-container">
         <div
           class="flex px-4 rounded-full border border-responsive active:border-neutral-600 lg:hover:border-neutral-600 dark:active:border-neutral-200 lg:dark:hover:border-neutral-200 overflow-hidden lg:mt-0 items-center">
@@ -125,7 +121,7 @@
             type="text"
             placeholder="Search..."
             id="search"
-            class="w-full outline-none border-none bg-transparent focus:outline-none focus:ring-0 dark:text-neutral-100 text-md" />
+            class="w-full outline-none border-none bg-transparent focus:outline-none focus:ring-0 dark:text-neutral-100 text-sm py-2" />
           <SearchIcon />
         </div>
       </div>
@@ -134,17 +130,18 @@
 </template>
 
 <script setup>
-  import { Collapse } from "flowbite";
   import SearchIcon from "./icons/SearchIcon.vue";
+  import CloseIcon from "./icons/CloseIcon.vue";
+  import PlusIcon from "./icons/PlusIcon.vue";
   import HamburgerIcon from "./icons/HamburgerIcon.vue";
   import { ref, computed } from "vue";
   import { useRouter } from "vue-router";
-  import PlusIcon from "./icons/PlusIcon.vue";
 
-  // as per https://stackoverflow.com/questions/33074160/bootstrap-collapse-half-working-on-iphone
-  // assign empty onclick handler for iphone collapse support
-  const empty = () => {};
+  const emit = defineEmits(["toggle-sidebar"]);
   const router = useRouter();
+
+  const showSearchbar = ref(false);
+  const showDropdownAvatar = ref(false);
 
   const isMobile = computed(() => {
     return screen.width <= 1024;
@@ -153,6 +150,18 @@
   function signOutUser() {
     localStorage.removeItem("mesh_token");
     router.go(0);
+  }
+
+  function toggleSidebar() {
+    emit("toggle-sidebar");
+  }
+
+  function toggleSearch() {
+    showSearchbar.value = !showSearchbar.value;
+  }
+
+  function toggleDropdownAvatar() {
+    showDropdownAvatar.value = !showDropdownAvatar.value;
   }
 </script>
 

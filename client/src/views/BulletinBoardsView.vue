@@ -1,13 +1,10 @@
 <template>
   <div class="relative">
-    <Sidebar
-      id="sidebar-container"
-      class="sidebar-responsive" />
-
     <div class="absolute w-full lg:left-[20%] lg:w-3/5 flex flex-col gap-0 p-2">
       Bulletin Board page
     </div>
-    <div class="absolute w-full lg:left-[80%] lg:w-1/5 flex flex-col gap-0 p-2">
+    <div
+      class="hidden absolute w-full lg:left-[80%] lg:w-1/5 lg:flex flex-col gap-0 p-2">
       Right pane
     </div>
   </div>

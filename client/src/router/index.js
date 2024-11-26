@@ -1,15 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import DiscoverView from "@/views/DiscoverView.vue";
-import AboutView from "@/views/AboutView.vue";
 import BulletinBoardsView from "@/views/BulletinBoardsView.vue";
 import PostView from "@/views/PostView.vue";
-import HomeRightPane from "@/components/rightpanes/HomeRightPane.vue";
 import Page404View from "@/views/Page404View.vue";
 import CollegeView from "@/views/CollegeView.vue";
-import CollegeRightPane from "@/components/rightpanes/CollegeRightPane.vue";
 import CourseGroupView from "@/views/CourseGroupView.vue";
-import CourseGroupRightPane from "@/components/rightpanes/CourseGroupRightPane.vue";
 import LandingView from "@/views/LandingView.vue";
 
 const router = createRouter({
@@ -43,11 +39,7 @@ const router = createRouter({
         requiresAuth: true,
       },
     },
-    {
-      path: "/about",
-      name: "About",
-      component: AboutView,
-    },
+
     {
       path: "/bulletin-boards",
       name: "BulletinBoards",

@@ -3,13 +3,20 @@
     <div class="me-4">
       <!-- MAIN PAGES -->
       <div class="flex flex-col justify-start items-start mt-4 gap-0">
-        <SidebarButton route="/feed"> <HomeIcon /> Feed </SidebarButton>
-        <SidebarButton route="/discover"> <MapIcon /> Discover </SidebarButton>
-        <SidebarButton route="/bulletin-boards">
-          <DiscoverIcon /> Bulletin Boards
+        <SidebarButton
+          route="/feed"
+          @clicked="handleButtonClicked">
+          <HomeIcon /> Feed
         </SidebarButton>
-        <SidebarButton route="/about">
-          <QuestionIcon /> What is Mesh?
+        <SidebarButton
+          route="/discover"
+          @clicked="handleButtonClicked">
+          <MapIcon /> Discover
+        </SidebarButton>
+        <SidebarButton
+          route="/bulletin-boards"
+          @clicked="handleButtonClicked">
+          <DiscoverIcon /> Bulletin Boards
         </SidebarButton>
       </div>
       <hr class="my-4 hr-responsive" />
@@ -20,6 +27,7 @@
         </div>
         <SidebarButton
           :route="`/college/${college.id}`"
+          @clicked="handleButtonClicked"
           v-for="college in collegesList">
           {{ college.name }}
         </SidebarButton>
@@ -47,6 +55,7 @@
 
         <SidebarButton
           :route="`/coursegroup/${courseGroup.id}`"
+          @clicked="handleButtonClicked"
           v-for="courseGroup in courseGroupList">
           {{ courseGroup.name }}
         </SidebarButton>
@@ -82,6 +91,8 @@
   import { COURSE_GROUPS, COLLEGES } from "@/tools/sampledata";
   import MapIcon from "./icons/MapIcon.vue";
 
+  const emit = defineEmits(["close-sidebar"]);
+
   const isShowFullCourseGroupList = ref(false);
   const isShowFullCollegeList = ref(false);
 
@@ -102,6 +113,10 @@
 
   function showLessColleges() {
     isShowFullCollegeList.value = false;
+  }
+
+  function handleButtonClicked() {
+    emit("close-sidebar");
   }
 
   const courseGroupList = computed(() => {

@@ -34,6 +34,7 @@ export const posts = [
     likesCount: 10,
     commentsCount: 100,
     dateCreated: "2024-11-07T04:00:00Z",
+    isBlurred: true,
   },
   {
     id: 4,
@@ -48,6 +49,7 @@ export const posts = [
     hasImage: true,
     image: "https://picsum.photos/1100/600",
     dateCreated: "2024-11-07T00:00:00Z",
+    isBlurred: true,
   },
   {
     id: 5,

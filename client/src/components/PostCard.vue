@@ -30,28 +30,47 @@
       <div class="text-xl font-bold line-clamp-1">{{ post.title }}</div>
 
       <!-- post body -->
-      <div
-        v-if="post.hasImage"
-        class="flex justify-center max-h-96 rounded-lg mt-2"
-        :class="`image-container-${post.id}`"
-      >
-        <img
-          :src="post.image"
-          alt=""
-          class="object-contain rounded-lg"
-          crossOrigin="anonymous"
-          @load="imageLoaded"
-        />
+      <div class="relative">
+        <div :class="post.isBlurred ? 'blur' : ''">
+          <!-- IMAGE -->
+          <div
+            v-if="post.hasImage"
+            class="flex justify-center max-h-96 rounded-lg mt-2"
+            :class="`image-container-${post.id}`"
+          >
+            <img
+              :src="post.image"
+              alt=""
+              class="object-contain rounded-lg"
+              :class="post.isBlurred ? 'blur-lg' : ''"
+              crossOrigin="anonymous"
+              @load="imageLoaded"
+            />
+            <div
+              v-if="!isImageLoaded"
+              class="bg-black opacity-30 rounded-lg h-96 w-full"
+            ></div>
+          </div>
+          <!-- TEXT -->
+          <div
+            v-else
+            class="line-clamp-5 text-neutral-700 dark:text-neutral-300"
+          >
+            {{ post.text }}
+          </div>
+        </div>
+        <!-- BLUR WARNING -->
         <div
-          v-if="!isImageLoaded"
-          class="bg-black opacity-30 rounded-lg h-96 w-full"
-        ></div>
-      </div>
-      <div
-        v-else
-        class="line-clamp-5 text-neutral-700 dark:text-neutral-300"
-      >
-        {{ post.text }}
+          class="absolute inset-0 flex justify-center items-center"
+          v-if="post.isBlurred"
+        >
+          <span
+            class="mx-4 text-sm font-semibold bg-white/30 dark:bg-black/50 rounded-lg p-2 backdrop-blur-sm"
+          >
+            This post may contain spoilers and/or sensitive content. Click to
+            view.
+          </span>
+        </div>
       </div>
     </RouterLink>
 

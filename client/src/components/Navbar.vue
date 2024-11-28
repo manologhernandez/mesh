@@ -79,13 +79,12 @@
         <!-- USER DROPDOWN MENU -->
         <div
           id="dropdownAvatar"
-          class="z-10 bg-white divide-y divide-neutral-100 rounded-lg shadow-[rgba(0,0,0,0.2)_0px_0px_15px_6px] w-44 dark:bg-neutral-700 dark:divide-neutral-600"
+          class="z-10 bg-white divide-y divide-neutral-200 rounded-lg shadow-[rgba(0,0,0,0.2)_0px_0px_15px_6px] w-44 dark:bg-neutral-700 dark:divide-neutral-600"
           :class="!showDropdownAvatar ? 'hidden' : 'absolute top-16 right-4'"
           v-click-outside="hideDropdownAvatar"
         >
-          <div class="px-4 py-3 text-sm text-neutral-900 dark:text-white">
-            <div>Mesh User</div>
-            <div class="font-medium truncate">user@email.edu.ph</div>
+          <div class="px-4 py-3 text-neutral-900 dark:text-white">
+            <div class="font-bold truncate">Mesh User</div>
           </div>
           <ul
             class="py-2 text-sm text-neutral-700 dark:text-neutral-200"
@@ -112,22 +111,24 @@
                 >Premium</a
               >
             </li>
-            <li>
-              <label class="inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  value=""
-                  class="sr-only peer"
-                  :checked="isDark"
-                  @change="toggleDark()"
-                />
-                <span class="px-4 py-2">Toggle Dark</span>
-                <div
-                  class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-                ></div>
-              </label>
-            </li>
           </ul>
+
+          <div class="py-2 text-sm text-neutral-700 dark:text-neutral-200">
+            <label class="inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                value=""
+                class="sr-only peer"
+                :checked="isDark"
+                @change="toggleDark()"
+              />
+              <span class="px-4 py-2">Dark mode</span>
+              <div
+                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+              ></div>
+            </label>
+          </div>
+
           <div
             class="py-2 cursor-pointer"
             @click="signOutUser"
@@ -202,7 +203,6 @@
   }
 
   function hideDropdownAvatar() {
-    console.log("hiding..");
     showDropdownAvatar.value = false;
   }
 </script>

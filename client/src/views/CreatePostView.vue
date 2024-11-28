@@ -302,7 +302,7 @@
         >
           <div class="flex items-center gap-2">
             <img
-              src="https://em-content.zobj.net/source/apple/391/gear_2699-fe0f.png"
+              :src="chosenCourseGroup.icon"
               alt=""
               class="h-6"
             />

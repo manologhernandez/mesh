@@ -67,84 +67,98 @@ export const posts = [
 export const COURSE_GROUPS = [
   {
     id: 1,
+    icon: "https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png",
     name: "Agriculture",
     description:
       "A field focusing on farming, crop science, livestock management, and sustainable agricultural practices.",
   },
   {
     id: 2,
+    icon: "https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png",
     name: "Architecture and Design",
     description:
       "A discipline that combines art and engineering to create functional, aesthetic, and innovative structures and spaces.",
   },
   {
     id: 3,
+    icon: "https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png",
     name: "Business",
     description:
       "A broad area covering entrepreneurship, management, finance, marketing, and organizational strategy.",
   },
   {
     id: 4,
+    icon: "https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png",
     name: "Education",
     description:
       "A field centered on teaching, curriculum development, educational psychology, and training future educators.",
   },
   {
     id: 5,
+    icon: "https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png",
     name: "Engineering",
     description:
       "A technical domain that applies science and mathematics to design and build machines, systems, and structures.",
   },
   {
     id: 6,
+    icon: "https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png",
     name: "Formal Sciences",
     description:
       "An abstract field that includes mathematics, logic, statistics, and computer science as foundational disciplines.",
   },
   {
     id: 7,
+    icon: "https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png",
     name: "Health Sciences",
     description:
       "A multidisciplinary area encompassing medicine, nursing, pharmacy, public health, and clinical research.",
   },
   {
     id: 8,
+    icon: "https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png",
     name: "Humanities",
     description:
       "A diverse field exploring human culture, history, language, literature, and philosophical thought.",
   },
   {
     id: 9,
+    icon: "https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png",
     name: "Media and Communication",
     description:
       "A domain focused on journalism, public relations, broadcasting, and the creation of media content.",
   },
   {
     id: 10,
+    icon: "https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png",
     name: "Natural Sciences",
     description:
       "A branch of science dealing with the study of the physical world, including biology, chemistry, and physics.",
   },
   {
     id: 11,
+    icon: "https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png",
     name: "Nutrition",
     description:
       "A specialized area examining diet, food science, and the role of nutrition in health and disease prevention.",
   },
   {
     id: 12,
+    icon: "https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png",
     name: "Public Administration",
     description:
       "A field focused on governance, public policy, and administrative practices in the public sector.",
   },
   {
     id: 13,
+    icon: "https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png",
     name: "Social Sciences",
     description:
       "An area studying human behavior, societies, and interactions through fields like sociology, psychology, and anthropology.",
   },
   {
     id: 14,
+    icon: "https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png",
     name: "Transportation",
     description:
       "A discipline covering transportation systems, logistics, and the planning of efficient movement for goods and people.",

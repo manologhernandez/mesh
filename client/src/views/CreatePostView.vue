@@ -1,7 +1,7 @@
 <template>
   <div class="relative">
     <div class="absolute w-full lg:left-[20%] lg:w-3/5 flex flex-col gap-0">
-      <div class="px-8 pt-4 pb-12">
+      <div class="px-4 lg:px-8 pt-4 pb-12">
         <div class="font-bold text-2xl mb-2 p-2">Create Post</div>
         <form
           @submit.prevent="handlePostSubmit"
@@ -79,7 +79,7 @@
                   for="courseGroup"
                   class="block text-sm font-semibold"
                 >
-                  Course Group
+                  Course Group <span class="font-normal">- Optional</span>
                 </label>
                 <div class="flex gap-4 items-center">
                   <select
@@ -134,6 +134,28 @@
               >
                 {{ errors.title }}
               </span>
+            </div>
+
+            <!-- CENSOR POST TOGGLE -->
+            <div class="flex flex-col gap-2">
+              <label class="inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  value=""
+                  class="sr-only peer"
+                  :checked="isCensorPost || isPostNsfw"
+                  @change="toggleCensorPostToggle"
+                  :disabled="isPostNsfw"
+                />
+                <span class="me-4 font-semibold text-sm">Blur post</span>
+                <div
+                  class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
+                ></div>
+              </label>
+              <span class="text-sm font-light"
+                >Please blur posts that may contain spoilers or other trigerring
+                content. NSFW posts are automatically blurred.</span
+              >
             </div>
 
             <!-- POST -->
@@ -251,10 +273,10 @@
 
     <!-- DESKTOP RIGHT SIDEPANE -->
     <div
-      class="hidden absolute w-full lg:left-[80%] lg:w-1/5 lg:flex flex-col gap-0 p-2"
+      class="hidden absolute w-full lg:left-[80%] lg:w-1/5 lg:flex flex-col gap-8 px-2 py-8"
     >
       <!-- SUBTOPIC DESCRIPTION AND RULES -->
-      <div class="px-2 pt-8">
+      <div class="px-2">
         <div
           class="rounded-lg border border-neutral-300 dark:border-neutral-600 px-4 py-4 flex flex-col gap-2"
           v-if="chosenSubtopic"
@@ -295,7 +317,7 @@
       </div>
 
       <!-- COURSE GROUP DESCRIPTION -->
-      <div class="px-2 pt-8">
+      <div class="px-2">
         <div
           class="rounded-lg border border-neutral-300 dark:border-neutral-600 px-4 py-4"
           v-if="chosenCourseGroup"
@@ -399,10 +421,20 @@
   const expandedRuleIndex = ref(null);
   const isShowSubtopicModal = ref(false);
   const isShowCourseGroupModal = ref(false);
-
-  // State Management
   const selectedFile = ref(null);
   const imagePreview = ref(null);
+  const isCensorPost = ref(false);
+
+  const isPostNsfw = computed(() => {
+    if (subtopic.value) {
+      return subtopic.value == "nsfw";
+    }
+    return false;
+  });
+
+  function toggleCensorPostToggle() {
+    isCensorPost.value = !isCensorPost.value;
+  }
 
   // Handle File Selection
   function handleFileChange(event) {
@@ -448,9 +480,10 @@
     if (validatePostInputs()) {
       var postDetails = {
         college: college.value,
-        title: title.value,
-        subtopic: subtopic.value,
         courseGroup: courseGroup.value,
+        subtopic: subtopic.value,
+        title: title.value,
+        isCensorPost: isCensorPost.value || isPostNsfw.value,
         post: post.value,
         attachment: imagePreview.value,
       };

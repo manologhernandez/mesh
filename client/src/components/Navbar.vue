@@ -55,9 +55,9 @@
         >
           <button
             type="button"
-            class="flex gap-2 lg:hover:bg-neutral-200 font-medium rounded-full px-2 lg:px-4 py-2 text-center dark:lg:hover:bg-neutral-800"
+            class="flex gap-1 lg:gap-2 lg:hover:bg-neutral-200 font-medium rounded-full px-2 lg:px-4 py-2 text-center dark:lg:hover:bg-neutral-800"
           >
-            <PlusIcon /> {{ isMobile ? "" : "Post" }}
+            <PlusIcon /> Post
           </button>
         </RouterLink>
 

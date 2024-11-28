@@ -66,7 +66,7 @@
           id="dropdownUserAvatarButton"
           class="h-full text-sm rounded-full ms-0 p-2"
           type="button"
-          @click="toggleDropdownAvatar"
+          @click.stop="toggleDropdownAvatar"
         >
           <span class="sr-only">Open user menu</span>
           <img
@@ -81,6 +81,7 @@
           id="dropdownAvatar"
           class="z-10 bg-white divide-y divide-neutral-100 rounded-lg shadow-[rgba(0,0,0,0.2)_0px_0px_15px_6px] w-44 dark:bg-neutral-700 dark:divide-neutral-600"
           :class="!showDropdownAvatar ? 'hidden' : 'absolute top-16 right-4'"
+          v-click-outside="hideDropdownAvatar"
         >
           <div class="px-4 py-3 text-sm text-neutral-900 dark:text-white">
             <div>Mesh User</div>
@@ -198,6 +199,11 @@
 
   function toggleDropdownAvatar() {
     showDropdownAvatar.value = !showDropdownAvatar.value;
+  }
+
+  function hideDropdownAvatar() {
+    console.log("hiding..");
+    showDropdownAvatar.value = false;
   }
 </script>
 

@@ -635,10 +635,10 @@
       color: #003a6c;
     }
     75% {
-      color: #fec00f;
+      color: #fcbf15;
     }
     95% {
-      color: #fec00f;
+      color: #fcbf15;
     }
     100% {
       color: #7b1113;
@@ -664,10 +664,10 @@
       color: #003a6c;
     }
     75% {
-      color: #fec00f;
+      color: #fcbf15;
     }
     95% {
-      color: #fec00f;
+      color: #fcbf15;
     }
     100% {
       color: #7b1113;
@@ -693,10 +693,10 @@
       color: #003a6c;
     }
     75% {
-      color: #fec00f;
+      color: #fcbf15;
     }
     95% {
-      color: #fec00f;
+      color: #fcbf15;
     }
     100% {
       color: #7b1113;
@@ -722,10 +722,10 @@
       color: #003a6c;
     }
     75% {
-      color: #fec00f;
+      color: #fcbf15;
     }
     95% {
-      color: #fec00f;
+      color: #fcbf15;
     }
     100% {
       color: #7b1113;
@@ -751,10 +751,10 @@
       color: #003a6c;
     }
     75% {
-      color: #fec00f;
+      color: #fcbf15;
     }
     95% {
-      color: #fec00f;
+      color: #fcbf15;
     }
     100% {
       color: #7b1113;

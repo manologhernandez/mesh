@@ -1,28 +1,115 @@
 export const posts = [
   {
     id: 1,
-    title: "My Post A",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed diam sit amet velit vulputate hendrerit eget sed lacus. Curabitur dapibus consequat vestibulum. Donec ullamcorper eros ut justo pellentesque, id scelerisque quam aliquam. Ut sit amet felis sapien. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris porta risus nisi, vel porta arcu suscipit in. Vivamus nec sapien a erat pretium tristique quis in ante. Etiam ut nunc a sapien hendrerit mollis. Etiam ultricies placerat neque. Quisque eleifend volutpat feugiat. Duis blandit est ut varius efficitur. Phasellus at imperdiet quam, quis euismod magna. Nunc mattis finibus turpis, vel condimentum metus imperdiet eu.",
+    title: "Lowkey Drowning in Deadlines",
+    text: "Okay, real talk—does anyone else feel like they're barely surviving this semester? Like, everyone's out here submitting stuff on time, acing quizzes, and I'm just trying to remember what day it is. 💀 If you've got tips for dealing with the chaos (or just wanna rant too), drop it here. No judgment, just vibes. We're all in this mess together, right? 😅",
     breadcrumbs: [
-      { title: "Breadcrumb A", link: "/" },
-      { title: "Breadcrumb B", link: "/" },
+      { title: "UPD", link: "/college/upd" },
+      { title: "Acads", link: "/" },
     ],
+    subtopic: {
+      id: "acads",
+    },
     likesCount: 10,
     commentsCount: 100,
     dateCreated: "2024-11-07T00:00:00Z",
+    author: {
+      username: "meshuser1",
+      college: {
+        id: "upd",
+      },
+    },
+    comments: [
+      {
+        id: 1,
+        author: "User1",
+        content: "This is a top-level comment.",
+        dateCreated: "2024-11-07T00:00:00Z",
+        likes: 5,
+        replies: [
+          {
+            id: 2,
+            author: "User2",
+            content: "This is the first reply to the top-level comment.",
+            dateCreated: "2024-11-07T00:00:00Z",
+            likes: 3,
+            replies: [],
+          },
+          {
+            id: 3,
+            author: "User3",
+            content: "This is the second reply to the top-level comment.",
+            dateCreated: "2024-11-07T00:00:00Z",
+            likes: 2,
+            replies: [],
+          },
+          {
+            id: 4,
+            author: "User4",
+            content: "This is the third reply to the top-level comment.",
+            dateCreated: "2024-11-07T00:00:00Z",
+            likes: 1,
+            replies: [],
+          },
+          {
+            id: 5,
+            author: "User5",
+            content:
+              "This is the fourth reply to the top-level comment. Initially hidden under 'Show More'.",
+            dateCreated: "2024-11-07T00:00:00Z",
+            likes: 0,
+            replies: [],
+          },
+          {
+            id: 6,
+            author: "User6",
+            content:
+              "This is the fifth reply to the top-level comment. Initially hidden under 'Show More'.",
+            dateCreated: "2024-11-07T00:00:00Z",
+            likes: 4,
+            replies: [],
+          },
+          {
+            id: 7,
+            author: "User7",
+            content:
+              "This is the sixth reply to the top-level comment. Initially hidden under 'Show More'.",
+            dateCreated: "2024-11-07T00:00:00Z",
+            likes: 2,
+            replies: [],
+          },
+        ],
+      },
+      {
+        id: 8,
+        author: "User8",
+        content: "This is another top-level comment with no replies.",
+        dateCreated: "2024-11-07T00:00:00Z",
+        likes: 2,
+        replies: [],
+      },
+    ],
   },
   {
     id: 2,
-    title: "My Post B",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sed diam sit amet velit vulputate hendrerit eget sed lacus. Curabitur dapibus consequat vestibulum. Donec ullamcorper eros ut justo pellentesque, id scelerisque quam aliquam. Ut sit amet felis sapien. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Mauris porta risus nisi, vel porta arcu suscipit in. Vivamus nec sapien a erat pretium tristique quis in ante. Etiam ut nunc a sapien hendrerit mollis. Etiam ultricies placerat neque. Quisque eleifend volutpat feugiat. Duis blandit est ut varius efficitur. Phasellus at imperdiet quam, quis euismod magna. Nunc mattis finibus turpis, vel condimentum metus imperdiet eu.",
+    title: "Prof Ko, Stand-Up Comedian?",
+    text: "Grabe si Sir/Ma’am kanina, akala mo open mic sa klase! 🤣 Yung banat niya: ‘Kapag late ka na nga, wag ka na magdala ng kape, di mo na kelangan ng props!’ ☕😂 Ano yung pinaka-memorable o nakakatawang hirit ng prof niyo? Spill the tea! (Safe space ‘to, promise. 😏)",
     breadcrumbs: [
-      { title: "Breadcrumb A", link: "/" },
-      { title: "Breadcrumb B", link: "/" },
-      { title: "Breadcrumb C", link: "/" },
+      { title: "DLSU", link: "/college/dlsu" },
+      { title: "Funny", link: "/" },
     ],
+    subtopic: {
+      id: "funny",
+    },
     likesCount: 10,
     commentsCount: 100,
     hasImage: true,
+    author: {
+      username: "meshman333",
+      college: {
+        id: "dlsu",
+      },
+    },
     image: "https://picsum.photos/500/800",
     dateCreated: "2024-11-07T06:00:00Z",
   },
@@ -171,18 +258,61 @@ export const COLLEGES = [
   {
     id: "admu",
     name: "ADMU",
+    meshers: 2000,
+    followers: 4000,
+    color: "#003a6c",
+    aboutText:
+      "Ateneo de Manila University, established in 1859, is one of the Philippines' leading private educational institutions. Rooted in Jesuit tradition, Ateneo is known for its commitment to academic excellence, social justice, and the holistic development of its students. Located in Quezon City, Ateneo offers a wide range of programs from basic education to graduate studies. Its vibrant campus fosters a strong sense of community and a culture of service.",
+    mainCampus:
+      "Ateneo de Manila University, Katipunan Avenue, Loyola Heights, Quezon City, 1108 Metro Manila, Philippines",
+    telephone: "+63 2 8426-6001",
+    email: "info@ateneo.edu",
+    website: "https://www.ateneo.edu",
   },
+
   {
     id: "dlsu",
     name: "DLSU",
+    meshers: 2000,
+    followers: 4000,
+    color: "#00703c",
+    aboutText:
+      "De La Salle University (DLSU), founded in 1911, is a top-ranked private Catholic university in the Philippines. Guided by the Lasallian tradition of faith, service, and community, DLSU is committed to providing transformative education and innovative research. The university’s flagship campus is situated in Manila, offering a wide array of undergraduate and graduate programs across various disciplines.",
+    mainCampus:
+      "De La Salle University, 2401 Taft Avenue, Malate, Manila, 1004 Metro Manila, Philippines",
+    telephone: "+63 2 8524-4611",
+    email: "info@dlsu.edu.ph",
+    website: "https://www.dlsu.edu.ph",
   },
+
   {
-    id: "up",
-    name: "UP",
+    id: "upd",
+    name: "UPD",
+    meshers: 2000,
+    followers: 4000,
+    color: "#7b1113",
+    aboutText:
+      "The University of the Philippines (UP) is the national university of the Philippines, recognized as the country’s premier institution of higher learning. Established in 1908, UP has a rich tradition of academic excellence and service to the nation. UP consists of a system of eight constituent universities located across the Philippines, with the flagship campus at UP Diliman in Quezon City. As of 2023, UP has over 60,000 students enrolled across its campuses, spanning undergraduate, graduate, and postgraduate programs.",
+    mainCampus:
+      "University of the Philippines Diliman Quezon Hall, Osmeña Avenue UP Diliman, Quezon City 1101 Metro Manila, Philippines",
+    telephone: "+63 2 8981-8500",
+    email: "info@up.edu.ph",
+    website: "https://up.edu.ph",
   },
+
   {
     id: "ust",
     name: "UST",
+    meshers: 2000,
+    followers: 4000,
+    color: "#fcbf15",
+    aboutText:
+      "The University of Santo Tomas (UST), established in 1611, is the oldest existing university in Asia and a prominent institution of higher learning in the Philippines. Renowned for its rich heritage and academic excellence, UST offers a diverse range of programs in the arts, sciences, and professional fields. Located in Manila, its iconic campus blends historical architecture with modern facilities to create a unique learning environment.",
+    mainCampus:
+      "University of Santo Tomas, España Boulevard, Sampaloc, Manila, 1008 Metro Manila, Philippines",
+    telephone: "+63 2 3406-1611",
+    email: "info@ust.edu.ph",
+    website: "https://www.ust.edu.ph",
   },
 ];
 

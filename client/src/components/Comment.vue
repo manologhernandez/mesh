@@ -1,27 +1,28 @@
 <template>
   <div :class="['border-l-2 pl-4 mb-4 border-responsive', nestedCommentClass]">
     <!-- Comment Content -->
-    <div class="p-2 rounded-lg flex flex-col gap-2">
+    <div class="p-1 lg:p-2 rounded-lg flex flex-col gap-2">
       <div class="flex items-center gap-2">
-        <div class="font-semibold">{{ comment.author }}</div>
+        <div class="text-sm font-semibold">{{ comment.author }}</div>
         <div class="text-xs line-clamp-1">
           {{ dayjs(comment.dateCreated).fromNow() }}
         </div>
       </div>
-      <p class="">{{ comment.content }}</p>
+      <p class="text-sm">{{ comment.content }}</p>
 
       <!-- Action Buttons -->
-      <div class="flex items-center gap-4 mt-2 text-sm">
+      <div class="flex items-center gap-4 mt-0 text-sm">
         <Like
           :likesCount="likes"
           @increment="likeComment"
           @decrement="unlikeComment"
+          class="text-xs font-semibold"
         />
 
         <button
           v-if="isRootComment"
           @click="replyToComment"
-          class="flex gap-2 items-center"
+          class="flex gap-2 items-center text-xs font-semibold"
         >
           <CommentIcon /> Reply
         </button>
@@ -31,7 +32,7 @@
     <!-- Replies (if within allowed nesting level) -->
     <div
       v-if="isRootComment && comment.replies.length"
-      class="mt-4"
+      class="mt-2"
     >
       <Comment
         v-for="(reply, index) in visibleReplies"
@@ -52,7 +53,7 @@
       @click="toggleShowMore"
       class="text-blue-500 text-sm mt-2"
     >
-      Show More Replies
+      Show all
     </button>
 
     <!-- Show Less Button -->
@@ -61,7 +62,7 @@
       @click="toggleShowMore"
       class="text-blue-500 text-sm mt-2"
     >
-      Show Less Replies
+      Show less
     </button>
   </div>
 </template>

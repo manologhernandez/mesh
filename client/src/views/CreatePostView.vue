@@ -153,7 +153,7 @@
                 ></div>
               </label>
               <span class="text-sm font-light"
-                >Please blur posts that may contain spoilers or other trigerring
+                >Please blur posts that may contain spoilers or sensitive
                 content. NSFW posts are automatically blurred.</span
               >
             </div>
@@ -273,7 +273,7 @@
 
     <!-- DESKTOP RIGHT SIDEPANE -->
     <div
-      class="hidden absolute w-full lg:left-[80%] lg:w-1/5 lg:flex flex-col gap-8 px-2 py-8"
+      class="hidden fixed scrollable lg:max-h-[92vh] lg:min-h-[92vh] w-full lg:left-[80%] lg:w-1/5 lg:flex flex-col gap-8 px-2 py-8"
     >
       <!-- SUBTOPIC DESCRIPTION AND RULES -->
       <div class="px-2">

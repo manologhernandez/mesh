@@ -1,31 +1,33 @@
 <template>
   <div class="relative">
-    <div class="absolute w-full lg:left-[20%] lg:w-3/5 flex flex-col gap-0 p-2">
-      <div>
-        <!-- Header -->
-        <div class="p-4 flex gap-4 items-center">
-          <div class="rounded-full h-24 lg:h-32 aspect-square bg-transparent">
-            <img
-              :src="college1.imgSrc"
-              class="object-cover"
-            />
+    <div class="absolute w-full lg:left-[20%] lg:w-3/5 flex flex-col gap-0">
+      <!-- Header -->
+      <div
+        class="p-4 flex gap-4 justify-around lg:justify-start items-center lg:items-end text-white dark:text-white"
+        :style="`background-color: ${college.color}`"
+      >
+        <div class="text-4xl lg:text-6xl font-bold">
+          {{ college.name }}
+        </div>
+        <div
+          class="flex flex-wrap max-w-[220px] lg:max-w-full lg:flex-nowrap gap-x-4 gap-y-2 text-sm items-center"
+        >
+          <div class="max-w-1/2 lg:w-auto">
+            Users: <span class="font-semibold">{{ college.meshers }}</span>
           </div>
-          <div class="flex flex-col gap-2">
-            <div class="text-xl lg:text-2xl font-bold">
-              {{ college1.name }}
-            </div>
-            <div class="flex gap-4 text-sm items-center">
-              <div>Meshers: {{ college1.meshers }}</div>
-              <div>Followers: {{ college1.followers }}</div>
-              <div
-                class="bg-neutral-200 dark:bg-neutral-700 px-4 py-1 rounded-md cursor-pointer font-semibold"
-              >
-                Follow
-              </div>
-            </div>
+          <div class="max-w-1/2 lg:w-auto">
+            Followers:
+            <span class="font-semibold">{{ college.followers }}</span>
+          </div>
+          <div
+            class="bg-neutral-200 dark:bg-neutral-200 dark:text-neutral-800 text-neutral-800 px-4 py-1 rounded-md cursor-pointer font-semibold w-full lg:w-auto text-center"
+          >
+            Follow
           </div>
         </div>
+      </div>
 
+      <div class="p-2">
         <!-- Tabbed Menu -->
         <div
           class="text-sm font-medium text-center text-neutral-500 mb-2 border-b border-neutral-200 dark:text-neutral-400 dark:border-neutral-700"
@@ -70,28 +72,28 @@
         >
           <div class="mb-4">
             <strong>Main Campus:</strong>
-            {{ college1.mainCampus }}
+            {{ college.mainCampus }}
           </div>
           <div class="mb-4">
-            {{ college1.aboutText }}
+            {{ college.aboutText }}
           </div>
 
           <div
             class="flex flex-col gap-0 lg:flex-row lg:gap-4 lg:justify-center"
           >
-            <div><strong>Telephone: </strong> {{ college1.telephone }}</div>
+            <div><strong>Telephone: </strong> {{ college.telephone }}</div>
 
             <div>
               <strong>Email: </strong
-              ><a :href="`mailto:${college1.email}`">{{ college1.email }}</a>
+              ><a :href="`mailto:${college.email}`">{{ college.email }}</a>
             </div>
             <div>
               <strong>Website: </strong>
               <a
-                :href="college1.website"
+                :href="college.website"
                 target="_blank"
                 class="underline underline-offset-4"
-                >{{ college1.website }}</a
+                >{{ college.website }}</a
               >
             </div>
           </div>
@@ -106,9 +108,9 @@
 
 <script setup>
   import Feed from "@/components/Feed.vue";
-  import { ref } from "vue";
+  import { computed, ref } from "vue";
 
-  import { posts, college1 } from "@/tools/sampledata";
+  import { posts, COLLEGES } from "@/tools/sampledata";
   import CollegeRightPane from "@/components/rightpanes/CollegeRightPane.vue";
 
   const showingFeed = ref(true);
@@ -116,6 +118,10 @@
 
   const props = defineProps({
     id: String,
+  });
+
+  const college = computed(() => {
+    return COLLEGES.filter((college) => college.id == props.id)[0];
   });
 
   function showFeed() {

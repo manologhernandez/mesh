@@ -10,11 +10,12 @@
           v-for="(breadcrumb, index) in post.breadcrumbs"
         >
           <ChevronRightIcon v-if="index > 0" />
-          <a
-            :href="breadcrumb.link"
+          <RouterLink
+            :to="breadcrumb.link"
             class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap"
-            >{{ breadcrumb.title }}</a
           >
+            {{ breadcrumb.title }}
+          </RouterLink>
         </div>
       </div>
       <div class="text-sm line-clamp-1">

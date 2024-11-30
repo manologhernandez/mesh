@@ -53,10 +53,10 @@
                       Click to select a subtopic
                     </option>
                     <option
-                      :value="interest.id"
-                      v-for="interest in interestsChoices"
+                      :value="subtopic.id"
+                      v-for="subtopic in SUBTOPICS"
                     >
-                      {{ interest.text }}
+                      {{ subtopic.name }}
                     </option>
                   </select>
                   <InfoIcon
@@ -287,7 +287,7 @@
               alt=""
               class="h-6"
             />
-            <span class="font-semibold">{{ chosenSubtopic.text }}</span>
+            <span class="font-semibold">{{ chosenSubtopic.name }}</span>
           </div>
           <div>
             {{ chosenSubtopic.description }}
@@ -351,7 +351,7 @@
             alt=""
             class="h-6"
           />
-          <span class="text-xl font-semibold">{{ chosenSubtopic.text }}</span>
+          <span class="text-xl font-semibold">{{ chosenSubtopic.name }}</span>
         </div>
         <div class="pt-4">
           {{ chosenSubtopic.description }}
@@ -408,7 +408,7 @@
 
 <script setup>
   import { computed, ref } from "vue";
-  import { COURSE_GROUPS, interestsChoices } from "@/tools/sampledata";
+  import { COURSE_GROUPS, SUBTOPICS } from "@/tools/sampledata";
   import CloseIcon from "@/components/icons/CloseIcon.vue";
   import InfoIcon from "@/components/icons/InfoIcon.vue";
 
@@ -515,9 +515,7 @@
 
   const chosenSubtopic = computed(() => {
     if (subtopic.value) {
-      return interestsChoices.filter(
-        (interest) => interest.id === subtopic.value
-      )[0];
+      return SUBTOPICS.filter((topic) => topic.id === subtopic.value)[0];
     }
     return null;
   });

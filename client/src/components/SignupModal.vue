@@ -276,35 +276,35 @@
               </select>
             </div>
 
-            <!-- Interests/Topics -->
+            <!-- SUBTOPICS -->
             <div>
               <span class="block text-sm font-semibold mb-1"
-                >Interests and Topics</span
+                >Interests and Subtopics</span
               >
               <ul
                 id="topics"
                 class="grid w-full gap-4 grid-cols-2 lg:grid-cols-3"
               >
-                <li v-for="interest in interestsChoices">
+                <li v-for="subtopic in SUBTOPICS">
                   <input
                     type="checkbox"
-                    :id="interest.id"
-                    :value="interest.id"
+                    :id="subtopic.id"
+                    :value="subtopic.id"
                     class="hidden peer"
-                    v-model="interests"
+                    v-model="subtopics"
                   />
                   <label
-                    :for="interest.id"
+                    :for="subtopic.id"
                     class="signup-checkbox-item"
                   >
                     <div class="flex w-full gap-1 items-center justify-center">
                       <img
-                        :src="interest.icon"
+                        :src="subtopic.icon"
                         class="h-5"
                         alt=""
                       />
                       <div class="font-semibold text-sm">
-                        {{ interest.text }}
+                        {{ subtopic.name }}
                       </div>
                     </div>
                   </label>
@@ -328,7 +328,7 @@
 
 <script setup>
   import CloseIcon from "./icons/CloseIcon.vue";
-  import { interestsChoices } from "@/tools/sampledata";
+  import { SUBTOPICS } from "@/tools/sampledata";
   import { ref, computed } from "vue";
   import { useRouter } from "vue-router";
 
@@ -341,7 +341,7 @@
   const password = ref("");
   const passwordConfirm = ref("");
   const degree = ref("");
-  const interests = ref([]);
+  const subtopics = ref([]);
   const router = useRouter();
 
   const emit = defineEmits(["closeModal"]);
@@ -416,7 +416,7 @@
         username: username.value,
         password: password.value,
         degree: degree.value,
-        interests: interests.value,
+        subtopics: subtopics.value,
       };
       alert("Received account info: " + JSON.stringify(accountInfo, null, 2));
       // Add API call and logic here

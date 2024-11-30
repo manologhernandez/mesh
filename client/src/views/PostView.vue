@@ -1,7 +1,10 @@
 <template>
   <div class="relative">
     <div class="absolute w-full lg:left-[20%] lg:w-3/5 flex flex-col gap-0 p-2">
-      <div class="p-2 lg:p-4">
+      <div
+        class="p-2 lg:p-4"
+        v-if="post"
+      >
         <!-- POST -->
         <div class="p-0 rounded-lg mb-6">
           <!-- POST HEADER -->
@@ -11,6 +14,7 @@
               <div
                 class="h-8 w-8 rounded-full border-none"
                 :style="`background-color: ${authorCollege.color}`"
+                v-if="authorCollege"
               ></div>
               <!-- BREADCRUMBS & AUTHOR -->
               <div
@@ -18,20 +22,24 @@
               >
                 <div class="text-sm flex items-center overflow-x-auto">
                   <!-- BREADCRUMBS -->
-                  <div
-                    class="flex items-center flex-nowrap"
-                    v-for="(breadcrumb, index) in post.breadcrumbs"
-                  >
-                    <ChevronRightIcon v-if="index > 0" />
-                    <RouterLink
-                      :to="breadcrumb.link"
-                      class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
-                      >{{ breadcrumb.title }}
-                    </RouterLink>
-                  </div>
+                  <template v-if="post.breadcrumbs">
+                    <div
+                      class="flex items-center flex-nowrap"
+                      v-for="(breadcrumb, index) in post.breadcrumbs"
+                    >
+                      <ChevronRightIcon v-if="index > 0" />
+                      <RouterLink
+                        :to="breadcrumb.link"
+                        class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
+                        >{{ breadcrumb.title }}
+                      </RouterLink>
+                    </div>
+                  </template>
                 </div>
                 <!-- AUTHOR -->
-                <div class="text-xs">{{ post.author.username }}</div>
+                <div class="text-xs">
+                  {{ post.author && post.author.username }}
+                </div>
               </div>
             </div>
             <!-- DATE POSTED -->
@@ -79,12 +87,15 @@
           <!-- SHARE -->
           <button
             class="flex gap-1 items-center lg:hover:bg-neutral-200 dark:lg:hover:bg-neutral-700 active:bg-neutral-200 dark:lg:active:bg-neutral-700 rounded-full px-2 py-2"
+            @click="showShareModal"
           >
             <ShareIcon /> Share
           </button>
+
           <!-- REPORT -->
           <button
             class="flex gap-1 items-center lg:hover:bg-neutral-200 dark:lg:hover:bg-neutral-700 active:bg-neutral-200 dark:lg:active:bg-neutral-700 rounded-full px-2 py-2"
+            @click="showReportModal"
           >
             <ReportIcon /> Report
           </button>
@@ -145,7 +156,7 @@
               alt=""
               class="h-6"
             />
-            <span class="font-semibold">{{ postSubtopic.text }}</span>
+            <span class="font-semibold">{{ postSubtopic.name }}</span>
           </div>
           <div>
             {{ postSubtopic.description }}
@@ -193,12 +204,24 @@
       </div>
     </div>
   </div>
+
+  <ShareModal
+    v-if="isShowShareModal"
+    @close-modal="hideShareModal"
+    :url="currUrl"
+  />
+
+  <ReportModal
+    v-if="isShowReportModal"
+    @close-modal="hideReportModal"
+    :post="post"
+  />
 </template>
 
 <script setup>
   import {
     posts,
-    interestsChoices,
+    SUBTOPICS,
     COLLEGES,
     COURSE_GROUPS,
   } from "@/tools/sampledata";
@@ -211,6 +234,9 @@
   import ShareIcon from "@/components/icons/ShareIcon.vue";
   import ReportIcon from "@/components/icons/ReportIcon.vue";
   import { FastAverageColor } from "fast-average-color";
+  import { useRouter } from "vue-router";
+  import ShareModal from "@/components/ShareModal.vue";
+  import ReportModal from "@/components/ReportModal.vue";
 
   dayjs.extend(relativeTime);
 
@@ -218,21 +244,57 @@
     id: String,
   });
 
+  const router = useRouter();
+
   const newComment = ref("");
   const expandedRuleIndex = ref(null);
   const isImageLoaded = ref(false);
+  const isShowShareModal = ref(false);
+  const isShowReportModal = ref(false);
+
+  function showShareModal() {
+    isShowShareModal.value = true;
+  }
+
+  function hideShareModal() {
+    isShowShareModal.value = false;
+  }
+
+  function showReportModal() {
+    isShowReportModal.value = true;
+  }
+
+  function hideReportModal() {
+    isShowReportModal.value = false;
+  }
 
   function imageLoaded() {
     isImageLoaded.value = true;
   }
+
+  const currUrl = computed(() => {
+    const route = router.resolve({});
+    const absoluteURL = new URL(
+      route.href,
+      window.location.origin + window.location.pathname
+    ).href;
+    return absoluteURL;
+  });
+
   const post = computed(() => {
-    return posts.filter((post) => post.id == props.id)[0];
+    var myPost = posts.filter((post) => post.id == props.id)[0];
+
+    if (myPost) {
+      return myPost;
+    } else {
+      router.push("/404");
+    }
   });
 
   const postSubtopic = computed(() => {
     if (post && post.value && post.value.subtopic && post.value.subtopic.id) {
-      return interestsChoices.filter(
-        (interest) => interest.id === post.value.subtopic.id
+      return SUBTOPICS.filter(
+        (subtopic) => subtopic.id === post.value.subtopic.id
       )[0];
     }
     return null;
@@ -253,7 +315,13 @@
   });
 
   const authorCollege = computed(() => {
-    if (post.value.author.college.id) {
+    if (
+      post &&
+      post.value &&
+      post.value.author &&
+      post.value.author.college &&
+      post.value.author.college.id
+    ) {
       return COLLEGES.filter(
         (college) => college.id == post.value.author.college.id
       )[0];
@@ -290,23 +358,29 @@
     expandedRuleIndex.value = expandedRuleIndex.value === index ? null : index;
   }
 
-  onMounted(() => {
-    const fac = new FastAverageColor();
-    const container = document.querySelector(
-      `.image-container-${post.value.id}`
-    );
+  function setupFac() {
+    if (post && post.value) {
+      const fac = new FastAverageColor();
+      const container = document.querySelector(
+        `.image-container-${post.value.id}`
+      );
 
-    if (container && post.value.hasImage) {
-      fac
-        .getColorAsync(container.querySelector("img"))
-        .then((color) => {
-          container.style.backgroundColor = color.rgba;
-          container.style.color = color.isDark ? "#fff" : "#000";
-        })
-        .catch((e) => {
-          console.log(e);
-        });
+      if (container && post.value.hasImage) {
+        fac
+          .getColorAsync(container.querySelector("img"))
+          .then((color) => {
+            container.style.backgroundColor = color.rgba;
+            container.style.color = color.isDark ? "#fff" : "#000";
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+      }
     }
+  }
+
+  onMounted(() => {
+    setupFac();
   });
 </script>
 

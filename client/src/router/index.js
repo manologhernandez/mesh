@@ -8,6 +8,7 @@ import CollegeView from "@/views/CollegeView.vue";
 import CourseGroupView from "@/views/CourseGroupView.vue";
 import LandingView from "@/views/LandingView.vue";
 import CreatePostView from "@/views/CreatePostView.vue";
+import SubtopicView from "@/views/SubtopicView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -71,6 +72,15 @@ const router = createRouter({
       path: "/coursegroup/:id",
       name: "CourseGroupSingle",
       component: CourseGroupView,
+      props: true,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/subtopic/:id",
+      name: "SubtopicSingle",
+      component: SubtopicView,
       props: true,
       meta: {
         requiresAuth: true,

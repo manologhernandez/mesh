@@ -7,14 +7,14 @@
         :style="`background-color: grey`"
       >
         <div class="text-4xl lg:text-6xl font-bold">
-          {{ courseGroup.name }}
+          {{ subtopic.name }}
         </div>
         <div
           class="flex flex-wrap max-w-[220px] lg:max-w-full lg:flex-nowrap gap-x-4 gap-y-2 text-sm items-center"
         >
           <div class="max-w-1/2 lg:w-auto">
             Followers:
-            <span class="font-semibold">{{ courseGroup.followers }}</span>
+            <span class="font-semibold">{{ subtopic.followers }}</span>
           </div>
           <div
             class="bg-neutral-200 dark:bg-neutral-200 dark:text-neutral-800 text-neutral-800 px-4 py-1 rounded-md cursor-pointer font-semibold w-full lg:w-auto text-center"
@@ -66,12 +66,12 @@
           v-show="showingInfo"
           class="p-4"
         >
-          {{ courseGroup.description }}
+          Course info..
         </div>
       </div>
     </div>
     <div class="absolute w-full lg:left-[80%] lg:w-1/5 flex flex-col gap-0 p-2">
-      <CourseGroupRightPane />
+      Right pane
     </div>
   </div>
 </template>
@@ -80,8 +80,7 @@
   import Feed from "@/components/Feed.vue";
   import { computed, ref } from "vue";
 
-  import { posts, COURSE_GROUPS } from "@/tools/sampledata";
-  import CourseGroupRightPane from "@/components/rightpanes/CourseGroupRightPane.vue";
+  import { posts, SUBTOPICS } from "@/tools/sampledata";
 
   const showingFeed = ref(true);
   const showingInfo = ref(false);
@@ -90,8 +89,8 @@
     id: String,
   });
 
-  const courseGroup = computed(() => {
-    return COURSE_GROUPS.filter((course) => course.id == props.id)[0];
+  const subtopic = computed(() => {
+    return SUBTOPICS.filter((subtopic) => subtopic.id == props.id)[0];
   });
 
   function showFeed() {

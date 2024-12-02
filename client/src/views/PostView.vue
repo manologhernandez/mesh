@@ -6,7 +6,7 @@
         v-if="post"
       >
         <!-- POST -->
-        <div class="p-0 rounded-lg mb-6">
+        <div class="relative p-0 rounded-lg mb-6">
           <!-- POST HEADER -->
           <div class="flex items-start justify-between mb-4 lg:mb-2">
             <div class="flex gap-2 items-center">
@@ -49,30 +49,44 @@
               {{ dayjs(post.dateCreated).fromNow() }}
             </div>
           </div>
-
+          <!-- POST BODY -->
           <div class="flex justify-between items-center gap-2 mb-4">
             <h2 class="text-xl font-semibold">{{ post.title }}</h2>
           </div>
 
-          <div
-            v-if="post.hasImage"
-            class="max-h-96 flex justify-center mb-4 rounded-lg"
-            :class="`image-container-${post.id}`"
-          >
-            <img
-              :src="post.image"
-              alt=""
-              class="object-contain rounded-lg"
-              :class="post.isBlurred ? 'blur-lg' : ''"
-              crossOrigin="anonymous"
-              @load="imageLoaded"
-            />
+          <div :class="blurPost ? 'blur-lg' : ''">
             <div
-              v-if="!isImageLoaded"
-              class="bg-black opacity-30 rounded-lg h-96 w-full"
-            ></div>
+              v-if="post.hasImage"
+              class="max-h-96 flex justify-center mb-4 rounded-lg"
+              :class="`image-container-${post.id}`"
+            >
+              <img
+                :src="post.image"
+                alt=""
+                class="object-contain rounded-lg"
+                crossOrigin="anonymous"
+                @load="imageLoaded"
+              />
+              <div
+                v-if="!isImageLoaded"
+                class="bg-black opacity-30 rounded-lg h-96 w-full"
+              ></div>
+            </div>
+            <p class="">{{ post.text }}</p>
           </div>
-          <p class="">{{ post.text }}</p>
+          <!-- BLUR WARNING -->
+          <div
+            class="absolute inset-0 flex justify-center items-center"
+            v-if="blurPost"
+            @click.prevent="unblurPost"
+          >
+            <span
+              class="mx-4 text-sm font-semibold bg-white/30 dark:bg-black/50 rounded-lg p-2 backdrop-blur-sm cursor-pointer"
+            >
+              This post may contain spoilers and/or sensitive content. Click to
+              view.
+            </span>
+          </div>
         </div>
 
         <!-- POST BUTTONS -->
@@ -251,6 +265,7 @@
   const isImageLoaded = ref(false);
   const isShowShareModal = ref(false);
   const isShowReportModal = ref(false);
+  const isUnblurPost = ref(false);
 
   function showShareModal() {
     isShowShareModal.value = true;
@@ -271,6 +286,14 @@
   function imageLoaded() {
     isImageLoaded.value = true;
   }
+
+  function unblurPost() {
+    isUnblurPost.value = true;
+  }
+
+  const blurPost = computed(() => {
+    return !isUnblurPost.value && post.value.isBlurred;
+  });
 
   const currUrl = computed(() => {
     const route = router.resolve({});

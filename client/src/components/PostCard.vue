@@ -32,7 +32,7 @@
 
       <!-- post body -->
       <div class="relative">
-        <div :class="post.isBlurred ? 'blur' : ''">
+        <div :class="blurPost ? 'blur' : ''">
           <!-- IMAGE -->
           <div
             v-if="post.hasImage"
@@ -43,7 +43,7 @@
               :src="post.image"
               alt=""
               class="object-contain rounded-lg"
-              :class="post.isBlurred ? 'blur-lg' : ''"
+              :class="blurPost ? 'blur-lg' : ''"
               crossOrigin="anonymous"
               @load="imageLoaded"
             />
@@ -63,7 +63,8 @@
         <!-- BLUR WARNING -->
         <div
           class="absolute inset-0 flex justify-center items-center"
-          v-if="post.isBlurred"
+          v-if="blurPost"
+          @click.prevent="unblurPost"
         >
           <span
             class="mx-4 text-sm font-semibold bg-white/30 dark:bg-black/50 rounded-lg p-2 backdrop-blur-sm"
@@ -101,7 +102,7 @@
   import ChevronRightIcon from "./icons/ChevronRightIcon.vue";
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
-  import { onMounted, ref } from "vue";
+  import { computed, onMounted, ref } from "vue";
   import { FastAverageColor } from "fast-average-color";
   import Like from "./Like.vue";
 
@@ -112,6 +113,7 @@
   });
 
   const isImageLoaded = ref(false);
+  const isUnblurPost = ref(false);
 
   function imageLoaded() {
     isImageLoaded.value = true;
@@ -123,6 +125,14 @@
   function postUnliked() {
     alert(`Post unliked`);
   }
+
+  function unblurPost() {
+    isUnblurPost.value = true;
+  }
+
+  const blurPost = computed(() => {
+    return !isUnblurPost.value && props.post.isBlurred;
+  });
 
   onMounted(() => {
     const fac = new FastAverageColor();

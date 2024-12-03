@@ -101,6 +101,12 @@
                       {{ course.name }}
                     </option>
                   </select>
+
+                  <CloseIcon
+                    v-if="chosenCourseGroup"
+                    @click="clearCourseGroup"
+                    class="cursor-pointer"
+                  />
                   <InfoIcon
                     v-if="chosenCourseGroup"
                     class="lg:hidden"
@@ -136,26 +142,52 @@
               </span>
             </div>
 
-            <!-- CENSOR POST TOGGLE -->
-            <div class="flex flex-col gap-2">
-              <label class="inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  value=""
-                  class="sr-only peer"
-                  :checked="isCensorPost || isPostNsfw"
-                  @change="toggleCensorPostToggle"
-                  :disabled="isPostNsfw"
-                />
-                <span class="me-4 font-semibold text-sm">Blur post</span>
-                <div
-                  class="relative w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-neutral-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-neutral-600 peer-checked:bg-blue-600"
-                ></div>
-              </label>
-              <span class="text-sm font-light"
-                >Please blur posts that may contain spoilers or sensitive
-                content. NSFW posts are automatically blurred.</span
-              >
+            <div class="grid lg:grid-cols-2 gap-4">
+              <!-- CENSOR POST TOGGLE -->
+              <div class="flex flex-col gap-2">
+                <label class="inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    value=""
+                    class="sr-only peer"
+                    :checked="isCensorPost || isPostNsfw"
+                    @change="toggleCensorPostToggle"
+                    :disabled="isPostNsfw"
+                  />
+                  <span class="me-4 font-semibold text-sm">Blur post</span>
+                  <div
+                    class="relative w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-neutral-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-neutral-600 peer-checked:bg-blue-600"
+                  ></div>
+                </label>
+                <span
+                  class="text-xs font-light text-neutral-700 dark:text-neutral-300"
+                  >Blur posts that may contain spoilers or sensitive content.
+                  NSFW posts are automatically blurred.</span
+                >
+              </div>
+
+              <!-- PROMOTE POST TOGGLE -->
+              <div class="flex flex-col gap-2">
+                <label class="inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    value=""
+                    class="sr-only peer"
+                    :checked="isPromotePost"
+                    @change="togglePromotePost"
+                  />
+                  <span class="me-4 font-semibold text-sm">Promote post</span>
+                  <div
+                    class="relative w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-neutral-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-neutral-600 peer-checked:bg-blue-600"
+                  ></div>
+                </label>
+                <span
+                  class="text-xs font-light text-neutral-700 dark:text-neutral-300"
+                >
+                  Promoted posts appear more often on people's feeds. Promoting
+                  a post will use up one MeshCredit.
+                </span>
+              </div>
             </div>
 
             <!-- POST -->
@@ -424,6 +456,7 @@
   const selectedFile = ref(null);
   const imagePreview = ref(null);
   const isCensorPost = ref(false);
+  const isPromotePost = ref(false);
 
   const isPostNsfw = computed(() => {
     if (subtopic.value) {
@@ -436,6 +469,10 @@
     isCensorPost.value = !isCensorPost.value;
   }
 
+  function togglePromotePost() {
+    isPromotePost.value = !isPromotePost.value;
+  }
+
   // Handle File Selection
   function handleFileChange(event) {
     const file = event.target.files[0];
@@ -445,6 +482,10 @@
       // Create preview URL
       imagePreview.value = URL.createObjectURL(file);
     }
+  }
+
+  function clearCourseGroup() {
+    courseGroup.value = "";
   }
 
   function clearImageAttachment() {
@@ -484,6 +525,7 @@
         subtopic: subtopic.value,
         title: title.value,
         isCensorPost: isCensorPost.value || isPostNsfw.value,
+        isPromotePost: isPromotePost.value,
         post: post.value,
         attachment: imagePreview.value,
       };

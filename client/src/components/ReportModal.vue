@@ -38,6 +38,10 @@
               id="violation"
               v-model="violation"
               class="appearance-none bg-white mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900 border-neutral-300 dark:border-neutral-600 cursor-pointer lg:hover:bg-neutral-100 dark:lg:hover:bg-neutral-800 active:bg-neutral-100 dark:active:bg-neutral-800"
+              :class="{
+                'border-red-500': errors.violation,
+                'border-neutral-300 dark:border-neutral-600': !errors.violation,
+              }"
             >
               <option
                 selected
@@ -53,6 +57,13 @@
               <option value="impresonation">Impersonation</option>
               <option value="spam">Spam</option>
             </select>
+
+            <span
+              v-if="errors.violation"
+              class="mt-1 text-sm text-red-500"
+            >
+              {{ errors.violation }}
+            </span>
 
             <label
               for="description"
@@ -91,6 +102,7 @@
 
   const violation = ref("");
   const description = ref("");
+  const errors = ref([]);
 
   const emit = defineEmits(["closeModal"]);
 
@@ -98,16 +110,28 @@
     post: Object,
   });
 
+  const validateReport = () => {
+    errors.value = {};
+
+    if (!violation.value) {
+      errors.value.violation = "Please indicate a violation.";
+    }
+
+    return Object.keys(errors.value).length === 0;
+  };
+
   function submitReport() {
-    var report = {
-      violation: violation.value,
-      description: description.value,
-      post: props.post,
-    };
+    if (validateReport()) {
+      var report = {
+        violation: violation.value,
+        description: description.value,
+        post: props.post,
+      };
 
-    alert("Submitting report: " + JSON.stringify(report, null, 2));
+      alert("Submitting report: " + JSON.stringify(report, null, 2));
 
-    closeModal();
+      closeModal();
+    }
   }
 
   const closeModal = () => {

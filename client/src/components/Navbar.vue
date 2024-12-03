@@ -69,11 +69,10 @@
           @click.stop="toggleDropdownAvatar"
         >
           <span class="sr-only">Open user menu</span>
-          <img
-            class="h-10 rounded-full"
-            src="https://picsum.photos/200/200"
-            alt="user photo"
-          />
+          <div
+            class="rounded-full w-10 h-10"
+            :style="`background-color: ${USER.college.color}`"
+          ></div>
         </button>
 
         <!-- USER DROPDOWN MENU -->
@@ -84,31 +83,31 @@
           v-click-outside="hideDropdownAvatar"
         >
           <div class="px-4 py-3 text-neutral-900 dark:text-white">
-            <div class="font-bold truncate">Mesh User</div>
+            <div class="font-bold truncate">{{ USER.username }}</div>
           </div>
           <ul
             class="py-2 text-sm text-neutral-700 dark:text-neutral-200"
             aria-labelledby="dropdownUserAvatarButton"
           >
             <li>
-              <a
-                href="#"
+              <RouterLink
+                to="/profile"
                 class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:hover:text-white"
-                >Profile</a
+                >Profile</RouterLink
               >
             </li>
             <li>
-              <a
-                href="#"
+              <RouterLink
+                to="/settings"
                 class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:hover:text-white"
-                >Settings</a
+                >Settings</RouterLink
               >
             </li>
             <li>
-              <a
-                href="#"
+              <RouterLink
+                to="/premium"
                 class="block px-4 py-2 hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:hover:text-white"
-                >Premium</a
+                >Premium</RouterLink
               >
             </li>
           </ul>
@@ -171,6 +170,7 @@
   import { ref, computed } from "vue";
   import { useRouter } from "vue-router";
   import { useDark, useToggle } from "@vueuse/core";
+  import { USER } from "@/tools/sampledata";
 
   const isDark = useDark();
   const toggleDark = useToggle(isDark);

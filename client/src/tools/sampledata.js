@@ -694,3 +694,139 @@ export const SUBTOPICS = [
     ],
   },
 ];
+
+export const USER = {
+  id: 1,
+  username: "meshuser123",
+  college: {
+    id: "upd",
+    name: "UPD",
+    meshers: 2000,
+    followers: 4000,
+    color: "#7b1113",
+    aboutText:
+      "The University of the Philippines (UP) is the national university of the Philippines, recognized as the country’s premier institution of higher learning. Established in 1908, UP has a rich tradition of academic excellence and service to the nation. UP consists of a system of eight constituent universities located across the Philippines, with the flagship campus at UP Diliman in Quezon City. As of 2023, UP has over 60,000 students enrolled across its campuses, spanning undergraduate, graduate, and postgraduate programs.",
+    mainCampus:
+      "University of the Philippines Diliman Quezon Hall, Osmeña Avenue UP Diliman, Quezon City 1101 Metro Manila, Philippines",
+    telephone: "+63 2 8981-8500",
+    email: "info@up.edu.ph",
+    website: "https://up.edu.ph",
+  },
+  posts: [
+    {
+      id: 1,
+      title: "Lowkey Drowning in Deadlines",
+      text: "Okay, real talk—does anyone else feel like they're barely surviving this semester? Like, everyone's out here submitting stuff on time, acing quizzes, and I'm just trying to remember what day it is. 💀 If you've got tips for dealing with the chaos (or just wanna rant too), drop it here. No judgment, just vibes. We're all in this mess together, right? 😅",
+      breadcrumbs: [
+        { title: "UPD", link: "/college/upd" },
+        { title: "Acads", link: "/" },
+      ],
+      subtopic: {
+        id: "acads",
+      },
+      likesCount: 10,
+      commentsCount: 100,
+      dateCreated: "2024-11-07T00:00:00Z",
+      author: {
+        username: "meshuser1",
+        college: {
+          id: "upd",
+        },
+      },
+      comments: [
+        {
+          id: 1,
+          author: "User1",
+          content: "This is a top-level comment.",
+          dateCreated: "2024-11-07T00:00:00Z",
+          likes: 5,
+          replies: [
+            {
+              id: 2,
+              author: "User2",
+              content: "This is the first reply to the top-level comment.",
+              dateCreated: "2024-11-07T00:00:00Z",
+              likes: 3,
+              replies: [],
+            },
+            {
+              id: 3,
+              author: "User3",
+              content: "This is the second reply to the top-level comment.",
+              dateCreated: "2024-11-07T00:00:00Z",
+              likes: 2,
+              replies: [],
+            },
+            {
+              id: 4,
+              author: "User4",
+              content: "This is the third reply to the top-level comment.",
+              dateCreated: "2024-11-07T00:00:00Z",
+              likes: 1,
+              replies: [],
+            },
+            {
+              id: 5,
+              author: "User5",
+              content:
+                "This is the fourth reply to the top-level comment. Initially hidden under 'Show More'.",
+              dateCreated: "2024-11-07T00:00:00Z",
+              likes: 0,
+              replies: [],
+            },
+            {
+              id: 6,
+              author: "User6",
+              content:
+                "This is the fifth reply to the top-level comment. Initially hidden under 'Show More'.",
+              dateCreated: "2024-11-07T00:00:00Z",
+              likes: 4,
+              replies: [],
+            },
+            {
+              id: 7,
+              author: "User7",
+              content:
+                "This is the sixth reply to the top-level comment. Initially hidden under 'Show More'.",
+              dateCreated: "2024-11-07T00:00:00Z",
+              likes: 2,
+              replies: [],
+            },
+          ],
+        },
+        {
+          id: 8,
+          author: "User8",
+          content: "This is another top-level comment with no replies.",
+          dateCreated: "2024-11-07T00:00:00Z",
+          likes: 2,
+          replies: [],
+        },
+      ],
+    },
+    {
+      id: 2,
+      title: "Prof Ko, Stand-Up Comedian?",
+      text: "Grabe si Sir/Ma’am kanina, akala mo open mic sa klase! 🤣 Yung banat niya: ‘Kapag late ka na nga, wag ka na magdala ng kape, di mo na kelangan ng props!’ ☕😂 Ano yung pinaka-memorable o nakakatawang hirit ng prof niyo? Spill the tea! (Safe space ‘to, promise. 😏)",
+      breadcrumbs: [
+        { title: "DLSU", link: "/college/dlsu" },
+        { title: "Funny", link: "/" },
+      ],
+      subtopic: {
+        id: "funny",
+      },
+      likesCount: 10,
+      commentsCount: 100,
+      hasImage: true,
+      author: {
+        username: "meshman333",
+        college: {
+          id: "dlsu",
+        },
+      },
+      image: "https://picsum.photos/500/800",
+      dateCreated: "2024-11-07T06:00:00Z",
+    },
+  ],
+  dateCreated: "2024-11-07T00:00:00Z",
+};

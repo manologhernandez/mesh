@@ -9,6 +9,9 @@ import CourseGroupView from "@/views/CourseGroupView.vue";
 import LandingView from "@/views/LandingView.vue";
 import CreatePostView from "@/views/CreatePostView.vue";
 import SubtopicView from "@/views/SubtopicView.vue";
+import ProfileView from "@/views/ProfileView.vue";
+import SettingsView from "@/views/SettingsView.vue";
+import PremiumView from "@/views/PremiumView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -90,6 +93,30 @@ const router = createRouter({
       path: "/create",
       name: "CreatePost",
       component: CreatePostView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/profile",
+      name: "Profile",
+      component: ProfileView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/settings",
+      name: "Settings",
+      component: SettingsView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/premium",
+      name: "Premium",
+      component: PremiumView,
       meta: {
         requiresAuth: true,
       },

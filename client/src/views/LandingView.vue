@@ -5,9 +5,12 @@
       class="snap-start w-full bg-white min-h-svh bg-cover bg-center flex flex-col gap-8 justify-center items-center bg-[url('/landing_bg.svg')]"
     >
       <div
-        class="backdrop-blur-sm bg-white/60 shadow-[rgba(0,0,0,0.3)_0px_0px_15px_6px] p-10 rounded-lg mx-4 max-w-full md:w-[450px] md:max-w-[450px] text-black dark:text-black"
+        class="backdrop-blur-sm bg-white/60 shadow-[rgba(0,0,0,0.3)_0px_0px_15px_6px] p-10 rounded-lg mx-4 max-w-full text-black dark:text-black"
       >
-        <div v-if="!showSignupModal">
+        <div
+          class="lg:w-[450px]"
+          v-if="!showSignupModal"
+        >
           <!-- Text Content -->
           <div class="flex flex-col gap-4 justify-center items-center">
             <div class="flex gap-4 items-center">
@@ -25,13 +28,25 @@
             </div>
           </div>
 
-          <!-- Login-->
+          <!-- LOGIN -->
           <div class="flex flex-col gap-8 w-full lg:px-0 mt-4">
+            <Loading
+              :active.sync="loginLoading"
+              :can-cancel="false"
+              loader="dots"
+            />
+
             <form
               @submit.prevent="handleLogin"
               class="flex flex-col gap-4"
             >
-              <!-- Username -->
+              <span
+                v-if="errors.login"
+                class="mt-4 text-sm font-semibold bg-red-700 text-white py-4 px-4 rounded"
+              >
+                {{ errors.login }}
+              </span>
+              <!-- USERNAME -->
               <div>
                 <label
                   for="username"
@@ -42,7 +57,7 @@
                 <input
                   type="text"
                   id="username"
-                  v-model="username"
+                  v-model="loginData.username"
                   :class="{
                     'border-red-500': errors.username,
                     'border-neutral-300 ': !errors.username,
@@ -68,7 +83,7 @@
                 <input
                   type="password"
                   id="password"
-                  v-model="password"
+                  v-model="loginData.password"
                   :class="{
                     'border-red-500': errors.password,
                     'border-neutral-300': !errors.password,
@@ -104,10 +119,16 @@
 
         <!-- SIGNUP -->
         <div v-if="showSignupModal">
+          <Loading
+            :active.sync="signupLoading"
+            :can-cancel="false"
+            loader="dots"
+          />
+
           <!-- Step 1: School Email -->
           <div
-            class="flex flex-col gap-4"
-            v-if="currentSignupStep == 1"
+            class="flex flex-col gap-4 lg:max-w-[450px]"
+            v-if="signupData.currentSignupStep == 1"
           >
             <h2 class="text-3xl font-bold">Join Mesh</h2>
             <div class="text-sm flex flex-col gap-2">
@@ -126,8 +147,14 @@
               @submit.prevent="handleEmailSignUp"
               class="flex flex-col gap-4"
             >
+              <span
+                v-if="errors.signup"
+                class="mt-2 text-sm font-semibold bg-red-700 text-white py-4 px-4 rounded"
+              >
+                {{ errors.signup }}
+              </span>
               <!-- Email -->
-              <div>
+              <div class="mt-2">
                 <label
                   for="email"
                   class="block text-sm font-semibold"
@@ -138,7 +165,7 @@
                   type="email"
                   id="email"
                   placeholder="name@university.edu.ph"
-                  v-model="email"
+                  v-model="signupData.email"
                   :class="{
                     'border-red-500': errors.email,
                     'border-neutral-300': !errors.email,
@@ -153,13 +180,14 @@
                 </p>
               </div>
 
-              <span class="text-xs mt-4">
+              <span class="text-xs text-neutral-700 mt-4">
                 By signing up, you agree to our
                 <RouterLink
                   to="/about"
                   class="underline underline-offset-2"
-                  >Privacy Policy</RouterLink
                 >
+                  Privacy Policy
+                </RouterLink>
                 and
                 <RouterLink
                   to="/about"
@@ -177,70 +205,111 @@
                 Continue
               </button>
             </form>
+
             <span
-              @click="showSignupModal = false"
-              class="text-sm underline underline-offset-2 cursor-pointer"
-              >Return to login</span
+              @click="closeSignupModal"
+              class="absolute top-6 right-6 cursor-pointer"
             >
+              <CloseIcon />
+            </span>
           </div>
           <!-- Step 2: Email Verification OTP -->
           <div
-            class="flex flex-col gap-4"
-            v-else-if="currentSignupStep == 2"
+            class="flex flex-col gap-4 lg:max-w-[450px]"
+            v-else-if="signupData.currentSignupStep == 2"
           >
             <h2 class="text-3xl font-bold">Validate your email</h2>
             <div class="text-sm flex flex-col gap-2">
               <span>
                 We sent a verfication code to
-                <span class="font-semibold">{{ email }}</span
+                <span class="font-semibold">{{ signupData.email }}</span
                 >. Please check your inbox and enter it below to verify your
                 email address.
               </span>
-              <span>The code will expire in 5 minutes.</span>
+              <span
+                >The code will expire in
+                <strong>{{ otpCountdown }}</strong> seconds.</span
+              >
             </div>
             <form
-              @submit.prevent="handleCodeVerification"
+              @submit.prevent="handleOtpVerification"
               class="flex flex-col gap-4"
             >
+              <span
+                v-if="errors.signup"
+                class="text-sm font-semibold bg-red-700 text-white py-4 px-4 rounded"
+              >
+                {{ errors.signup }}
+              </span>
+
               <!-- OTP -->
               <div class="flex justify-evenly">
                 <input
-                  v-for="(code, index) in codes"
+                  v-for="(code, index) in signupData.otp"
                   :key="index"
-                  v-model="codes[index]"
+                  v-model="signupData.otp[index]"
                   type="text"
                   maxlength="1"
                   class="w-12 h-12 text-center border-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  :ref="(el) => (inputs[index] = el)"
-                  @input="moveToNextCodeInput(index)"
-                  @keydown.backspace="moveToPreviousCodeInput(index, $event)"
+                  :ref="(el) => (signupData.inputs[index] = el)"
+                  @input="moveToNextOtpInput(index)"
+                  @keydown.backspace="moveToPreviousOtpInput(index, $event)"
                 />
               </div>
+              <span class="text-sm">
+                Didn't receive an OTP?
+                <span
+                  class="underline font-semibold cursor-pointer"
+                  @click="resendOtp"
+                  v-if="!hasResentOtp"
+                >
+                  Click to resend
+                </span>
+                <span
+                  class="font-semibold"
+                  v-else
+                >
+                  OTP resent!
+                </span>
+              </span>
 
-              <!-- Submit Code Button -->
+              <!-- Submit OTP Button -->
               <button
                 type="submit"
                 class="w-full mt-4 p-4 bg-black text-white font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800 disabled:bg-neutral-500 disabled:active:bg-neutral-500 disabled:lg:hover:bg-neutral-500"
-                :disabled="!isCodeComplete"
+                :disabled="!isOtpInputComplete"
               >
                 Continue
               </button>
             </form>
+            <span
+              @click="closeSignupModal"
+              class="absolute top-6 right-6 cursor-pointer"
+            >
+              <CloseIcon />
+            </span>
           </div>
 
           <!-- Step 3: User Details -->
           <div
-            class="flex flex-col gap-4 max-h-[600px] scrollable"
-            v-else-if="currentSignupStep == 3"
+            class="flex flex-col gap-4 max-h-[600px] lg:max-w-[600px] scrollable px-4"
+            v-else-if="signupData.currentSignupStep == 3"
           >
             <h2 class="text-3xl font-bold">Create Account</h2>
             <div class="text-sm flex flex-col gap-2">
               <span>Let's finish setting up your account.</span>
             </div>
+
             <form
-              @submit.prevent="handleAccountInfo"
+              @submit.prevent="handleCreateAccount"
               class="flex flex-col gap-4"
             >
+              <span
+                v-if="errors.signup"
+                class="text-sm font-semibold bg-red-700 text-white py-4 px-4 rounded"
+              >
+                {{ errors.signup }}
+              </span>
               <div class="flex flex-col gap-4">
                 <!-- Username -->
                 <div>
@@ -253,7 +322,7 @@
                   <input
                     type="text"
                     id="username"
-                    v-model="username"
+                    v-model="signupData.username"
                     :class="{
                       'border-red-500': errors.username,
                       'border-neutral-300': !errors.username,
@@ -279,7 +348,7 @@
                   <input
                     type="password"
                     id="password"
-                    v-model="password"
+                    v-model="signupData.password"
                     :class="{
                       'border-red-500': errors.password,
                       'border-neutral-300': !errors.password,
@@ -305,7 +374,7 @@
                   <input
                     type="password"
                     id="passwordConfirm"
-                    v-model="passwordConfirm"
+                    v-model="signupData.passwordConfirm"
                     :class="{
                       'border-red-500': errors.passwordConfirm,
                       'border-neutral-300': !errors.passwordConfirm,
@@ -345,12 +414,13 @@
                   </label>
                   <select
                     id="degree"
-                    v-model="degree"
-                    class="appearance-none mt-1 block w-full px-3 py-2 border rounded-md shadow-sm border-neutral-300"
+                    v-model="signupData.degree"
+                    class="appearance-none mt-1 block w-full px-3 py-2 border rounded-md shadow-sm border-neutral-300 cursor-pointer bg-white"
                   >
                     <option
                       selected
                       disabled
+                      value=""
                     >
                       Click to select a course group
                     </option>
@@ -378,7 +448,7 @@
                         :id="subtopic.id"
                         :value="subtopic.id"
                         class="hidden peer"
-                        v-model="subtopics"
+                        v-model="signupData.subtopics"
                       />
                       <label
                         :for="subtopic.id"
@@ -402,7 +472,7 @@
                 </div>
               </div>
 
-              <!-- Submit Code Button -->
+              <!-- Submit Account Button -->
               <button
                 type="submit"
                 class="w-full mt-4 p-4 bg-black text-white font-medium text-sm rounded-md shadow-md lg:hover:bg-neutral-800 active:bg-neutral-800 disabled:bg-neutral-500 disabled:active:bg-neutral-500 disabled:lg:hover:bg-neutral-500"
@@ -410,6 +480,58 @@
                 Create Account
               </button>
             </form>
+            <span
+              @click="closeSignupModal"
+              class="absolute top-6 right-6 cursor-pointer"
+            >
+              <CloseIcon />
+            </span>
+          </div>
+
+          <!-- Step -1: Email Not Supported -->
+          <div
+            class="flex flex-col gap-4"
+            v-if="signupData.currentSignupStep == -1"
+          >
+            <h2 class="text-3xl font-bold">Join the Waitlist</h2>
+            <div class="text-sm flex flex-col gap-2">
+              <span>
+                Sorry, but your email <strong>{{ signupData.email }}</strong> is
+                currently not supported in Mesh.
+              </span>
+            </div>
+
+            <span
+              @click="closeSignupModal"
+              class="absolute top-6 right-6 cursor-pointer"
+            >
+              <CloseIcon />
+            </span>
+          </div>
+
+          <!-- Step -2: Email Used More Than Twice -->
+          <div
+            class="flex flex-col gap-4"
+            v-if="signupData.currentSignupStep == -2"
+          >
+            <h2 class="text-3xl font-bold">
+              Your email has already been used twice
+            </h2>
+            <div class="text-sm flex flex-col gap-2">
+              <span>
+                Sorry, but your email
+                <strong>{{ signupData.email }}</strong> has already been used
+                twice to request for an OTP. In order to prevent abuse and email
+                sharing, we cannot allow you to use this email anymore.
+              </span>
+            </div>
+
+            <span
+              @click="closeSignupModal"
+              class="absolute top-6 right-6 cursor-pointer"
+            >
+              <CloseIcon />
+            </span>
           </div>
         </div>
       </div>
@@ -475,135 +597,478 @@
 </template>
 
 <script setup>
-  import { ref, computed } from "vue";
+  import { ref, computed, onMounted } from "vue";
   import { SUBTOPICS } from "@/tools/sampledata";
   import { useRouter } from "vue-router";
+  import CloseIcon from "@/components/icons/CloseIcon.vue";
+  import Loading from "vue-loading-overlay";
+  import { useUserStore } from "@/stores/user";
+
+  const store = useUserStore();
+
+  const loginLoading = ref(false);
+  const signupLoading = ref(false);
 
   const router = useRouter();
-  const username = ref("");
-  const password = ref("");
-  const errors = ref([]);
+  const errors = ref({});
   const showSignupModal = ref(false);
 
-  const email = ref("");
-  const currentSignupStep = ref(1);
-  const codes = ref(Array(6).fill(""));
-  const inputs = ref([]);
-  const passwordConfirm = ref("");
-  const degree = ref("");
-  const subtopics = ref([]);
+  const signupData = ref({
+    currentSignupStep: 1,
+    username: "",
+    password: "",
+    passwordConfirm: "",
+    email: "",
+    otp: Array(6).fill(""),
+    inputs: [],
+    degree: "",
+    subtopics: [],
+    collegeEmailUuid: "",
+  });
 
+  const loginData = ref({
+    username: "",
+    password: "",
+  });
+
+  const otpCountdown = ref(600);
+  var countdownInterval = null;
+  const hasResentOtp = ref(false);
+
+  onMounted(() => {
+    const cachedSignupData = JSON.parse(sessionStorage.getItem("signupData"));
+    if (cachedSignupData) {
+      signupData.value = cachedSignupData;
+      if (signupData.currentSignupStep > 1) {
+        openSignupModal();
+      }
+    } else {
+      sessionStorage.setItem("signupData", JSON.stringify(signupData.value));
+    }
+  });
+
+  // Check if otp is fully inputted
+  const isOtpInputComplete = computed(() => {
+    return signupData.value.otp.every((digit) => digit !== "");
+  });
+
+  // Cache the current signup data object to session storage
+  function cacheSignupData() {
+    sessionStorage.setItem("signupData", JSON.stringify(signupData.value));
+  }
+
+  // Increment signup step counter
+  function incrementSignupStep() {
+    signupData.value.currentSignupStep += 1;
+    cacheSignupData();
+  }
+
+  // Set specific signup step counter value
+  function setSignupStep(val) {
+    signupData.value.currentSignupStep = val;
+    cacheSignupData();
+  }
+
+  // Start the OTP Countdown timer
+  function startOtpCountdown() {
+    countdownInterval = setInterval(() => {
+      if (otpCountdown.value > 0) {
+        otpCountdown.value -= 1;
+      } else {
+        clearInterval(countdownInterval);
+      }
+    }, 1000);
+  }
+
+  // Reset the OTP Countdown timer
+  function resetOtpCountdown() {
+    clearInterval(countdownInterval);
+    otpCountdown.value = 600;
+  }
+
+  // Toggle show the signup component
   function openSignupModal() {
     showSignupModal.value = true;
   }
 
-  function hideSignupModal() {
+  // Toggle hide the signup component
+  async function closeSignupModal() {
     showSignupModal.value = false;
+    otpCountdown.value = 600;
+    errors.value.signup = "";
+
+    if (signupData.value.collegeEmailUuid) {
+      // Delete temp user that was created with email
+      await rollbackSignup(
+        signupData.value.email,
+        signupData.value.collegeEmailUuid
+      );
+    } else {
+      signupData.value = {
+        currentSignupStep: 1,
+        username: "",
+        password: "",
+        passwordConfirm: "",
+        email: "",
+        otp: Array(6).fill(""),
+        inputs: [],
+        degree: "",
+        subtopics: [],
+        collegeEmailUuid: "",
+      };
+
+      cacheSignupData();
+    }
   }
 
-  const validateForm = () => {
+  async function rollbackSignup(email, uuid) {
+    const reqBody = {
+      email: email,
+      uuid: uuid,
+    };
+
+    const request = new Request("/auth/rollback", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reqBody),
+    });
+
+    signupLoading.value = true;
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          // Handle other status codes
+          throw new Error(`Error: ${response.status}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        signupData.value = {
+          currentSignupStep: 1,
+          username: "",
+          password: "",
+          passwordConfirm: "",
+          email: "",
+          otp: Array(6).fill(""),
+          inputs: [],
+          degree: "",
+          subtopics: [],
+          collegeEmailUuid: "",
+        };
+
+        cacheSignupData();
+      })
+      .catch((e) => {
+        errors.value.signup = e.message;
+      })
+      .finally(() => {
+        signupLoading.value = false;
+      });
+  }
+
+  // Client side username password validation
+  function validateLoginForm() {
     errors.value = {};
-    if (!username.value) {
+    if (!loginData.value.username) {
       errors.value.username = "Username is required.";
     }
-    if (!password.value) {
+    if (!loginData.value.password) {
       errors.value.password = "Password is required.";
     }
     return Object.keys(errors.value).length === 0;
-  };
+  }
 
-  const handleLogin = () => {
-    if (validateForm()) {
-      console.log("Logging in with:", {
-        username: username.value,
-        password: password.value,
+  // Login auth handler
+  function handleLogin() {
+    if (validateLoginForm()) {
+      const reqBody = {
+        username: loginData.value.username,
+        password: loginData.value.password,
+      };
+
+      const request = new Request("/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reqBody),
       });
-      alert("Login successful!");
-      localStorage.setItem("mesh_token", "myaccesstoken");
 
-      router.go(0);
+      loginLoading.value = true;
+      fetch(request)
+        .then((response) => {
+          if (!response.ok) {
+            // Check for a 400 error
+            if (response.status === 400) {
+              return response.json().then((errorData) => {
+                throw new Error(`${errorData.message || "Bad Request"}`);
+              });
+            }
+            // Handle other status codes
+            throw new Error(`Error: ${response.status}`);
+          }
+          return response.json(); // Parse JSON if response is ok
+        })
+        .then((data) => {
+          store.setUser(data.data);
+          router.go(0);
+        })
+        .catch((e) => {
+          errors.value.login = e.message;
+        })
+        .finally(() => {
+          loginLoading.value = false;
+        });
     }
-  };
-
-  const isCodeComplete = computed(() => {
-    return codes.value.every((digit) => digit !== "");
-  });
+  }
 
   // Move focus to the next input field
-  const moveToNextCodeInput = (index) => {
-    if (codes.value[index] && index < codes.value.length - 1) {
-      inputs.value[index + 1]?.focus();
+  function moveToNextOtpInput(index) {
+    if (
+      signupData.value.otp[index] &&
+      index < signupData.value.otp.length - 1
+    ) {
+      signupData.value.inputs[index + 1]?.focus();
     }
-  };
+  }
 
   // Move focus to the previous input field
-  const moveToPreviousCodeInput = (index, event) => {
-    if (!codes.value[index] && index > 0 && event.key === "Backspace") {
-      inputs.value[index - 1]?.focus();
+  function moveToPreviousOtpInput(index, event) {
+    if (
+      !signupData.value.otp[index] &&
+      index > 0 &&
+      event.key === "Backspace"
+    ) {
+      signupData.value.inputs[index - 1]?.focus();
     }
-  };
+  }
 
-  const validateEmail = () => {
+  // Client side email validation
+  function validateEmail() {
     errors.value = {};
-    if (!email.value) {
+
+    // Regular expression for email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!signupData.value.email) {
       errors.value.email = "Email is required.";
+    } else if (!emailRegex.test(signupData.value.email)) {
+      errors.value.email = "Invalid email format...";
     }
-    return Object.keys(errors.value).length === 0;
-  };
 
-  const validateAccountInfo = () => {
+    return Object.keys(errors.value).length === 0;
+  }
+
+  // Client side account info validation
+  function validateAccountInfo() {
     errors.value = {};
-    if (!username.value) {
+    if (!signupData.value.username) {
       errors.value.username = "Username is required.";
     }
 
-    // add username unique check call
-    if (false) {
-      errors.value.username = "Username already taken.";
-    }
-
-    if (password.value != passwordConfirm.value) {
+    if (signupData.value.password != signupData.value.passwordConfirm) {
       errors.value.password = "Passwords do not match";
       errors.value.passwordConfirm = "Passwords do not match";
     }
 
-    if (password.value.length < 6) {
+    if (signupData.value.password.length < 6) {
       errors.value.password = "Password must be at least 6 characters";
     }
 
     return Object.keys(errors.value).length === 0;
-  };
+  }
 
-  const handleEmailSignUp = () => {
+  // Email verification handler
+  function handleEmailSignUp() {
     if (validateEmail()) {
-      alert("Received email address: " + email.value);
-      // Add API call and logic here
-      currentSignupStep.value += 1;
-    }
-  };
-
-  const handleCodeVerification = () => {
-    const verificationCode = codes.value.join("");
-    alert(`Verification code submitted: ${verificationCode}`);
-    // Add API call and logic here
-    currentSignupStep.value += 1;
-  };
-
-  const handleAccountInfo = () => {
-    if (validateAccountInfo()) {
-      var accountInfo = {
-        username: username.value,
-        password: password.value,
-        degree: degree.value,
-        subtopics: subtopics.value,
+      const reqBody = {
+        email: signupData.value.email,
       };
-      alert("Received account info: " + JSON.stringify(accountInfo, null, 2));
-      // Add API call and logic here
 
-      localStorage.setItem("mesh_token", "myaccesstoken");
-      router.go(0);
+      const request = new Request("/auth/validate_email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reqBody),
+      });
+
+      signupLoading.value = true;
+      fetch(request)
+        .then((response) => {
+          if (!response.ok) {
+            // Check for a 400 error
+            if (response.status === 400) {
+              return response.json().then((errorData) => {
+                throw new Error(`${errorData.message || "Bad Request"}`);
+              });
+            }
+            // 401 Error: Email is unsupported
+            if (response.status === 401) {
+              setSignupStep(-1);
+            }
+            // 403 Error: Email is used more than twice
+            if (response.status === 403) {
+              setSignupStep(-2);
+            }
+            // Handle other status codes
+            throw new Error(`Error: ${response.status}`);
+          }
+          return response.json(); // Parse JSON if response is ok
+        })
+        .then((data) => {
+          incrementSignupStep();
+          startOtpCountdown();
+        })
+        .catch((e) => {
+          errors.value.signup = e.message;
+        })
+        .finally(() => {
+          signupLoading.value = false;
+        });
     }
-  };
+  }
+
+  // OTP verification handler
+  function handleOtpVerification() {
+    errors.value = {};
+    const reqBody = {
+      otp: signupData.value.otp.join(""),
+      email: signupData.value.email,
+    };
+
+    const request = new Request("/auth/validate_otp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reqBody),
+    });
+
+    signupLoading.value = true;
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          // Handle other status codes
+          throw new Error(`Error: ${response.status}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        signupData.value.collegeEmailUuid = data.data.user.id;
+        incrementSignupStep();
+        resetOtpCountdown();
+      })
+      .catch((e) => {
+        errors.value.signup = e.message;
+      })
+      .finally(() => {
+        signupLoading.value = false;
+      });
+  }
+
+  // Account creation handler
+  function handleCreateAccount() {
+    if (validateAccountInfo()) {
+      var reqBody = {
+        username: signupData.value.username,
+        password: signupData.value.password,
+        degree: signupData.value.degree,
+        subtopics: signupData.value.subtopics,
+        uuid: signupData.value.collegeEmailUuid,
+      };
+
+      const request = new Request("/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reqBody),
+      });
+
+      signupLoading.value = true;
+      fetch(request)
+        .then((response) => {
+          if (!response.ok) {
+            // Check for a 400 error
+            if (response.status === 400) {
+              return response.json().then((errorData) => {
+                throw new Error(`${errorData.message || "Bad Request"}`);
+              });
+            }
+            // Handle other status codes
+            throw new Error(`Error: ${response.status}`);
+          }
+          return response.json(); // Parse JSON if response is ok
+        })
+        .then((data) => {
+          store.setUser(data.data);
+          router.go(0);
+        })
+        .catch((e) => {
+          errors.value.signup = e.message;
+        })
+        .finally(() => {
+          signupLoading.value = false;
+        });
+    }
+  }
+
+  // Resend OTP to client email
+  function resendOtp() {
+    const reqBody = {
+      email: signupData.value.email,
+    };
+
+    const request = new Request("/auth/resend_otp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reqBody),
+    });
+
+    signupLoading.value = true;
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          // Handle other status codes
+          throw new Error(`Error: ${response.status}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        hasResentOtp.value = true;
+        resetOtpCountdown();
+        startOtpCountdown();
+      })
+      .catch((e) => {
+        errors.value.signup = e.message;
+      })
+      .finally(() => {
+        signupLoading.value = false;
+      });
+  }
 </script>
 
 <style scoped>

@@ -3,6 +3,7 @@ import "./assets/style.css";
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
+import { createPinia } from "pinia";
 
 // Detect click outside element
 // https://stackoverflow.com/questions/36170425/detect-click-outside-element
@@ -22,8 +23,10 @@ const clickOutside = {
   },
 };
 
+const pinia = createPinia();
 const app = createApp(App);
 
 app.use(router);
+app.use(pinia);
 app.directive("click-outside", clickOutside);
 app.mount("#app");

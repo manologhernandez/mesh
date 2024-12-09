@@ -83,7 +83,7 @@
           v-click-outside="hideDropdownAvatar"
         >
           <div class="px-4 py-3 text-neutral-900 dark:text-white">
-            <div class="font-bold truncate">{{ USER.username }}</div>
+            <div class="font-bold truncate">{{ username }}</div>
           </div>
           <ul
             class="py-2 text-sm text-neutral-700 dark:text-neutral-200"
@@ -171,6 +171,9 @@
   import { useRouter } from "vue-router";
   import { useDark, useToggle } from "@vueuse/core";
   import { USER } from "@/tools/sampledata";
+  import { useUserStore } from "@/stores/user";
+
+  const store = useUserStore();
 
   const isDark = useDark();
   const toggleDark = useToggle(isDark);
@@ -185,8 +188,10 @@
     return screen.width <= 1024;
   });
 
+  const username = computed(() => store.userId);
+
   function signOutUser() {
-    localStorage.removeItem("mesh_token");
+    store.clearUser();
     router.go(0);
   }
 

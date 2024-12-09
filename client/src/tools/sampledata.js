@@ -306,7 +306,7 @@ export const COLLEGES = [
     followers: 4000,
     color: "#7b1113",
     aboutText:
-      "The University of the Philippines (UP) is the national university of the Philippines, recognized as the country’s premier institution of higher learning. Established in 1908, UP has a rich tradition of academic excellence and service to the nation. UP consists of a system of eight constituent universities located across the Philippines, with the flagship campus at UP Diliman in Quezon City. As of 2023, UP has over 60,000 students enrolled across its campuses, spanning undergraduate, graduate, and postgraduate programs.",
+      "The University of the Philippines (UP) is the national university of the Philippines, recognized as the country's premier institution of higher learning. Established in 1908, UP has a rich tradition of academic excellence and service to the nation. UP consists of a system of eight constituent universities located across the Philippines, with the flagship campus at UP Diliman in Quezon City. As of 2023, UP has over 60,000 students enrolled across its campuses, spanning undergraduate, graduate, and postgraduate programs.",
     mainCampus:
       "University of the Philippines Diliman Quezon Hall, Osmeña Avenue UP Diliman, Quezon City 1101 Metro Manila, Philippines",
     telephone: "+63 2 8981-8500",

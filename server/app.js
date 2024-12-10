@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/auth");
+const apiRoutes = require("./routes/api");
 const { expressjwt: jwt } = require("express-jwt");
 require("dotenv").config();
 
@@ -29,5 +30,6 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/auth", authRoutes);
+app.use("/api", apiRoutes);
 
 module.exports = app;

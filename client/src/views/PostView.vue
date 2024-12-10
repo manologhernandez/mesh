@@ -1,6 +1,17 @@
 <template>
   <div class="relative">
     <div class="absolute w-full lg:left-[20%] lg:w-3/5 flex flex-col gap-0 p-2">
+      <Loading
+        :active.sync="loading"
+        :can-cancel="false"
+        loader="dots"
+      />
+      <span
+        v-if="errors.post"
+        class="mt-2 text-sm font-semibold bg-red-700 text-white py-4 px-4 rounded"
+      >
+        {{ errors.post }}
+      </span>
       <div
         class="p-2 lg:p-4"
         v-if="post"
@@ -13,8 +24,8 @@
               <!-- COLLEGE ICON -->
               <div
                 class="h-8 w-8 rounded-full border-none"
-                :style="`background-color: ${authorCollege.color}`"
-                v-if="authorCollege"
+                :style="`background-color: ${post.college.color}`"
+                v-if="post.college"
               ></div>
               <!-- BREADCRUMBS & AUTHOR -->
               <div
@@ -22,23 +33,46 @@
               >
                 <div class="text-sm flex items-center overflow-x-auto">
                   <!-- BREADCRUMBS -->
-                  <template v-if="post.breadcrumbs">
-                    <div
-                      class="flex items-center flex-nowrap"
-                      v-for="(breadcrumb, index) in post.breadcrumbs"
-                    >
-                      <ChevronRightIcon v-if="index > 0" />
+                  <template
+                    v-if="post.college || post.subtopic || post.courseGroup"
+                  >
+                    <div class="flex items-center flex-nowrap">
+                      <!-- College link -->
                       <RouterLink
-                        :to="breadcrumb.link"
+                        :to="`/college/${post.college.id}`"
                         class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
-                        >{{ breadcrumb.title }}
+                        >{{ post.college.short_name }}
                       </RouterLink>
+                      <!-- Subtopic link -->
+                      <div
+                        class="flex items-center"
+                        v-if="post.subtopic"
+                      >
+                        <ChevronRightIcon />
+                        <RouterLink
+                          :to="`/subtopic/${post.subtopic.id}`"
+                          class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
+                          >{{ post.subtopic.name }}
+                        </RouterLink>
+                      </div>
+                      <!-- Course Group link -->
+                      <div
+                        class="flex items-center"
+                        v-if="post.course_group"
+                      >
+                        <ChevronRightIcon />
+                        <RouterLink
+                          :to="`/coursegroup/${post.course_group.id}`"
+                          class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
+                          >{{ post.course_group.name }}
+                        </RouterLink>
+                      </div>
                     </div>
                   </template>
                 </div>
                 <!-- AUTHOR -->
                 <div class="text-xs">
-                  {{ post.author && post.author.username }}
+                  {{ post.author_username }}
                 </div>
               </div>
             </div>
@@ -46,7 +80,7 @@
             <div
               class="text-sm line-clamp-1 text-neutral-700 dark:text-neutral-300"
             >
-              {{ dayjs(post.dateCreated).fromNow() }}
+              {{ dayjs(post.created_at).fromNow() }}
             </div>
           </div>
           <!-- POST BODY -->
@@ -178,7 +212,7 @@
           <div class="font-semibold">Rules</div>
           <ol class="">
             <li
-              v-for="(rule, index) in postSubtopic.rules"
+              v-for="(rule, index) in postSubtopic.subtopic_rules"
               :key="index"
               class="pb-2"
             >
@@ -233,16 +267,11 @@
 </template>
 
 <script setup>
-  import {
-    posts,
-    SUBTOPICS,
-    COLLEGES,
-    COURSE_GROUPS,
-  } from "@/tools/sampledata";
+  import { COLLEGES } from "@/tools/sampledata";
   import Comment from "@/components/Comment.vue";
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
-  import { computed, ref, onMounted } from "vue";
+  import { computed, ref, onMounted, watch } from "vue";
   import ChevronRightIcon from "@/components/icons/ChevronRightIcon.vue";
   import Like from "@/components/Like.vue";
   import ShareIcon from "@/components/icons/ShareIcon.vue";
@@ -251,6 +280,7 @@
   import { useRouter } from "vue-router";
   import ShareModal from "@/components/ShareModal.vue";
   import ReportModal from "@/components/ReportModal.vue";
+  import Loading from "vue-loading-overlay";
 
   dayjs.extend(relativeTime);
 
@@ -266,6 +296,56 @@
   const isShowShareModal = ref(false);
   const isShowReportModal = ref(false);
   const isUnblurPost = ref(false);
+
+  const loading = ref(false);
+  const errors = ref({});
+
+  const post = ref(null);
+
+  onMounted(() => {
+    setupFac();
+  });
+
+  // watch the params of the route to fetch the data again
+  watch(() => props.id, getPost, { immediate: true });
+
+  // fetch post
+  function getPost(id) {
+    const request = new Request(`/api/post?id=${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    loading.value = true;
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          if (response.status === 404) {
+            router.push("/404");
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        post.value = data.data;
+      })
+      .catch((e) => {
+        errors.value.post = e.message;
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  }
 
   function showShareModal() {
     isShowShareModal.value = true;
@@ -292,7 +372,7 @@
   }
 
   const blurPost = computed(() => {
-    return !isUnblurPost.value && post.value.isBlurred;
+    return !isUnblurPost.value && post.value.is_censored;
   });
 
   const currUrl = computed(() => {
@@ -304,50 +384,16 @@
     return absoluteURL;
   });
 
-  const post = computed(() => {
-    var myPost = posts.filter((post) => post.id == props.id)[0];
-
-    if (myPost) {
-      return myPost;
-    } else {
-      router.push("/404");
-    }
-  });
-
   const postSubtopic = computed(() => {
-    if (post && post.value && post.value.subtopic && post.value.subtopic.id) {
-      return SUBTOPICS.filter(
-        (subtopic) => subtopic.id === post.value.subtopic.id
-      )[0];
+    if (post && post.value && post.value.subtopic) {
+      return post.value.subtopic;
     }
     return null;
   });
 
   const postCourseGroup = computed(() => {
-    if (
-      post &&
-      post.value &&
-      post.value.courseGroup &&
-      post.value.courseGroup.id
-    ) {
-      return COURSE_GROUPS.filter(
-        (courseGroup) => courseGroup.id === post.value.courseGroup.id
-      )[0];
-    }
-    return null;
-  });
-
-  const authorCollege = computed(() => {
-    if (
-      post &&
-      post.value &&
-      post.value.author &&
-      post.value.author.college &&
-      post.value.author.college.id
-    ) {
-      return COLLEGES.filter(
-        (college) => college.id == post.value.author.college.id
-      )[0];
+    if (post && post.value && post.value.course_group) {
+      return post.value.course_group;
     }
     return null;
   });
@@ -385,7 +431,7 @@
     if (post && post.value) {
       const fac = new FastAverageColor();
       const container = document.querySelector(
-        `.image-container-${post.value.id}`
+        `.image-container-${post.value.uuid}`
       );
 
       if (container && post.value.hasImage) {
@@ -401,10 +447,6 @@
       }
     }
   }
-
-  onMounted(() => {
-    setupFac();
-  });
 </script>
 
 <style lang="scss" scoped></style>

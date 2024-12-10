@@ -19,6 +19,13 @@ export default defineConfig({
         secure: false,
         rewrite: (path) => path.replace(/^\/auth/, ""),
       },
+
+      "/api": {
+        target: "http://127.0.0.1:3000/api",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
     },
   },
 });

@@ -2,11 +2,22 @@
   <div class="relative">
     <div class="absolute w-full lg:left-[20%] lg:w-3/5 flex flex-col gap-0">
       <div class="px-4 lg:px-8 pt-4 pb-12">
+        <Loading
+          :active.sync="loading"
+          :can-cancel="false"
+          loader="dots"
+        />
         <div class="font-bold text-2xl mb-2 p-2">Create Post</div>
         <form
           @submit.prevent="handlePostSubmit"
           class="flex flex-col gap-4"
         >
+          <span
+            v-if="errors.createPost"
+            class="mt-2 text-sm font-semibold bg-red-700 text-white py-4 px-4 rounded"
+          >
+            {{ errors.createPost }}
+          </span>
           <div class="flex flex-col gap-4 p-2">
             <!-- COLLEGE -->
             <div>
@@ -16,13 +27,21 @@
               >
                 <span class="text-red-500 font-bold">* </span>College
               </label>
-              <input
-                type="text"
-                id="college"
-                v-model="college"
-                disabled
-                class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-800 dark:border-neutral-600"
-              />
+              <div
+                class="rounded-lg p-3 mt-2 bg-neutral-100 dark:bg-neutral-600 font-semibold flex gap-2 items-center mb-2"
+              >
+                <div
+                  class="rounded-full w-6 h-6"
+                  :style="`background-color: ${
+                    userStore.college ? userStore.college.color : '#FFF'
+                  }`"
+                ></div>
+                <span>{{
+                  userStore.college
+                    ? userStore.college.name
+                    : "No college found"
+                }}</span>
+              </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -327,7 +346,7 @@
           <div class="font-semibold">Rules</div>
           <ol class="">
             <li
-              v-for="(rule, index) in chosenSubtopic.rules"
+              v-for="(rule, index) in chosenSubtopic.subtopic_rules"
               :key="index"
               class="pb-2"
             >
@@ -391,7 +410,7 @@
         <div class="font-semibold py-4">Rules</div>
         <ol class="">
           <li
-            v-for="(rule, index) in chosenSubtopic.rules"
+            v-for="(rule, index) in chosenSubtopic.subtopic_rules"
             :key="index"
             class="pb-4"
           >
@@ -439,13 +458,16 @@
 </template>
 
 <script setup>
-  import { computed, ref } from "vue";
-  import { COURSE_GROUPS, SUBTOPICS } from "@/tools/sampledata";
+  import { computed, ref, onMounted } from "vue";
   import CloseIcon from "@/components/icons/CloseIcon.vue";
   import InfoIcon from "@/components/icons/InfoIcon.vue";
+  import Loading from "vue-loading-overlay";
+  import { useUserStore } from "@/stores/user";
+  import { useRouter } from "vue-router";
 
-  const errors = ref([]);
-  const college = ref("University of the Philippines");
+  const errors = ref({});
+  const router = useRouter();
+  const userStore = useUserStore();
   const subtopic = ref("");
   const courseGroup = ref("");
   const title = ref("");
@@ -457,10 +479,89 @@
   const imagePreview = ref(null);
   const isCensorPost = ref(false);
   const isPromotePost = ref(false);
+  const loading = ref(false);
+
+  const SUBTOPICS = ref(null);
+  const COURSE_GROUPS = ref(null);
+
+  onMounted(() => {
+    getSubtopics();
+    getCourseGroups();
+  });
+
+  // fetch suptopics
+  function getSubtopics() {
+    const request = new Request("/api/subtopics", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    loading.value = true;
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        SUBTOPICS.value = data.data;
+      })
+      .catch((e) => {
+        errors.value.createPost = e.message;
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  }
+
+  // fetch course groups
+  function getCourseGroups() {
+    const request = new Request("/api/course_groups", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    loading.value = true;
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        COURSE_GROUPS.value = data.data;
+      })
+      .catch((e) => {
+        errors.value.createPost = e.message;
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  }
 
   const isPostNsfw = computed(() => {
-    if (subtopic.value) {
-      return subtopic.value == "nsfw";
+    if (chosenSubtopic.value) {
+      return chosenSubtopic.value.name == "NSFW";
     }
     return false;
   });
@@ -519,8 +620,8 @@
 
   function handlePostSubmit() {
     if (validatePostInputs()) {
-      var postDetails = {
-        college: college.value,
+      const reqBody = {
+        college: userStore.college ? userStore.college.id : null,
         courseGroup: courseGroup.value,
         subtopic: subtopic.value,
         title: title.value,
@@ -528,10 +629,41 @@
         isPromotePost: isPromotePost.value,
         post: post.value,
         attachment: imagePreview.value,
+        author: userStore.username,
       };
-      alert("Received post details: " + JSON.stringify(postDetails, null, 2));
 
-      // Add API post call and logic here
+      const request = new Request("/api/create_post", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reqBody),
+      });
+
+      loading.value = true;
+      fetch(request)
+        .then((response) => {
+          if (!response.ok) {
+            // Check for a 400 error
+            if (response.status === 400) {
+              return response.json().then((errorData) => {
+                throw new Error(`${errorData.message || "Bad Request"}`);
+              });
+            }
+            // Handle other status codes
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+          }
+          return response.json(); // Parse JSON if response is ok
+        })
+        .then((data) => {
+          router.push(`/post/${data.id}`);
+        })
+        .catch((e) => {
+          errors.value.createPost = e.message;
+        })
+        .finally(() => {
+          loading.value = false;
+        });
     }
   }
 
@@ -557,14 +689,14 @@
 
   const chosenSubtopic = computed(() => {
     if (subtopic.value) {
-      return SUBTOPICS.filter((topic) => topic.id === subtopic.value)[0];
+      return SUBTOPICS.value.filter((topic) => topic.id === subtopic.value)[0];
     }
     return null;
   });
 
   const chosenCourseGroup = computed(() => {
     if (courseGroup.value) {
-      return COURSE_GROUPS.filter(
+      return COURSE_GROUPS.value.filter(
         (course) => course.id === courseGroup.value
       )[0];
     }

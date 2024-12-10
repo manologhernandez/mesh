@@ -15,7 +15,7 @@ module.exports = {
     // Query the college_email table for the domain
     const { data, error } = await supabaseClient
       .from("college_email")
-      .select("domain")
+      .select("domain, college(id, name, short_name, color)")
       .eq("domain", domain);
 
     if (error) {
@@ -23,7 +23,10 @@ module.exports = {
     }
 
     // If data is not empty, the domain exists
-    return data.length > 0;
+    if (data.length > 0) {
+      return data[0].college;
+    }
+    return false;
   },
   validateEmailAttempts: async function (email, supabaseClient) {
     // Query the otp_emails table for the email
@@ -115,6 +118,7 @@ module.exports = {
     password,
     degree,
     subtopics,
+    college,
     supabaseClient
   ) {
     return await supabaseClient.auth.signUp({
@@ -124,6 +128,7 @@ module.exports = {
         data: {
           degree: degree,
           subtopics: subtopics,
+          college: college,
         },
       },
     });

@@ -9,9 +9,15 @@ export const useUserStore = defineStore("user", () => {
   const sessionToken = useLocalStorage("mesh_token", "");
 
   // getters
-  const userId = computed(() => {
-    if (user.value && user.value.email) {
-      return user.value.email.split("@")[0];
+  const username = computed(() => {
+    if (user.value && user.value.username) {
+      return user.value.username;
+    }
+  });
+
+  const college = computed(() => {
+    if (user.value && user.value.metadata) {
+      return user.value.metadata.college;
     }
   });
 
@@ -23,9 +29,9 @@ export const useUserStore = defineStore("user", () => {
   function setUser(userData) {
     console.log("vue store setting user: ", userData);
     store("mesh_user", JSON.stringify(userData.user));
-    store("mesh_token", userData.session.access_token);
+    store("mesh_token", userData.session.token);
     user.value = userData.user;
-    sessionToken.value = userData.session.access_token;
+    sessionToken.value = userData.session.token;
   }
 
   //setters
@@ -34,5 +40,5 @@ export const useUserStore = defineStore("user", () => {
     clear();
   }
 
-  return { user, userId, setUser, clearUser };
+  return { user, username, college, token, setUser, clearUser };
 });

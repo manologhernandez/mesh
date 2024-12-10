@@ -71,7 +71,9 @@
           <span class="sr-only">Open user menu</span>
           <div
             class="rounded-full w-10 h-10"
-            :style="`background-color: ${USER.college.color}`"
+            :style="`background-color: ${
+              userStore.college ? userStore.college.color : '#FFF'
+            }`"
           ></div>
         </button>
 
@@ -83,7 +85,7 @@
           v-click-outside="hideDropdownAvatar"
         >
           <div class="px-4 py-3 text-neutral-900 dark:text-white">
-            <div class="font-bold truncate">{{ username }}</div>
+            <div class="font-bold truncate">{{ userStore.username }}</div>
           </div>
           <ul
             class="py-2 text-sm text-neutral-700 dark:text-neutral-200"
@@ -170,7 +172,6 @@
   import { ref, computed } from "vue";
   import { useRouter } from "vue-router";
   import { useDark, useToggle } from "@vueuse/core";
-  import { USER } from "@/tools/sampledata";
   import { useUserStore } from "@/stores/user";
 
   const userStore = useUserStore();
@@ -187,8 +188,6 @@
   const isMobile = computed(() => {
     return screen.width <= 1024;
   });
-
-  const username = computed(() => userStore.userId);
 
   function signOutUser() {
     userStore.clearUser();

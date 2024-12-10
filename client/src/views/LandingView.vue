@@ -220,6 +220,15 @@
           >
             <h2 class="text-3xl font-bold">Validate your email</h2>
             <div class="text-sm flex flex-col gap-2">
+              <div
+                class="rounded-lg p-2 bg-neutral-200/50 font-semibold flex gap-2 items-center mb-2"
+              >
+                <div
+                  class="rounded-full w-6 h-6"
+                  :style="`background-color: ${signupData.college.color}`"
+                ></div>
+                <span>{{ signupData.college.name }}</span>
+              </div>
               <span>
                 We sent a verfication code to
                 <span class="font-semibold">{{ signupData.email }}</span
@@ -628,6 +637,7 @@
     degree: "",
     subtopics: [],
     collegeEmailUuid: "",
+    college: {},
   });
 
   const loginData = ref({
@@ -724,6 +734,7 @@
         degree: "",
         subtopics: [],
         collegeEmailUuid: "",
+        college: {},
       };
 
       cacheSignupData();
@@ -755,7 +766,7 @@
             });
           }
           // Handle other status codes
-          throw new Error(`Error: ${response.status}`);
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
         return response.json(); // Parse JSON if response is ok
       })
@@ -771,6 +782,7 @@
           degree: "",
           subtopics: [],
           collegeEmailUuid: "",
+          college: {},
         };
 
         cacheSignupData();
@@ -822,7 +834,7 @@
               });
             }
             // Handle other status codes
-            throw new Error(`Error: ${response.status}`);
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
           }
           return response.json(); // Parse JSON if response is ok
         })
@@ -929,15 +941,17 @@
               setSignupStep(-2);
             }
             // Handle other status codes
-            throw new Error(`Error: ${response.status}`);
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
           }
           return response.json(); // Parse JSON if response is ok
         })
         .then((data) => {
           incrementSignupStep();
+          signupData.value.college = data.data;
           startOtpCountdown();
         })
         .catch((e) => {
+          console.log(e);
           errors.value.signup = e.message;
         })
         .finally(() => {
@@ -973,7 +987,7 @@
             });
           }
           // Handle other status codes
-          throw new Error(`Error: ${response.status}`);
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
         return response.json(); // Parse JSON if response is ok
       })
@@ -999,6 +1013,7 @@
         degree: signupData.value.degree,
         subtopics: signupData.value.subtopics,
         uuid: signupData.value.collegeEmailUuid,
+        college: signupData.value.college,
       };
 
       const request = new Request("/auth/signup", {
@@ -1020,7 +1035,7 @@
               });
             }
             // Handle other status codes
-            throw new Error(`Error: ${response.status}`);
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
           }
           return response.json(); // Parse JSON if response is ok
         })
@@ -1062,7 +1077,7 @@
             });
           }
           // Handle other status codes
-          throw new Error(`Error: ${response.status}`);
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
         }
         return response.json(); // Parse JSON if response is ok
       })

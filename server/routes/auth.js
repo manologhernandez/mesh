@@ -24,8 +24,11 @@ router.post("/validate_email", async (req, res) => {
     return res.status(400).json({ message: "Please input a valid email." });
   }
 
+  var collegeDetails = null;
+
   try {
-    if (!(await authTools.validateEmailCollege(email, supabase))) {
+    collegeDetails = await authTools.validateEmailCollege(email, supabase);
+    if (!collegeDetails) {
       return res.status(401).json({ message: "Email is unsupported." });
     }
   } catch (error) {
@@ -53,7 +56,7 @@ router.post("/validate_email", async (req, res) => {
       return res.status(400).json({ message: error.message });
     }
 
-    res.status(200).json({ message: "OTP Sent!", data });
+    res.status(200).json({ message: "Email supported", data: collegeDetails });
   } catch (error) {
     res
       .status(500)
@@ -111,7 +114,7 @@ router.post("/resend_otp", async (req, res) => {
 
 // Signup Route
 router.post("/signup", async (req, res) => {
-  const { username, password, degree, subtopics, uuid } = req.body;
+  const { username, password, degree, subtopics, uuid, college } = req.body;
 
   if (!username || !password) {
     return res
@@ -126,6 +129,7 @@ router.post("/signup", async (req, res) => {
       password,
       degree,
       subtopics,
+      college,
       supabase
     );
 
@@ -143,7 +147,22 @@ router.post("/signup", async (req, res) => {
       throw new Error(err.message);
     }
 
-    res.status(201).json({ message: "Signup successful!", data });
+    var responseData = {
+      session: {
+        token: data.session.access_token,
+      },
+      user: {
+        username: data.user.email.split("@")[0],
+        metadata: {
+          degree: data.user.user_metadata.degree,
+          subtopics: data.user.user_metadata.subtopics,
+          college: data.user.user_metadata.college,
+        },
+        created_at: data.user.created_at,
+      },
+    };
+
+    res.status(201).json({ message: "Signup successful!", data: responseData });
   } catch (error) {
     res
       .status(500)
@@ -197,7 +216,22 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: error.message });
     }
 
-    res.status(200).json({ message: "Login successful!", data });
+    var responseData = {
+      session: {
+        token: data.session.access_token,
+      },
+      user: {
+        username: data.user.email.split("@")[0],
+        metadata: {
+          degree: data.user.user_metadata.degree,
+          subtopics: data.user.user_metadata.subtopics,
+          college: data.user.user_metadata.college,
+        },
+        created_at: data.user.created_at,
+      },
+    };
+
+    res.status(200).json({ message: "Login successful!", data: responseData });
   } catch (error) {
     res
       .status(500)

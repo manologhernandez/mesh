@@ -173,7 +173,7 @@
   import { USER } from "@/tools/sampledata";
   import { useUserStore } from "@/stores/user";
 
-  const store = useUserStore();
+  const userStore = useUserStore();
 
   const isDark = useDark();
   const toggleDark = useToggle(isDark);
@@ -188,10 +188,10 @@
     return screen.width <= 1024;
   });
 
-  const username = computed(() => store.userId);
+  const username = computed(() => userStore.userId);
 
   function signOutUser() {
-    store.clearUser();
+    userStore.clearUser();
     router.go(0);
   }
 

@@ -603,8 +603,12 @@
   import CloseIcon from "@/components/icons/CloseIcon.vue";
   import Loading from "vue-loading-overlay";
   import { useUserStore } from "@/stores/user";
+  import {
+    encryptAndStore,
+    decryptAndRetrieve,
+  } from "@/tools/localStorageUtils";
 
-  const store = useUserStore();
+  const userStore = useUserStore();
 
   const loginLoading = ref(false);
   const signupLoading = ref(false);
@@ -635,15 +639,20 @@
   var countdownInterval = null;
   const hasResentOtp = ref(false);
 
-  onMounted(() => {
-    const cachedSignupData = JSON.parse(sessionStorage.getItem("signupData"));
-    if (cachedSignupData) {
-      signupData.value = cachedSignupData;
-      if (signupData.currentSignupStep > 1) {
-        openSignupModal();
+  onMounted(async () => {
+    try {
+      const cachedSignupData = await decryptAndRetrieve("signupData");
+      if (cachedSignupData) {
+        signupData.value = cachedSignupData;
+
+        if (signupData.value.currentSignupStep > 1) {
+          openSignupModal();
+        }
+      } else {
+        await encryptAndStore("signupData", signupData.value);
       }
-    } else {
-      sessionStorage.setItem("signupData", JSON.stringify(signupData.value));
+    } catch (error) {
+      console.log("Error loading cache");
     }
   });
 
@@ -654,7 +663,7 @@
 
   // Cache the current signup data object to session storage
   function cacheSignupData() {
-    sessionStorage.setItem("signupData", JSON.stringify(signupData.value));
+    encryptAndStore("signupData", signupData.value);
   }
 
   // Increment signup step counter
@@ -817,8 +826,8 @@
           }
           return response.json(); // Parse JSON if response is ok
         })
-        .then((data) => {
-          store.setUser(data.data);
+        .then(async (data) => {
+          await userStore.setUser(data.data);
           router.go(0);
         })
         .catch((e) => {
@@ -1015,8 +1024,8 @@
           }
           return response.json(); // Parse JSON if response is ok
         })
-        .then((data) => {
-          store.setUser(data.data);
+        .then(async (data) => {
+          await userStore.setUser(data.data);
           router.go(0);
         })
         .catch((e) => {

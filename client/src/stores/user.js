@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { useLocalStorage } from "@vueuse/core";
 import { ref, computed } from "vue";
+import { store, clear } from "@/tools/localStorageUtils";
 
 export const useUserStore = defineStore("user", () => {
   // state variables
@@ -21,8 +22,8 @@ export const useUserStore = defineStore("user", () => {
   //setters
   function setUser(userData) {
     console.log("vue store setting user: ", userData);
-    localStorage.setItem("mesh_user", JSON.stringify(userData.user));
-    localStorage.setItem("mesh_token", userData.session.access_token);
+    store("mesh_user", JSON.stringify(userData.user));
+    store("mesh_token", userData.session.access_token);
     user.value = userData.user;
     sessionToken.value = userData.session.access_token;
   }
@@ -30,8 +31,7 @@ export const useUserStore = defineStore("user", () => {
   //setters
   function clearUser() {
     console.log("vue store clearing user");
-    localStorage.removeItem("mesh_user");
-    localStorage.removeItem("mesh_token");
+    clear();
   }
 
   return { user, userId, setUser, clearUser };

@@ -39,6 +39,8 @@ module.exports = {
       throw new Error(error.message);
     }
 
+    if (data.length < 1) return true;
+
     return data[0].attempts < 2;
   },
   incrementEmailAttempts: async function (email, supabaseClient) {

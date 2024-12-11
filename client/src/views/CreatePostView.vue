@@ -220,7 +220,7 @@
               <textarea
                 id="post"
                 rows="8"
-                class="mt-1 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900"
+                class="mt-2 block w-full px-3 py-2 border rounded-md shadow-sm dark:bg-neutral-900"
                 v-model="post"
                 :class="{
                   'border-red-500': errors.post,
@@ -559,6 +559,7 @@
       });
   }
 
+  // check if post is tagged NSFW
   const isPostNsfw = computed(() => {
     if (chosenSubtopic.value) {
       return chosenSubtopic.value.name == "NSFW";
@@ -566,10 +567,12 @@
     return false;
   });
 
+  // Toggle censor post boolean
   function toggleCensorPostToggle() {
     isCensorPost.value = !isCensorPost.value;
   }
 
+  // Toggle promote post boolean
   function togglePromotePost() {
     isPromotePost.value = !isPromotePost.value;
   }
@@ -585,16 +588,19 @@
     }
   }
 
+  // Clear course group value
   function clearCourseGroup() {
     courseGroup.value = "";
   }
 
+  // Clear image attachment values
   function clearImageAttachment() {
     selectedFile.value = null;
     imagePreview.value = null;
     errors.value.file = null;
   }
 
+  // Validation helper function to validate post values
   const validatePostInputs = () => {
     errors.value = {};
 
@@ -618,75 +624,171 @@
     return Object.keys(errors.value).length === 0;
   };
 
+  // Handler to create a post
   function handlePostSubmit() {
     if (validatePostInputs()) {
-      const reqBody = {
-        college: userStore.college ? userStore.college.id : null,
-        courseGroup: courseGroup.value,
-        subtopic: subtopic.value,
-        title: title.value,
-        isCensorPost: isCensorPost.value || isPostNsfw.value,
-        isPromotePost: isPromotePost.value,
-        post: post.value,
-        attachment: imagePreview.value,
-        author: userStore.username,
-      };
+      // if user attaches a file, upload file first before creating post
+      if (selectedFile.value) {
+        try {
+          const formData = new FormData();
+          formData.append("file", selectedFile.value);
 
-      const request = new Request("/api/create_post", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(reqBody),
-      });
+          const request = new Request("/api/upload", {
+            method: "POST",
+            headers: {},
+            body: formData,
+          });
+          loading.value = true;
+          fetch(request)
+            .then((response) => {
+              if (!response.ok) {
+                if (response.status === 400) {
+                  return response.json().then((errorData) => {
+                    throw new Error(`${errorData.message || "Bad Request"}`);
+                  });
+                }
+                throw new Error(
+                  `Error ${response.status}: ${response.statusText}`
+                );
+              }
+              return response.json();
+            })
+            .then((data) => {
+              const attachmentUrl = data.url;
 
-      loading.value = true;
-      fetch(request)
-        .then((response) => {
-          if (!response.ok) {
-            // Check for a 400 error
-            if (response.status === 400) {
-              return response.json().then((errorData) => {
-                throw new Error(`${errorData.message || "Bad Request"}`);
+              const reqBody = {
+                college: userStore.college ? userStore.college.id : null,
+                courseGroup: courseGroup.value,
+                subtopic: subtopic.value,
+                title: title.value,
+                isCensorPost: isCensorPost.value || isPostNsfw.value,
+                isPromotePost: isPromotePost.value,
+                post: post.value,
+                attachment: attachmentUrl,
+                author: userStore.username,
+              };
+
+              const request = new Request("/api/create_post", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(reqBody),
               });
-            }
-            // Handle other status codes
-            throw new Error(`Error ${response.status}: ${response.statusText}`);
-          }
-          return response.json(); // Parse JSON if response is ok
-        })
-        .then((data) => {
-          router.push(`/post/${data.id}`);
-        })
-        .catch((e) => {
-          errors.value.createPost = e.message;
-        })
-        .finally(() => {
-          loading.value = false;
+
+              fetch(request)
+                .then((response) => {
+                  if (!response.ok) {
+                    if (response.status === 400) {
+                      return response.json().then((errorData) => {
+                        throw new Error(
+                          `${errorData.message || "Bad Request"}`
+                        );
+                      });
+                    }
+                    throw new Error(
+                      `Error ${response.status}: ${response.statusText}`
+                    );
+                  }
+                  return response.json();
+                })
+                .then((data) => {
+                  router.push(`/post/${data.id}`);
+                })
+                .catch((e) => {
+                  errors.value.createPost = e.message;
+                })
+                .finally(() => {
+                  loading.value = false;
+                });
+            })
+            .catch((e) => {
+              errors.value.createPost = e.message;
+            })
+            .finally(() => {
+              loading.value = false;
+            });
+        } catch (error) {
+          console.error("Error uploading file:", error);
+          alert("Error uploading file. Please try again.");
+        }
+      } else {
+        const reqBody = {
+          college: userStore.college ? userStore.college.id : null,
+          courseGroup: courseGroup.value,
+          subtopic: subtopic.value,
+          title: title.value,
+          isCensorPost: isCensorPost.value || isPostNsfw.value,
+          isPromotePost: isPromotePost.value,
+          post: post.value,
+          attachment: null,
+          author: userStore.username,
+        };
+
+        const request = new Request("/api/create_post", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(reqBody),
         });
+
+        loading.value = true;
+        fetch(request)
+          .then((response) => {
+            if (!response.ok) {
+              // Check for a 400 error
+              if (response.status === 400) {
+                return response.json().then((errorData) => {
+                  throw new Error(`${errorData.message || "Bad Request"}`);
+                });
+              }
+              // Handle other status codes
+              throw new Error(
+                `Error ${response.status}: ${response.statusText}`
+              );
+            }
+            return response.json(); // Parse JSON if response is ok
+          })
+          .then((data) => {
+            router.push(`/post/${data.id}`);
+          })
+          .catch((e) => {
+            errors.value.createPost = e.message;
+          })
+          .finally(() => {
+            loading.value = false;
+          });
+      }
     }
   }
 
+  // Toggle expanded subtopic rule
   function toggleRule(index) {
     expandedRuleIndex.value = expandedRuleIndex.value === index ? null : index;
   }
 
+  // Hide subtopic modal
   function hideSubtopicModal() {
     isShowSubtopicModal.value = false;
   }
 
+  // Show subtopic modal
   function showSubtopicModal() {
     isShowSubtopicModal.value = true;
   }
 
+  // Hide course group modal
   function hideCourseGroupModal() {
     isShowCourseGroupModal.value = false;
   }
 
+  // Show course group modal
   function showCourseGroupModal() {
     isShowCourseGroupModal.value = true;
   }
 
+  // retrieve the user's chosen subtopic based on what was selected on the dropdown
   const chosenSubtopic = computed(() => {
     if (subtopic.value) {
       return SUBTOPICS.value.filter((topic) => topic.id === subtopic.value)[0];
@@ -694,6 +796,7 @@
     return null;
   });
 
+  // retrieve the user's chosen course group based on what was selected on the dropdown
   const chosenCourseGroup = computed(() => {
     if (courseGroup.value) {
       return COURSE_GROUPS.value.filter(

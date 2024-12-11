@@ -90,12 +90,12 @@
 
           <div :class="blurPost ? 'blur-lg' : ''">
             <div
-              v-if="post.hasImage"
+              v-if="post.attachment"
               class="max-h-96 flex justify-center mb-4 rounded-lg"
-              :class="`image-container-${post.id}`"
+              :class="`image-container-${post.uuid}`"
             >
               <img
-                :src="post.image"
+                :src="post.attachment"
                 alt=""
                 class="object-contain rounded-lg"
                 crossOrigin="anonymous"

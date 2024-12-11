@@ -1,7 +1,23 @@
 const express = require("express");
 const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
+const multer = require("multer");
 const router = express.Router();
+const crypto = require("crypto");
+
+// Multer Configuration with File Size Limit
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB limit
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith("image/")) {
+      return cb(
+        new Error("Invalid file type. Only JPEG, PNG, and GIF are allowed.")
+      );
+    }
+    cb(null, true);
+  },
+});
 
 // Supabase initialization
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -68,7 +84,7 @@ router.get("/post", async (req, res) => {
     const { data, error } = await supabase
       .from("post")
       .select(
-        "uuid, title, text, author_username, created_at, is_censored, is_promoted, college(id, short_name, color), subtopic(id, name, description, icon, subtopic_rules(order, title, description)), course_group(id, name, description)"
+        "uuid, title, text, author_username, created_at, is_censored, is_promoted, attachment, college(id, short_name, color), subtopic(id, name, description, icon, subtopic_rules(order, title, description)), course_group(id, name, description)"
       )
       .eq("uuid", uuid);
 
@@ -122,6 +138,7 @@ router.post("/create_post", async (req, res) => {
         college_id: parseInt(college),
         is_censored: Boolean(isCensorPost),
         is_promoted: Boolean(isPromotePost),
+        attachment: attachment,
       })
       .select("uuid");
     if (error) {
@@ -133,6 +150,48 @@ router.post("/create_post", async (req, res) => {
     return res
       .status(500)
       .json({ message: "Internal server error.", error: error.message });
+  }
+});
+
+// Upload file route
+// Endpoint to Handle File Upload
+router.post("/upload", upload.single("file"), async (req, res) => {
+  const file = req.file;
+
+  if (!file) {
+    return res.status(400).json({ message: "No file attached" });
+  }
+
+  try {
+    // generate random filename
+    const fileExtension = file.originalname.split(".").pop(); // Extract file extension
+    const randomName = crypto.randomBytes(16).toString("hex"); // Generate random 16-byte string
+    const filename = `${randomName}.${fileExtension}`;
+
+    // upload file
+    const { data, error } = await supabase.storage
+      .from("uploads") // Replace with your bucket name
+      .upload(`user/${filename}`, file.buffer, {
+        cacheControl: "3600",
+        upsert: false, // Set to true if you want to overwrite existing files
+        contentType: file.mimetype,
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    // Generate the public URL of the uploaded file
+    const publicUrl = supabase.storage
+      .from("uploads")
+      .getPublicUrl(`user/${filename}`).data.publicUrl;
+
+    res.status(200).json({
+      message: "File uploaded successfully",
+      url: publicUrl,
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 

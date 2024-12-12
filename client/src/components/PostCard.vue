@@ -105,9 +105,11 @@
       class="flex gap-4 justify-center text-sm items-center align-middle text-neutral-700 dark:text-neutral-300 pt-2"
     >
       <Like
-        :likesCount="post.likesCount"
-        @increment="postLiked()"
-        @decrement="postUnliked()"
+        class="flex gap-1 items-center rounded-full pe-2 py-2"
+        :likes-count="postLikeCount"
+        :liked="hasLikedPost"
+        @increment="postLiked"
+        @decrement="postUnliked"
       />
 
       <RouterLink
@@ -126,9 +128,10 @@
   import ChevronRightIcon from "./icons/ChevronRightIcon.vue";
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
-  import { computed, onMounted, ref } from "vue";
+  import { computed, onMounted, ref, watch } from "vue";
   import { FastAverageColor } from "fast-average-color";
   import Like from "./Like.vue";
+  import { useUserStore } from "@/stores/user";
 
   dayjs.extend(relativeTime);
 
@@ -136,18 +139,110 @@
     post: Object,
   });
 
+  const userStore = useUserStore();
+
   const isImageLoaded = ref(false);
   const isUnblurPost = ref(false);
+
+  const hasLikedPost = ref(false);
+  const incrementLikeCount = ref(false);
+  const decrementLikeCount = ref(false);
+
+  watch(() => props.post, checkPostIsLiked, { immediate: true });
+
+  function checkPostIsLiked() {
+    hasLikedPost.value = props.post.user_has_reacted.length > 0;
+  }
 
   function imageLoaded() {
     isImageLoaded.value = true;
   }
 
   function postLiked() {
-    alert(`Post liked`);
+    const reqBody = {
+      postUuid: props.post.uuid,
+      reaction: "like",
+    };
+
+    const request = new Request("/api/react_post", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: userStore.token,
+      },
+      body: JSON.stringify(reqBody),
+    });
+
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        hasLikedPost.value = true;
+        incrementLikeCount.value = true;
+        decrementLikeCount.value = false;
+      })
+      .catch((e) => {
+        errors.value.post = e.message;
+      })
+      .finally(() => {});
   }
+
   function postUnliked() {
-    alert(`Post unliked`);
+    const reqBody = {
+      postUuid: props.post.uuid,
+    };
+
+    const request = new Request("/api/react_post", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: userStore.token,
+      },
+      body: JSON.stringify(reqBody),
+    });
+
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        hasLikedPost.value = false;
+        incrementLikeCount.value = false;
+        decrementLikeCount.value = true;
+      })
+      .catch((e) => {
+        errors.value.post = e.message;
+      })
+      .finally(() => {});
   }
 
   function unblurPost() {
@@ -156,6 +251,16 @@
 
   const blurPost = computed(() => {
     return !isUnblurPost.value && props.post.is_censored;
+  });
+
+  const postLikeCount = computed(() => {
+    if (incrementLikeCount.value) {
+      return Number(props.post.total_reactions[0]["count"]) + 1;
+    }
+    if (decrementLikeCount.value) {
+      return Number(props.post.total_reactions[0]["count"]) - 1;
+    }
+    return Number(props.post.total_reactions[0]["count"]);
   });
 
   onMounted(() => {

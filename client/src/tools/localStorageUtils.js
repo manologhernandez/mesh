@@ -65,7 +65,7 @@ function store(key, val) {
 }
 
 function clear() {
-  localStorage.clear();
+  localStorage.removeItem("mesh_token");
 }
 
 export { store, clear, encryptAndStore, decryptAndRetrieve };

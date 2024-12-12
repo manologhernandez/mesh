@@ -500,6 +500,7 @@
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: userStore.token,
       },
     });
 
@@ -512,6 +513,11 @@
             return response.json().then((errorData) => {
               throw new Error(`${errorData.message || "Bad Request"}`);
             });
+          }
+
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
           }
           // Handle other status codes
           throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -535,6 +541,7 @@
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: userStore.token,
       },
     });
 
@@ -547,6 +554,10 @@
             return response.json().then((errorData) => {
               throw new Error(`${errorData.message || "Bad Request"}`);
             });
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
           }
           // Handle other status codes
           throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -640,7 +651,7 @@
 
           const request = new Request("/api/upload", {
             method: "POST",
-            headers: {},
+            headers: { Authorization: userStore.token },
             body: formData,
           });
           loading.value = true;
@@ -652,6 +663,10 @@
                     throw new Error(`${errorData.message || "Bad Request"}`);
                   });
                 }
+                if (response.status === 401 || response.status === 403) {
+                  userStore.clearUser();
+                  router.go(0);
+                }
                 throw new Error(
                   `Error ${response.status}: ${response.statusText}`
                 );
@@ -662,7 +677,6 @@
               const attachmentUrl = data.url;
 
               const reqBody = {
-                college: userStore.college ? userStore.college.id : null,
                 courseGroup: courseGroup.value,
                 subtopic: subtopic.value,
                 title: title.value,
@@ -670,13 +684,13 @@
                 isPromotePost: isPromotePost.value,
                 post: post.value,
                 attachment: attachmentUrl,
-                author: userStore.username,
               };
 
               const request = new Request("/api/create_post", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
+                  Authorization: userStore.token,
                 },
                 body: JSON.stringify(reqBody),
               });
@@ -690,6 +704,10 @@
                           `${errorData.message || "Bad Request"}`
                         );
                       });
+                    }
+                    if (response.status === 401 || response.status === 403) {
+                      userStore.clearUser();
+                      router.go(0);
                     }
                     throw new Error(
                       `Error ${response.status}: ${response.statusText}`
@@ -719,7 +737,6 @@
         }
       } else {
         const reqBody = {
-          college: userStore.college ? userStore.college.id : null,
           courseGroup: courseGroup.value,
           subtopic: subtopic.value,
           title: title.value,
@@ -727,13 +744,13 @@
           isPromotePost: isPromotePost.value,
           post: post.value,
           attachment: null,
-          author: userStore.username,
         };
 
         const request = new Request("/api/create_post", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: userStore.token,
           },
           body: JSON.stringify(reqBody),
         });
@@ -747,6 +764,10 @@
                 return response.json().then((errorData) => {
                   throw new Error(`${errorData.message || "Bad Request"}`);
                 });
+              }
+              if (response.status === 401 || response.status === 403) {
+                userStore.clearUser();
+                router.go(0);
               }
               // Handle other status codes
               throw new Error(

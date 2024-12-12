@@ -129,9 +129,10 @@
           <!-- LIKE -->
           <Like
             class="flex gap-1 items-center rounded-full pe-2 py-2"
-            :likes-count="post.likesCount"
-            @increment="likeClicked"
-            @decrement="likeUnclicked"
+            :likes-count="postLikeCount"
+            :liked="hasLikedPost"
+            @increment="postLiked"
+            @decrement="postUnliked"
           />
           <!-- SHARE -->
           <button
@@ -270,7 +271,6 @@
 </template>
 
 <script setup>
-  import { COLLEGES } from "@/tools/sampledata";
   import Comment from "@/components/Comment.vue";
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
@@ -284,6 +284,7 @@
   import ShareModal from "@/components/ShareModal.vue";
   import ReportModal from "@/components/ReportModal.vue";
   import Loading from "vue-loading-overlay";
+  import { useUserStore } from "@/stores/user";
 
   dayjs.extend(relativeTime);
 
@@ -299,11 +300,15 @@
   const isShowShareModal = ref(false);
   const isShowReportModal = ref(false);
   const isUnblurPost = ref(false);
+  const userStore = useUserStore();
 
   const loading = ref(false);
   const errors = ref({});
 
   const post = ref(null);
+  const hasLikedPost = ref(false);
+  const incrementLikeCount = ref(false);
+  const decrementLikeCount = ref(false);
 
   onMounted(() => {
     setupFac();
@@ -318,6 +323,7 @@
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        Authorization: userStore.token,
       },
     });
 
@@ -331,6 +337,10 @@
               throw new Error(`${errorData.message || "Bad Request"}`);
             });
           }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
           if (response.status === 404) {
             router.push("/404");
           }
@@ -341,6 +351,7 @@
       })
       .then((data) => {
         post.value = data.data;
+        hasLikedPost.value = post.value.user_has_reacted.length > 0;
       })
       .catch((e) => {
         errors.value.post = e.message;
@@ -410,6 +421,16 @@
     );
   });
 
+  const postLikeCount = computed(() => {
+    if (incrementLikeCount.value) {
+      return Number(post.value.total_reactions[0]["count"]) + 1;
+    }
+    if (decrementLikeCount.value) {
+      return Number(post.value.total_reactions[0]["count"]) - 1;
+    }
+    return Number(post.value.total_reactions[0]["count"]);
+  });
+
   function submitComment() {
     var comment = {
       value: newComment.value,
@@ -418,12 +439,91 @@
     alert("sending comment: " + JSON.stringify(comment, null, 2));
   }
 
-  function likeClicked() {
-    alert("Like clicked");
+  function postLiked() {
+    const reqBody = {
+      postUuid: post.value.uuid,
+      reaction: "like",
+    };
+
+    const request = new Request("/api/react_post", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: userStore.token,
+      },
+      body: JSON.stringify(reqBody),
+    });
+
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        hasLikedPost.value = true;
+        incrementLikeCount.value = true;
+        decrementLikeCount.value = false;
+      })
+      .catch((e) => {
+        errors.value.post = e.message;
+      })
+      .finally(() => {});
   }
 
-  function likeUnclicked() {
-    alert("Like unclicked");
+  function postUnliked() {
+    const reqBody = {
+      postUuid: post.value.uuid,
+    };
+
+    const request = new Request("/api/react_post", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: userStore.token,
+      },
+      body: JSON.stringify(reqBody),
+    });
+
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        hasLikedPost.value = false;
+        incrementLikeCount.value = false;
+        decrementLikeCount.value = true;
+      })
+      .catch((e) => {
+        errors.value.post = e.message;
+      })
+      .finally(() => {});
   }
 
   function toggleRule(index) {

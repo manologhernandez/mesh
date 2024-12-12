@@ -47,6 +47,8 @@
   import ThreadlineWidget from "@/components/ThreadlineWidget.vue";
   import { THREADLINES, BBPosts } from "@/tools/sampledata.js";
   import { onMounted, onUnmounted, ref } from "vue";
+  import { useUserStore } from "@/stores/user";
+  import { useRouter } from "vue-router";
 
   const posts = ref([]);
   const loading = ref(false);
@@ -58,6 +60,8 @@
   const fetchingMorePosts = ref(false);
   const maxPostsReached = ref(false);
   const sortBy = ref("desc");
+  const userStore = useUserStore();
+  const router = useRouter();
 
   onMounted(() => {
     getPosts();
@@ -93,7 +97,7 @@
       `/api/posts?limit=${POST_COUNT}&offset=${postOffset.value}&sortBy=${sortBy.value}`,
       {
         method: "GET",
-        headers: {},
+        headers: { Authorization: userStore.token },
       }
     );
 
@@ -106,6 +110,10 @@
             return response.json().then((errorData) => {
               throw new Error(`${errorData.message || "Bad Request"}`);
             });
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
           }
           // Handle other status codes
           throw new Error(`Error ${response.status}: ${response.statusText}`);
@@ -129,7 +137,7 @@
       `/api/posts?limit=${POST_COUNT}&offset=${postOffset.value}&sortBy=${sortBy.value}`,
       {
         method: "GET",
-        headers: {},
+        headers: { Authorization: userStore.token },
       }
     );
 
@@ -141,6 +149,10 @@
           if (response.status === 404) {
             maxPostsReached.value = true;
             return;
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
           }
           // Handle other status codes
           throw new Error(`Error ${response.status}: ${response.statusText}`);

@@ -5,38 +5,36 @@ import { store, clear } from "@/tools/localStorageUtils";
 
 export const useUserStore = defineStore("user", () => {
   // state variables
-  const user = useLocalStorage("mesh_user", {});
+  const user = null;
   const sessionToken = useLocalStorage("mesh_token", "");
 
   // getters
   const username = computed(() => {
-    if (user.value && user.value.username) {
-      return user.value.username;
+    if (sessionToken.value) {
+      const tokenPayload = JSON.parse(atob(sessionToken.value.split(".")[1]));
+      return tokenPayload.email.split("@")[0];
     }
   });
 
   const college = computed(() => {
-    if (user.value && user.value.metadata) {
-      return user.value.metadata.college;
+    if (sessionToken.value) {
+      const tokenPayload = JSON.parse(atob(sessionToken.value.split(".")[1]));
+      return tokenPayload.user_metadata.college;
     }
   });
 
   const token = computed(() => {
-    return sessionToken.value;
+    return "Bearer " + sessionToken.value;
   });
 
   //setters
   function setUser(userData) {
-    console.log("vue store setting user: ", userData);
-    store("mesh_user", JSON.stringify(userData.user));
     store("mesh_token", userData.session.token);
-    user.value = userData.user;
     sessionToken.value = userData.session.token;
   }
 
   //setters
   function clearUser() {
-    console.log("vue store clearing user");
     clear();
   }
 

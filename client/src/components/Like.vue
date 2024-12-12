@@ -3,7 +3,7 @@
     class="flex gap-1 items-center lg:hover:text-yellow-400 active:text-yellow-400 cursor-pointer"
     @click="likeClicked"
   >
-    <StarIcon v-if="!liked" />
+    <StarIcon v-if="!props.liked" />
     <StarIconFilled
       v-else
       class="text-yellow-400"
@@ -22,19 +22,19 @@
       type: Number,
       default: 0,
     },
+    liked: {
+      type: Boolean,
+      default: false,
+    },
   });
 
   const emit = defineEmits(["increment", "decrement"]);
 
-  const liked = ref(false);
-
   function likeClicked() {
-    if (!liked.value) {
+    if (!props.liked) {
       emit("increment");
-      liked.value = true;
     } else {
       emit("decrement");
-      liked.value = false;
     }
   }
 </script>

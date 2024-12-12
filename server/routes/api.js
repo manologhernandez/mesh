@@ -4,6 +4,7 @@ require("dotenv").config();
 const multer = require("multer");
 const router = express.Router();
 const crypto = require("crypto");
+const authenticateToken = require("../middleware/authenticateToken");
 
 // Multer Configuration with File Size Limit
 const upload = multer({
@@ -33,7 +34,7 @@ const supabase = createClient(supabaseUrl, serviceRoleKey, {
 // Routes
 
 // Get subtopics route
-router.get("/subtopics", async (req, res) => {
+router.get("/subtopics", authenticateToken(supabase), async (req, res) => {
   try {
     const { data, error } = await supabase
       .from("subtopic")
@@ -54,7 +55,7 @@ router.get("/subtopics", async (req, res) => {
 });
 
 // Get course groups route
-router.get("/course_groups", async (req, res) => {
+router.get("/course_groups", authenticateToken(supabase), async (req, res) => {
   try {
     const { data, error } = await supabase
       .from("course_group")
@@ -73,8 +74,10 @@ router.get("/course_groups", async (req, res) => {
 });
 
 // Get a specific post route
-router.get("/post", async (req, res) => {
+router.get("/post", authenticateToken(supabase), async (req, res) => {
   const uuid = req.query.id;
+  const user = req.user;
+  const userId = user.id;
 
   if (!uuid) {
     return res.status(400).json({ message: "Post id required" });
@@ -84,9 +87,16 @@ router.get("/post", async (req, res) => {
     const { data, error } = await supabase
       .from("post")
       .select(
-        "uuid, title, text, author_username, created_at, is_censored, is_promoted, attachment, college(id, short_name, color), subtopic(id, name, description, icon, subtopic_rule(order, title, description)), course_group(id, name, description)"
+        `uuid, title, text, author_username, created_at, is_censored, is_promoted, attachment, 
+        college(id, short_name, color), 
+        subtopic(id, name, description, icon, subtopic_rule(order, title, description)), 
+        course_group(id, name, description), 
+        user_has_reacted:post_reaction(created_at),
+        total_reactions:post_reaction!inner(count)`
       )
-      .eq("uuid", uuid);
+      .eq("uuid", uuid)
+      .eq("post_reaction.user_id", userId);
+    // .eq("post_reaction.reaction_type", "like");
 
     if (error) {
       throw new Error(error.message);
@@ -108,10 +118,12 @@ router.get("/post", async (req, res) => {
 
 // Get all posts route
 // Todo: add suport for filterng and sorting
-router.get("/posts", async (req, res) => {
+router.get("/posts", authenticateToken(supabase), async (req, res) => {
   var offset = req.query.offset;
   var limit = req.query.limit;
   var sortBy = req.query.sortBy;
+  const user = req.user;
+  const userId = user.id;
 
   // set defaults
   if (!offset) {
@@ -133,8 +145,14 @@ router.get("/posts", async (req, res) => {
     const { data, error } = await supabase
       .from("post")
       .select(
-        "uuid, title, text, author_username, created_at, is_censored, is_promoted, attachment, college(id, short_name, color), subtopic(id, name), course_group(id, name)"
+        `uuid, title, text, author_username, created_at, is_censored, is_promoted, attachment, 
+        college(id, short_name, color), 
+        subtopic(id, name), 
+        course_group(id, name),
+        user_has_reacted:post_reaction(created_at),
+        total_reactions:post_reaction!inner(count)`
       )
+      .eq("post_reaction.user_id", userId)
       .range(from, to)
       .order("created_at", { ascending: sortBy == "asc" });
 
@@ -155,24 +173,27 @@ router.get("/posts", async (req, res) => {
 });
 
 // Create post route
-router.post("/create_post", async (req, res) => {
+router.post("/create_post", authenticateToken(supabase), async (req, res) => {
   const {
-    college,
     courseGroup,
     subtopic,
     title,
     isCensorPost,
     isPromotePost,
     post,
-    author,
     attachment,
   } = req.body;
 
-  if (!college || !title || !post || !subtopic || !author) {
+  const user = req.user;
+
+  if (!title || !post || !subtopic) {
     return res
       .status(400)
       .json({ message: "Post details are incomplete/invalid." });
   }
+
+  const username = user.email.split("@")[0];
+  const college = user.user_metadata.college.id;
 
   try {
     const { data, error } = await supabase
@@ -180,10 +201,10 @@ router.post("/create_post", async (req, res) => {
       .insert({
         title: title,
         text: post,
-        author_username: author,
+        author_username: username,
         subtopic_id: parseInt(subtopic),
         course_group_id: parseInt(courseGroup),
-        college_id: parseInt(college),
+        college_id: college,
         is_censored: Boolean(isCensorPost),
         is_promoted: Boolean(isPromotePost),
         attachment: attachment,
@@ -201,46 +222,111 @@ router.post("/create_post", async (req, res) => {
   }
 });
 
-// Upload file route
-// Endpoint to Handle File Upload
-router.post("/upload", upload.single("file"), async (req, res) => {
-  const file = req.file;
+// React to a post route
+router.post("/react_post", authenticateToken(supabase), async (req, res) => {
+  const { postUuid, reaction } = req.body;
+  const user = req.user;
 
-  if (!file) {
-    return res.status(400).json({ message: "No file attached" });
+  if (!postUuid || !reaction) {
+    return res
+      .status(400)
+      .json({ message: "Post reaction details are incomplete/invalid." });
   }
 
   try {
-    // generate random filename
-    const fileExtension = file.originalname.split(".").pop(); // Extract file extension
-    const randomName = crypto.randomBytes(16).toString("hex"); // Generate random 16-byte string
-    const filename = `${randomName}.${fileExtension}`;
-
-    // upload file
-    const { data, error } = await supabase.storage
-      .from("uploads") // Replace with your bucket name
-      .upload(`user/${filename}`, file.buffer, {
-        cacheControl: "3600",
-        upsert: false, // Set to true if you want to overwrite existing files
-        contentType: file.mimetype,
-      });
+    const { error } = await supabase.from("post_reaction").insert({
+      post_uuid: postUuid,
+      user_id: user.id,
+      reaction_type: reaction,
+    });
 
     if (error) {
-      throw error;
+      throw new Error(error.message);
     }
 
-    // Generate the public URL of the uploaded file
-    const publicUrl = supabase.storage
-      .from("uploads")
-      .getPublicUrl(`user/${filename}`).data.publicUrl;
-
-    res.status(200).json({
-      message: "File uploaded successfully",
-      url: publicUrl,
-    });
+    res.status(200).json({ message: "Post liked." });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
   }
 });
+
+// Remove react to a post route
+router.delete("/react_post", authenticateToken(supabase), async (req, res) => {
+  const { postUuid } = req.body;
+  const user = req.user;
+
+  if (!postUuid) {
+    return res
+      .status(400)
+      .json({ message: "Post reaction details are incomplete/invalid." });
+  }
+
+  try {
+    const { error } = await supabase
+      .from("post_reaction")
+      .delete()
+      .eq("post_uuid", postUuid)
+      .eq("user_id", user.id);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    res.status(200).json({ message: "Post unliked." });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+});
+
+// Upload file route
+// Endpoint to Handle File Upload
+router.post(
+  "/upload",
+  authenticateToken(supabase),
+  upload.single("file"),
+  async (req, res) => {
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({ message: "No file attached" });
+    }
+
+    try {
+      // generate random filename
+      const fileExtension = file.originalname.split(".").pop(); // Extract file extension
+      const randomName = crypto.randomBytes(16).toString("hex"); // Generate random 16-byte string
+      const filename = `${randomName}.${fileExtension}`;
+
+      // upload file
+      const { data, error } = await supabase.storage
+        .from("uploads") // Replace with your bucket name
+        .upload(`user/${filename}`, file.buffer, {
+          cacheControl: "3600",
+          upsert: false, // Set to true if you want to overwrite existing files
+          contentType: file.mimetype,
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      // Generate the public URL of the uploaded file
+      const publicUrl = supabase.storage
+        .from("uploads")
+        .getPublicUrl(`user/${filename}`).data.publicUrl;
+
+      res.status(200).json({
+        message: "File uploaded successfully",
+        url: publicUrl,
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+);
 
 module.exports = router;

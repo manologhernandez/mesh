@@ -151,15 +151,6 @@ router.post("/signup", async (req, res) => {
       session: {
         token: data.session.access_token,
       },
-      user: {
-        username: data.user.email.split("@")[0],
-        metadata: {
-          degree: data.user.user_metadata.degree,
-          subtopics: data.user.user_metadata.subtopics,
-          college: data.user.user_metadata.college,
-        },
-        created_at: data.user.created_at,
-      },
     };
 
     res.status(201).json({ message: "Signup successful!", data: responseData });
@@ -219,15 +210,6 @@ router.post("/login", async (req, res) => {
     var responseData = {
       session: {
         token: data.session.access_token,
-      },
-      user: {
-        username: data.user.email.split("@")[0],
-        metadata: {
-          degree: data.user.user_metadata.degree,
-          subtopics: data.user.user_metadata.subtopics,
-          college: data.user.user_metadata.college,
-        },
-        created_at: data.user.created_at,
       },
     };
 

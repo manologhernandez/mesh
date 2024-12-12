@@ -214,7 +214,7 @@
           <div class="font-semibold">Rules</div>
           <ol class="">
             <li
-              v-for="(rule, index) in postSubtopic.subtopic_rules"
+              v-for="(rule, index) in postSubtopic.subtopic_rule"
               :key="index"
               class="pb-2"
             >

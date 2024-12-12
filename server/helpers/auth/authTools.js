@@ -29,9 +29,9 @@ module.exports = {
     return false;
   },
   validateEmailAttempts: async function (email, supabaseClient) {
-    // Query the otp_emails table for the email
+    // Query the otp_email table for the email
     const { data, error } = await supabaseClient
-      .from("otp_emails")
+      .from("otp_email")
       .select("attempts")
       .eq("email", email);
 
@@ -44,9 +44,9 @@ module.exports = {
     return data[0].attempts < 2;
   },
   incrementEmailAttempts: async function (email, supabaseClient) {
-    // Query the otp_emails table for the email
+    // Query the otp_email table for the email
     const { data, error } = await supabaseClient
-      .from("otp_emails")
+      .from("otp_email")
       .select("attempts")
       .eq("email", email);
 
@@ -55,16 +55,16 @@ module.exports = {
     }
 
     if (data.length === 0) {
-      // Insert into otp_emails
+      // Insert into otp_email
       const { error } = await supabaseClient
-        .from("otp_emails")
+        .from("otp_email")
         .insert({ email: email });
       if (error) {
         throw new Error(error.message);
       }
     } else {
       const { error } = await supabaseClient
-        .from("otp_emails")
+        .from("otp_email")
         .update({
           attempts: data[0].attempts + 1,
         })
@@ -76,9 +76,9 @@ module.exports = {
     }
   },
   decrementEmailAttempts: async function (email, supabaseClient) {
-    // Query the otp_emails table for the email
+    // Query the otp_email table for the email
     const { data, error } = await supabaseClient
-      .from("otp_emails")
+      .from("otp_email")
       .select("attempts")
       .eq("email", email);
 
@@ -88,7 +88,7 @@ module.exports = {
 
     if (data.length > 0) {
       const { error } = await supabaseClient
-        .from("otp_emails")
+        .from("otp_email")
         .update({
           attempts: data[0].attempts - 1,
         })

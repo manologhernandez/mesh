@@ -348,7 +348,7 @@
           <div class="font-semibold">Rules</div>
           <ol class="">
             <li
-              v-for="(rule, index) in chosenSubtopic.subtopic_rules"
+              v-for="(rule, index) in chosenSubtopic.subtopic_rule"
               :key="index"
               class="pb-2"
             >
@@ -414,7 +414,7 @@
         <div class="font-semibold py-4">Rules</div>
         <ol class="">
           <li
-            v-for="(rule, index) in chosenSubtopic.subtopic_rules"
+            v-for="(rule, index) in chosenSubtopic.subtopic_rule"
             :key="index"
             class="pb-4"
           >

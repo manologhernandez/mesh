@@ -38,7 +38,7 @@ router.get("/subtopics", async (req, res) => {
     const { data, error } = await supabase
       .from("subtopic")
       .select(
-        "id, name, icon, description, subtopic_rules(order, title, description)"
+        "id, name, icon, description, subtopic_rule(order, title, description)"
       );
 
     if (error) {
@@ -84,7 +84,7 @@ router.get("/post", async (req, res) => {
     const { data, error } = await supabase
       .from("post")
       .select(
-        "uuid, title, text, author_username, created_at, is_censored, is_promoted, attachment, college(id, short_name, color), subtopic(id, name, description, icon, subtopic_rules(order, title, description)), course_group(id, name, description)"
+        "uuid, title, text, author_username, created_at, is_censored, is_promoted, attachment, college(id, short_name, color), subtopic(id, name, description, icon, subtopic_rule(order, title, description)), course_group(id, name, description)"
       )
       .eq("uuid", uuid);
 

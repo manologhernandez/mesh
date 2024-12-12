@@ -99,6 +99,7 @@
                 alt=""
                 class="object-contain rounded-lg"
                 crossOrigin="anonymous"
+                loading="lazy"
                 @load="imageLoaded"
               />
               <div
@@ -203,6 +204,7 @@
               :src="postSubtopic.icon"
               alt=""
               class="h-6"
+              loading="lazy"
             />
             <span class="font-semibold">{{ postSubtopic.name }}</span>
           </div>
@@ -244,6 +246,7 @@
               :src="postCourseGroup.icon"
               alt=""
               class="h-6"
+              loading="lazy"
             />
             <span class="font-semibold">{{ postCourseGroup.name }}</span>
           </div>

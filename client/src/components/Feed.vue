@@ -14,15 +14,17 @@
         <select
           id="sortBy"
           class="appearance-none bg-neutral-100 border-0 text-sm rounded-lg w-full p-2.5 focus:ring-0 cursor-pointer active:bg-neutral-200 lg:hover:bg-neutral-200 dark:bg-neutral-700 dark:placeholder-neutral-400 dark:active:bg-neutral-900 dark:lg:hover:bg-neutral-900"
+          v-model="sortBy"
+          @change="handleSortChange"
         >
           <option
-            value="0"
+            value="desc"
             selected
           >
-            Trending
+            Latest
           </option>
-          <option value="1">Top</option>
-          <option value="2">Latest</option>
+          <option value="">Top</option>
+          <option value="asc">Oldest</option>
         </select>
       </form>
     </div>
@@ -37,10 +39,17 @@
 
 <script setup>
   import PostCard from "@/components/PostCard.vue";
+  import { ref } from "vue";
 
+  const sortBy = ref("desc");
   const props = defineProps({
     posts: Array,
   });
+  const emit = defineEmits(["sort"]);
+
+  function handleSortChange() {
+    emit("sort", sortBy.value);
+  }
 </script>
 
 <style lang="scss" scoped></style>

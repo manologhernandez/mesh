@@ -70,6 +70,7 @@
             src="https://em-content.zobj.net/source/apple/391/closed-book_1f4d5.png"
             alt=""
             class="h-6 w-6"
+            loading="lazy"
           />
           <span>{{ courseGroup.name }}</span>
         </SidebarButton>
@@ -104,6 +105,7 @@
             :src="subtopic.icon"
             alt=""
             class="h-6 w-6"
+            loading="lazy"
           />
           <span>{{ subtopic.name }}</span>
         </SidebarButton>

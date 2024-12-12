@@ -72,7 +72,7 @@ router.get("/course_groups", async (req, res) => {
   }
 });
 
-// Get post route
+// Get a specific post route
 router.get("/post", async (req, res) => {
   const uuid = req.query.id;
 
@@ -98,6 +98,54 @@ router.get("/post", async (req, res) => {
         .json({ message: "Post retrieved.", data: data[0] });
     } else {
       return res.status(404).json({ message: "Post does not exist" });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+});
+
+// Get all posts route
+// Todo: add suport for filterng and sorting
+router.get("/posts", async (req, res) => {
+  var offset = req.query.offset;
+  var limit = req.query.limit;
+  var sortBy = req.query.sortBy;
+
+  // set defaults
+  if (!offset) {
+    offset = 0;
+  }
+
+  if (!limit) {
+    limit = 5;
+  }
+
+  if (!sortBy) {
+    sortBy = "desc";
+  }
+
+  try {
+    const from = offset * limit;
+    const to = from + limit - 1;
+
+    const { data, error } = await supabase
+      .from("post")
+      .select(
+        "uuid, title, text, author_username, created_at, is_censored, is_promoted, attachment, college(id, short_name, color), subtopic(id, name), course_group(id, name)"
+      )
+      .range(from, to)
+      .order("created_at", { ascending: sortBy == "asc" });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (data.length > 0) {
+      return res.status(200).json({ message: "Posts retrieved.", data });
+    } else {
+      return res.status(404).json({ message: "No posts found" });
     }
   } catch (error) {
     return res

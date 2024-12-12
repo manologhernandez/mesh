@@ -5,26 +5,49 @@
     <!-- breadcrumbs and date -->
     <div class="flex justify-between text-neutral-700 dark:text-neutral-300">
       <div class="text-sm flex items-center max-w-[70%] overflow-x-auto">
-        <div
-          class="flex items-center flex-nowrap"
-          v-for="(breadcrumb, index) in post.breadcrumbs"
-        >
-          <ChevronRightIcon v-if="index > 0" />
-          <RouterLink
-            :to="breadcrumb.link"
-            class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap"
-          >
-            {{ breadcrumb.title }}
-          </RouterLink>
-        </div>
+        <!-- BREADCRUMBS -->
+        <template v-if="post.college || post.subtopic || post.courseGroup">
+          <div class="flex items-center flex-nowrap">
+            <!-- College link -->
+            <RouterLink
+              :to="`/college/${post.college.id}`"
+              class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
+              >{{ post.college.short_name }}
+            </RouterLink>
+            <!-- Subtopic link -->
+            <div
+              class="flex items-center"
+              v-if="post.subtopic"
+            >
+              <ChevronRightIcon />
+              <RouterLink
+                :to="`/subtopic/${post.subtopic.id}`"
+                class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
+                >{{ post.subtopic.name }}
+              </RouterLink>
+            </div>
+            <!-- Course Group link -->
+            <div
+              class="flex items-center"
+              v-if="post.course_group"
+            >
+              <ChevronRightIcon />
+              <RouterLink
+                :to="`/coursegroup/${post.course_group.id}`"
+                class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
+                >{{ post.course_group.name }}
+              </RouterLink>
+            </div>
+          </div>
+        </template>
       </div>
       <div class="text-sm line-clamp-1">
-        {{ dayjs(post.dateCreated).fromNow() }}
+        {{ dayjs(post.created_at).fromNow() }}
       </div>
     </div>
 
     <RouterLink
-      :to="`/post/${post.id}`"
+      :to="`/post/${post.uuid}`"
       class="cursor-pointer"
     >
       <!-- post title -->
@@ -35,17 +58,18 @@
         <div :class="blurPost ? 'blur' : ''">
           <!-- IMAGE -->
           <div
-            v-if="post.hasImage"
+            v-if="post.attachment"
             class="flex justify-center max-h-96 rounded-lg mt-2"
-            :class="`image-container-${post.id}`"
+            :class="`image-container-${post.uuid}`"
           >
             <img
-              :src="post.image"
+              :src="post.attachment"
               alt=""
               class="object-contain rounded-lg"
               :class="blurPost ? 'blur-lg' : ''"
               crossOrigin="anonymous"
               @load="imageLoaded"
+              loading="lazy"
             />
             <div
               v-if="!isImageLoaded"
@@ -87,7 +111,7 @@
       />
 
       <RouterLink
-        :to="`/post/${post.id}`"
+        :to="`/post/${post.uuid}`"
         class="flex gap-1 items-center lg:hover:text-red-500 active:text-red-500"
       >
         <CommentIcon />
@@ -131,16 +155,16 @@
   }
 
   const blurPost = computed(() => {
-    return !isUnblurPost.value && props.post.isBlurred;
+    return !isUnblurPost.value && props.post.is_censored;
   });
 
   onMounted(() => {
     const fac = new FastAverageColor();
     const container = document.querySelector(
-      `.image-container-${props.post.id}`
+      `.image-container-${props.post.uuid}`
     );
 
-    if (container && props.post.hasImage) {
+    if (container && props.post.attachment) {
       fac
         .getColorAsync(container.querySelector("img"))
         .then((color) => {

@@ -302,6 +302,7 @@
                         :src="subtopic.icon"
                         class="h-5"
                         alt=""
+                        loading="lazy"
                       />
                       <div class="font-semibold text-sm">
                         {{ subtopic.name }}

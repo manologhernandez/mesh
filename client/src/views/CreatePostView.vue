@@ -252,6 +252,7 @@
                   :src="imagePreview"
                   alt="Preview"
                   class="max-h-48 max-w-72"
+                  loading="lazy"
                 />
                 <CloseIcon
                   @click="clearImageAttachment"
@@ -337,6 +338,7 @@
               :src="chosenSubtopic.icon"
               alt=""
               class="h-6"
+              loading="lazy"
             />
             <span class="font-semibold">{{ chosenSubtopic.name }}</span>
           </div>
@@ -378,6 +380,7 @@
               :src="chosenCourseGroup.icon"
               alt=""
               class="h-6"
+              loading="lazy"
             />
             <span class="font-semibold">{{ chosenCourseGroup.name }}</span>
           </div>
@@ -401,6 +404,7 @@
             :src="chosenSubtopic.icon"
             alt=""
             class="h-6"
+            loading="lazy"
           />
           <span class="text-xl font-semibold">{{ chosenSubtopic.name }}</span>
         </div>
@@ -446,6 +450,7 @@
             src="https://em-content.zobj.net/source/apple/391/gear_2699-fe0f.png"
             alt=""
             class="h-6"
+            loading="lazy"
           />
           <span class="text-xl font-semibold">{{
             chosenCourseGroup.name

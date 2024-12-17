@@ -3,7 +3,7 @@
     <span class="font-bold">Sponsored</span>
     <div
       class="rounded-lg bg-cover bg-center aspect-square w-full flex justify-center items-center cursor-pointer"
-      :style="`background-image: url(https://placehold.co/400x400?text=Ad+goes+here)`"
+      :style="`background-image: url(https://placehold.co/400x400?text=Advertisement)`"
     ></div>
   </div>
 </template>

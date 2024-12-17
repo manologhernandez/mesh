@@ -1,9 +1,13 @@
 <template>
-  <RouterLink :to="`/post/${threadline.id}`">
+  <RouterLink :to="`/post/${threadline.uuid}`">
     <div class="story-card cursor-pointer group">
       <div
         class="relative bg-cover bg-center p-4 h-32 rounded-lg flex justify-center items-end"
-        :style="`background-image: url(${threadline.imageSrc}); -webkit-mask-image: linear-gradient(to right, #fff, #fff);`"
+        :style="
+          threadline.attachment
+            ? `background-image: url(${threadline.attachment}); -webkit-mask-image: linear-gradient(to right, #fff, #fff);`
+            : `background-color: ${threadline.college.color};`
+        "
       >
         <div
           class="absolute left-0 right-0 bottom-0 font-semibold text-white z-10 p-2"
@@ -14,6 +18,7 @@
             {{ threadline.title }}
           </span>
         </div>
+
         <div class="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
       </div>
     </div>

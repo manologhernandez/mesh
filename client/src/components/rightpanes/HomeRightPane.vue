@@ -5,12 +5,11 @@
     <!-- ad space -->
     <AdSquare />
     <!-- bulletin board widget -->
-    <BBWidget :BBPosts="BBPosts" />
+    <BBWidget />
   </div>
 </template>
 
 <script setup>
-  import { BBPosts } from "@/tools/sampledata";
   import BBWidget from "../BBWidget.vue";
   import AdSquare from "../AdSquare.vue";
 </script>

@@ -214,7 +214,6 @@ router.get("/post", authenticateToken(supabase), async (req, res) => {
 });
 
 // Get all posts route
-// Todo: add suport for filterng and sorting
 router.get("/posts", authenticateToken(supabase), async (req, res) => {
   var offset = req.query.offset;
   var limit = req.query.limit;
@@ -278,6 +277,37 @@ router.get("/posts", authenticateToken(supabase), async (req, res) => {
       return res.status(200).json({ message: "Posts retrieved.", data });
     } else {
       return res.status(404).json({ message: "No posts found" });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+});
+
+// Get threadlines route
+router.get("/threadlines", authenticateToken(supabase), async (req, res) => {
+  const user = req.user;
+  const userId = user.id;
+
+  try {
+    const from = 0;
+    const to = 4;
+
+    const { data, error } = await supabase
+      .from("post")
+      .select(`uuid, title, is_censored, attachment, college( color)`)
+      .range(from, to)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (data.length > 0) {
+      return res.status(200).json({ message: "Threadlines retrieved.", data });
+    } else {
+      return res.status(404).json({ message: "No threadlines found" });
     }
   } catch (error) {
     return res

@@ -39,7 +39,7 @@
 
 <style scoped>
   .active > .sidebar-btn {
-    background-color: rgb(64 64 64);
+    background-color: rgb(110, 110, 110);
     color: white;
   }
 </style>

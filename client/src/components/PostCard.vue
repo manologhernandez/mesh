@@ -12,6 +12,7 @@
             <RouterLink
               :to="`/college/${post.college.id}`"
               class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
+              v-if="post.college"
               >{{ post.college.short_name }}
             </RouterLink>
             <!-- Subtopic link -->
@@ -151,7 +152,9 @@
   watch(() => props.post, checkPostIsLiked, { immediate: true });
 
   function checkPostIsLiked() {
-    hasLikedPost.value = props.post.user_has_reacted.length > 0;
+    if (props.post && props.post.user_has_reacted) {
+      hasLikedPost.value = props.post.user_has_reacted.length > 0;
+    }
   }
 
   function imageLoaded() {
@@ -254,13 +257,15 @@
   });
 
   const postLikeCount = computed(() => {
-    if (incrementLikeCount.value) {
-      return Number(props.post.total_reactions[0]["count"]) + 1;
+    if (props.post && props.post.total_reactions) {
+      if (incrementLikeCount.value) {
+        return Number(props.post.total_reactions[0]["count"]) + 1;
+      }
+      if (decrementLikeCount.value) {
+        return Number(props.post.total_reactions[0]["count"]) - 1;
+      }
+      return Number(props.post.total_reactions[0]["count"]);
     }
-    if (decrementLikeCount.value) {
-      return Number(props.post.total_reactions[0]["count"]) - 1;
-    }
-    return Number(props.post.total_reactions[0]["count"]);
   });
 
   onMounted(() => {

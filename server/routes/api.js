@@ -73,6 +73,51 @@ router.get("/course_groups", authenticateToken(supabase), async (req, res) => {
   }
 });
 
+// Get a college route
+router.get("/college", authenticateToken(supabase), async (req, res) => {
+  const id = req.query.id;
+  try {
+    const { data, error } = await supabase
+      .from("college")
+      .select("*")
+      .eq("id", id);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (data.length < 1) {
+      return res.status(404).json({ message: "College not found." });
+    }
+
+    return res.status(200).json({ data: data[0] });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+});
+
+// Get all colleges route
+router.get("/colleges", authenticateToken(supabase), async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from("college")
+      .select("id, name, short_name, color")
+      .order("short_name", { ascending: true });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    return res.status(200).json({ data });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+});
+
 // Get a specific post route
 router.get("/post", authenticateToken(supabase), async (req, res) => {
   const uuid = req.query.id;
@@ -124,6 +169,11 @@ router.get("/posts", authenticateToken(supabase), async (req, res) => {
   var sortBy = req.query.sortBy;
   const user = req.user;
   const userId = user.id;
+  var collegeFilter = req.query.college;
+
+  if (collegeFilter) {
+    collegeFilter = collegeFilter.split(",");
+  }
 
   // set defaults
   if (!offset) {
@@ -142,19 +192,25 @@ router.get("/posts", authenticateToken(supabase), async (req, res) => {
     const from = offset * limit;
     const to = from + limit - 1;
 
-    const { data, error } = await supabase
+    let query = supabase
       .from("post")
       .select(
         `uuid, title, text, author_username, created_at, is_censored, is_promoted, attachment, 
-        college(id, short_name, color), 
-        subtopic(id, name), 
-        course_group(id, name),
-        user_has_reacted:post_reaction(created_at),
-        total_reactions:post_reaction!inner(count)`
+      college(id, short_name, color), 
+      subtopic(id, name), 
+      course_group(id, name),
+      user_has_reacted:post_reaction(created_at),
+      total_reactions:post_reaction!inner(count)`
       )
       .eq("post_reaction.user_id", userId)
       .range(from, to)
       .order("created_at", { ascending: sortBy == "asc" });
+
+    if (collegeFilter) {
+      query = query.in("college_id", collegeFilter);
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       throw new Error(error.message);

@@ -35,7 +35,7 @@
             class="rounded-full w-6 h-6"
             :style="`background-color: ${college.color}`"
           ></div>
-          <span>{{ college.name }} </span>
+          <span>{{ college.short_name }} </span>
         </SidebarButton>
 
         <template v-if="COLLEGES.length > MAX_SHOWN_COLLEGES">
@@ -133,15 +133,14 @@
 <script setup>
   import HomeIcon from "./icons/HomeIcon.vue";
   import DiscoverIcon from "./icons/DiscoverIcon.vue";
-  import QuestionIcon from "./icons/QuestionIcon.vue";
-  import AcademicIcon from "./icons/AcademicIcon.vue";
-  import BuildingIcon from "./icons/BuildingIcon.vue";
   import ChevronDownIcon from "./icons/ChevronDownIcon.vue";
   import ChevronUpIcon from "./icons/ChevronUpIcon.vue";
   import SidebarButton from "./SidebarButton.vue";
-  import { ref, computed } from "vue";
-  import { COURSE_GROUPS, COLLEGES, SUBTOPICS } from "@/tools/sampledata";
+  import { ref, computed, onMounted } from "vue";
   import MapIcon from "./icons/MapIcon.vue";
+  import { useUserStore } from "@/stores/user";
+
+  const userStore = useUserStore();
 
   const emit = defineEmits(["close-sidebar"]);
 
@@ -152,6 +151,122 @@
   const MAX_SHOWN_COLLEGES = 4;
   const MAX_SHOWN_COURSE_GROUPS = 4;
   const MAX_SHOWN_SUBTOPICS = 6;
+
+  const SUBTOPICS = ref([]);
+  const COURSE_GROUPS = ref([]);
+  const COLLEGES = ref([]);
+
+  onMounted(() => {
+    getSubtopics();
+    getCourseGroups();
+    getColleges();
+  });
+
+  // fetch suptopics
+  function getSubtopics() {
+    const request = new Request("/api/subtopics", {
+      method: "GET",
+      headers: {
+        Authorization: userStore.token,
+      },
+    });
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        SUBTOPICS.value = data.data;
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {});
+  }
+
+  // fetch course groups
+  function getCourseGroups() {
+    const request = new Request("/api/course_groups", {
+      method: "GET",
+      headers: {
+        Authorization: userStore.token,
+      },
+    });
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        COURSE_GROUPS.value = data.data;
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {});
+  }
+
+  // fetch colleges
+  function getColleges() {
+    const request = new Request("/api/colleges", {
+      method: "GET",
+      headers: {
+        Authorization: userStore.token,
+      },
+    });
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        COLLEGES.value = data.data;
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {});
+  }
 
   function showAllCourseGroups() {
     isShowFullCourseGroupList.value = true;
@@ -183,23 +298,23 @@
 
   const courseGroupList = computed(() => {
     if (isShowFullCourseGroupList.value) {
-      return COURSE_GROUPS;
+      return COURSE_GROUPS.value;
     }
-    return COURSE_GROUPS.slice(0, MAX_SHOWN_COURSE_GROUPS);
+    return COURSE_GROUPS.value.slice(0, MAX_SHOWN_COURSE_GROUPS);
   });
 
   const collegesList = computed(() => {
     if (isShowFullCollegeList.value) {
-      return COLLEGES;
+      return COLLEGES.value;
     }
-    return COLLEGES.slice(0, MAX_SHOWN_COLLEGES);
+    return COLLEGES.value.slice(0, MAX_SHOWN_COLLEGES);
   });
 
   const subtopicList = computed(() => {
     if (isShowFullSubtopicList.value) {
-      return SUBTOPICS;
+      return SUBTOPICS.value;
     }
-    return SUBTOPICS.slice(0, MAX_SHOWN_SUBTOPICS);
+    return SUBTOPICS.value.slice(0, MAX_SHOWN_SUBTOPICS);
   });
 </script>
 

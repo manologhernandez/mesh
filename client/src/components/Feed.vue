@@ -1,5 +1,11 @@
 <template>
-  <div>
+  <div ref="scrollComponent">
+    <Loading
+      :active="loading"
+      :can-cancel="false"
+      loader="dots"
+      :is-full-page="true"
+    />
     <!-- sort options -->
     <div class="flex justify-end items-center px-2 pt-1 pb-2">
       <!-- <div class="font-bold ps-2">My Feed</div> -->
@@ -12,7 +18,7 @@
           >Sort by:</label
         >
         <select
-          id="sortBy"
+          id="sortby"
           class="appearance-none bg-neutral-100 border-0 text-sm rounded-lg w-full p-2.5 focus:ring-0 cursor-pointer active:bg-neutral-200 lg:hover:bg-neutral-200 dark:bg-neutral-700 dark:placeholder-neutral-400 dark:active:bg-neutral-900 dark:lg:hover:bg-neutral-900"
           v-model="sortBy"
           @change="handleSortChange"
@@ -34,22 +40,201 @@
       <PostCard :post="post" />
       <hr class="my-0 hr-responsive" />
     </div>
+    <div class="relative h-10 my-4">
+      <Loading
+        :active="fetchingMorePosts"
+        :can-cancel="false"
+        loader="dots"
+        :is-full-page="false"
+      />
+
+      <div
+        class="text-center pt-4 pb-8"
+        v-if="maxPostsReached"
+      >
+        You've reached the end of the feed.
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
   import PostCard from "@/components/PostCard.vue";
-  import { ref } from "vue";
+  import { ref, onMounted, onUnmounted, watch } from "vue";
+  import { useUserStore } from "@/stores/user";
+  import { useRouter } from "vue-router";
+  import Loading from "vue-loading-overlay";
 
   const sortBy = ref("desc");
+  const userStore = useUserStore();
+  const router = useRouter();
+
+  const POST_COUNT = 5;
+  const postOffset = ref(0);
+
+  const errors = ref([]);
+
+  const loading = ref(false);
+
+  const fetchingMorePosts = ref(false);
+  const maxPostsReached = ref(false);
+
+  const posts = ref([]);
+
+  const scrollComponent = ref(null);
+
   const props = defineProps({
-    posts: Array,
+    feedOptions: {
+      type: Object,
+    },
   });
-  const emit = defineEmits(["sort"]);
+
+  onMounted(() => {
+    window.addEventListener("scroll", handleScroll);
+    getPosts();
+  });
+
+  onUnmounted(() => {
+    window.removeEventListener("scroll", handleScroll);
+  });
+
+  watch(
+    () => props.feedOptions.collegeFilters,
+    (newVal, oldVal) => {
+      // if feedoptions changed, reset and get new posts
+      if (JSON.stringify(oldVal) != JSON.stringify(newVal)) {
+        maxPostsReached.value = false;
+        postOffset.value = 0;
+        getPosts();
+      }
+    }
+  );
 
   function handleSortChange() {
-    emit("sort", sortBy.value);
+    postOffset.value = 0;
+    maxPostsReached.value = false;
+    console.log("handle sort change");
+    getPosts();
   }
+
+  function getPosts() {
+    posts.value = [];
+
+    const url = generateRequestUrl();
+
+    const request = new Request(url, {
+      method: "GET",
+      headers: { Authorization: userStore.token },
+    });
+
+    loading.value = true;
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          if (response.status === 404) {
+            maxPostsReached.value = true;
+            return;
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        posts.value = data.data;
+        postOffset.value = postOffset.value + 1;
+      })
+      .catch((e) => {
+        errors.value.feed = e.message;
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  }
+
+  function loadMorePosts() {
+    const url = generateRequestUrl();
+    const request = new Request(url, {
+      method: "GET",
+      headers: { Authorization: userStore.token },
+    });
+
+    fetchingMorePosts.value = true;
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 404 error
+          if (response.status === 404) {
+            maxPostsReached.value = true;
+            return;
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        posts.value.push(...data.data);
+        postOffset.value = postOffset.value + 1;
+      })
+      .catch((e) => {
+        errors.value.feed = e.message;
+      })
+      .finally(() => {
+        fetchingMorePosts.value = false;
+      });
+  }
+
+  function generateRequestUrl() {
+    var baseUrl = `/api/posts?limit=${POST_COUNT}&offset=${postOffset.value}&sortBy=${sortBy.value}`;
+
+    if (
+      props.feedOptions &&
+      props.feedOptions.collegeFilters &&
+      props.feedOptions.collegeFilters.length > 0
+    ) {
+      baseUrl += `&college=${props.feedOptions.collegeFilters.join(",")}`;
+    }
+    if (
+      props.feedOptions &&
+      props.feedOptions.subtopicFilters &&
+      props.feedOptions.subtopicFilters.length > 0
+    ) {
+      baseUrl += `&subtopic=${props.feedOptions.subtopicFilters.join(",")}`;
+    }
+    if (
+      props.feedOptions &&
+      props.feedOptions.courseGroupFilters &&
+      props.feedOptions.courseGroupFilters.length > 0
+    ) {
+      baseUrl += `&coursegroup=${props.feedOptions.courseGroupFilters.join(
+        ","
+      )}`;
+    }
+
+    return baseUrl;
+  }
+
+  const handleScroll = (e) => {
+    let element = scrollComponent.value;
+    if (
+      element &&
+      element.getBoundingClientRect().bottom - 400 < window.innerHeight &&
+      !loading.value &&
+      !fetchingMorePosts.value &&
+      !maxPostsReached.value
+    ) {
+      loadMorePosts();
+    }
+  };
 </script>
 
 <style lang="scss" scoped></style>

@@ -43,18 +43,6 @@
                         class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
                         >{{ post.college.short_name }}
                       </RouterLink>
-                      <!-- Subtopic link -->
-                      <div
-                        class="flex items-center"
-                        v-if="post.subtopic"
-                      >
-                        <ChevronRightIcon />
-                        <RouterLink
-                          :to="`/subtopic/${post.subtopic.id}`"
-                          class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
-                          >{{ post.subtopic.name }}
-                        </RouterLink>
-                      </div>
                       <!-- Course Group link -->
                       <div
                         class="flex items-center"
@@ -65,6 +53,18 @@
                           :to="`/coursegroup/${post.course_group.id}`"
                           class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
                           >{{ post.course_group.name }}
+                        </RouterLink>
+                      </div>
+                      <!-- Subtopic link -->
+                      <div
+                        class="flex items-center"
+                        v-if="post.subtopic"
+                      >
+                        <ChevronRightIcon />
+                        <RouterLink
+                          :to="`/subtopic/${post.subtopic.id}`"
+                          class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
+                          >{{ post.subtopic.name }}
                         </RouterLink>
                       </div>
                     </div>

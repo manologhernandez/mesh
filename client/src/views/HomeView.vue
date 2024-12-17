@@ -5,7 +5,7 @@
         class="absolute w-full lg:left-[20%] lg:w-3/5 flex flex-col gap-0 p-2"
       >
         <ThreadlineWidget :threadlines="THREADLINES" />
-        <Feed :feed-options="{ collegeFilters: [1, 2, 3, 4] }" />
+        <Feed :feed-options="{ collegeFilters: [] }" />
       </div>
       <div
         class="absolute w-full lg:left-[80%] lg:w-1/5 flex flex-col gap-0 p-2"

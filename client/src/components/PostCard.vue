@@ -11,22 +11,18 @@
             <!-- College link -->
             <RouterLink
               :to="`/college/${post.college.id}`"
-              class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
+              class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold flex gap-1 items-center"
               v-if="post.college"
-              >{{ post.college.short_name }}
-            </RouterLink>
-            <!-- Subtopic link -->
-            <div
-              class="flex items-center"
-              v-if="post.subtopic"
             >
-              <ChevronRightIcon />
-              <RouterLink
-                :to="`/subtopic/${post.subtopic.id}`"
-                class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
-                >{{ post.subtopic.name }}
-              </RouterLink>
-            </div>
+              <!-- COLLEGE ICON -->
+              <div
+                class="h-4 w-4 rounded-full border-none"
+                :style="`background-color: ${post.college.color}`"
+                v-if="post.college"
+              ></div>
+
+              {{ post.college.short_name }}
+            </RouterLink>
             <!-- Course Group link -->
             <div
               class="flex items-center"
@@ -37,6 +33,18 @@
                 :to="`/coursegroup/${post.course_group.id}`"
                 class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
                 >{{ post.course_group.name }}
+              </RouterLink>
+            </div>
+            <!-- Subtopic link -->
+            <div
+              class="flex items-center"
+              v-if="post.subtopic"
+            >
+              <ChevronRightIcon />
+              <RouterLink
+                :to="`/subtopic/${post.subtopic.id}`"
+                class="active:text-blue-500 lg:hover:text-blue-500 text-nowrap font-semibold"
+                >{{ post.subtopic.name }}
               </RouterLink>
             </div>
           </div>

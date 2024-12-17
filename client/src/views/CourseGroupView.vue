@@ -1,6 +1,12 @@
 <template>
   <div class="relative">
     <div class="absolute w-full lg:left-[20%] lg:w-3/5 flex flex-col gap-0">
+      <Loading
+        :active.sync="loading"
+        :can-cancel="false"
+        loader="dots"
+        :is-full-page="true"
+      />
       <!-- Header -->
       <div
         class="p-4 flex gap-4 justify-around lg:justify-start items-center lg:items-end text-white dark:text-white"
@@ -60,8 +66,10 @@
 
         <!-- Feed -->
         <div v-show="showingFeed">
-          <Feed :posts="posts" />
+          <Feed :feed-options="{ courseGroupFilters: [props.id] }" />
         </div>
+
+        <!-- Information -->
         <div
           v-show="showingInfo"
           class="p-4"
@@ -78,21 +86,75 @@
 
 <script setup>
   import Feed from "@/components/Feed.vue";
-  import { computed, ref } from "vue";
-
-  import { posts, COURSE_GROUPS } from "@/tools/sampledata";
+  import { ref, watch } from "vue";
   import CourseGroupRightPane from "@/components/rightpanes/CourseGroupRightPane.vue";
+  import Loading from "vue-loading-overlay";
+  import { useUserStore } from "@/stores/user";
+  import { useRouter } from "vue-router";
 
   const showingFeed = ref(true);
   const showingInfo = ref(false);
+
+  const userStore = useUserStore();
+  const loading = ref(false);
+  const courseGroup = ref({});
+  const router = useRouter();
 
   const props = defineProps({
     id: String,
   });
 
-  const courseGroup = computed(() => {
-    return COURSE_GROUPS.filter((course) => course.id == props.id)[0];
-  });
+  // watch the params of the route to fetch the data again
+  watch(
+    () => props.id,
+    (courseGroupId) => {
+      getCourseGroup(courseGroupId);
+    },
+    { immediate: true }
+  );
+
+  // fetch Course Group
+  function getCourseGroup(id) {
+    const request = new Request(`/api/course_group?id=${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: userStore.token,
+      },
+    });
+
+    loading.value = true;
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
+          if (response.status === 404) {
+            console.log("Course group not found..");
+            router.push("/404");
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        courseGroup.value = data.data;
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  }
 
   function showFeed() {
     showingFeed.value = true;

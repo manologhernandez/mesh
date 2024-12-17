@@ -99,9 +99,11 @@
   });
 
   watch(
-    () => props.feedOptions.collegeFilters,
+    () => props.feedOptions,
     (newVal, oldVal) => {
-      // if feedoptions changed, reset and get new posts
+      // console.log("watch called, ", oldVal, newVal);
+
+      // if feedOptions changed, reset and get new posts
       if (JSON.stringify(oldVal) != JSON.stringify(newVal)) {
         maxPostsReached.value = false;
         postOffset.value = 0;
@@ -215,7 +217,7 @@
       props.feedOptions.courseGroupFilters &&
       props.feedOptions.courseGroupFilters.length > 0
     ) {
-      baseUrl += `&coursegroup=${props.feedOptions.courseGroupFilters.join(
+      baseUrl += `&courseGroup=${props.feedOptions.courseGroupFilters.join(
         ","
       )}`;
     }

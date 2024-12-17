@@ -114,7 +114,7 @@
 
 <script setup>
   import Feed from "@/components/Feed.vue";
-  import { computed, ref, watch } from "vue";
+  import { ref, watch } from "vue";
   import { useUserStore } from "@/stores/user";
   import CollegeRightPane from "@/components/rightpanes/CollegeRightPane.vue";
   import Loading from "vue-loading-overlay";
@@ -127,7 +127,6 @@
   const loading = ref(false);
   const college = ref({});
   const router = useRouter();
-  const posts = ref([]);
 
   const props = defineProps({
     id: String,

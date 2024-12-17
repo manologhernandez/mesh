@@ -54,7 +54,34 @@ router.get("/subtopics", authenticateToken(supabase), async (req, res) => {
   }
 });
 
-// Get course groups route
+// Get a subtopic route
+router.get("/subtopic", authenticateToken(supabase), async (req, res) => {
+  const id = req.query.id;
+  try {
+    const { data, error } = await supabase
+      .from("subtopic")
+      .select(
+        "id, name, icon, description, subtopic_rule(order, title, description)"
+      )
+      .eq("id", id);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (data.length < 1) {
+      return res.status(404).json({ message: "Subtopic not found." });
+    }
+
+    return res.status(200).json({ data: data[0] });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+});
+
+// Get all course group route
 router.get("/course_groups", authenticateToken(supabase), async (req, res) => {
   try {
     const { data, error } = await supabase
@@ -66,6 +93,31 @@ router.get("/course_groups", authenticateToken(supabase), async (req, res) => {
     }
 
     return res.status(200).json({ data });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+});
+
+// Get a course group route
+router.get("/course_group", authenticateToken(supabase), async (req, res) => {
+  const id = req.query.id;
+  try {
+    const { data, error } = await supabase
+      .from("course_group")
+      .select("id, name, icon, description")
+      .eq("id", id);
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    if (data.length < 1) {
+      return res.status(404).json({ message: "Course group not found." });
+    }
+
+    return res.status(200).json({ data: data[0] });
   } catch (error) {
     return res
       .status(500)
@@ -169,11 +221,9 @@ router.get("/posts", authenticateToken(supabase), async (req, res) => {
   var sortBy = req.query.sortBy;
   const user = req.user;
   const userId = user.id;
-  var collegeFilter = req.query.college;
-
-  if (collegeFilter) {
-    collegeFilter = collegeFilter.split(",");
-  }
+  const collegeFilter = req.query.college;
+  const courseGroupFilter = req.query.courseGroup;
+  const subtopicFilter = req.query.subtopic;
 
   // set defaults
   if (!offset) {
@@ -207,7 +257,15 @@ router.get("/posts", authenticateToken(supabase), async (req, res) => {
       .order("created_at", { ascending: sortBy == "asc" });
 
     if (collegeFilter) {
-      query = query.in("college_id", collegeFilter);
+      query = query.in("college_id", collegeFilter.split(","));
+    }
+
+    if (courseGroupFilter) {
+      query = query.in("course_group_id", courseGroupFilter.split(","));
+    }
+
+    if (subtopicFilter) {
+      query = query.in("subtopic_id", subtopicFilter.split(","));
     }
 
     const { data, error } = await query;

@@ -19,7 +19,10 @@
           </span>
         </div>
 
-        <div class="absolute inset-0 bg-black opacity-50 rounded-lg"></div>
+        <div
+          class="absolute inset-0 bg-black/50 rounded-lg"
+          :class="threadline.is_censored ? 'backdrop-blur-md' : ''"
+        ></div>
       </div>
     </div>
   </RouterLink>

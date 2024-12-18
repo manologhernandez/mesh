@@ -433,12 +433,9 @@
                     >
                       Click to select a course group
                     </option>
-                    <option>Architecture</option>
-                    <option>Business</option>
-                    <option>Computer Science</option>
-                    <option>Engineering</option>
-                    <option>Nursing</option>
-                    <option>Others</option>
+                    <option v-for="course in COURSE_GROUPS">
+                      {{ course.name }}
+                    </option>
                   </select>
                 </div>
 
@@ -607,8 +604,7 @@
 </template>
 
 <script setup>
-  import { ref, computed, onMounted } from "vue";
-  import { SUBTOPICS } from "@/tools/sampledata";
+  import { ref, computed, onMounted, watch } from "vue";
   import { useRouter } from "vue-router";
   import CloseIcon from "@/components/icons/CloseIcon.vue";
   import Loading from "vue-loading-overlay";
@@ -650,6 +646,9 @@
   var countdownInterval = null;
   const hasResentOtp = ref(false);
 
+  const SUBTOPICS = ref([]);
+  const COURSE_GROUPS = ref([]);
+
   onMounted(async () => {
     try {
       const cachedSignupData = await decryptAndRetrieve("signupData");
@@ -666,6 +665,84 @@
       console.log("Error loading cache");
     }
   });
+
+  // Fetch server for data on specific signup steps
+  watch(
+    () => signupData.value.currentSignupStep,
+    (newVal, oldVal) => {
+      if (newVal == 3) {
+        getSubtopics();
+        getCourseGroups();
+      }
+    }
+  );
+
+  // fetch suptopics
+  function getSubtopics() {
+    const request = new Request("/api/subtopics", {
+      method: "GET",
+      headers: {},
+    });
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        SUBTOPICS.value = data.data;
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {});
+  }
+
+  // fetch course groups
+  function getCourseGroups() {
+    const request = new Request("/api/course_groups", {
+      method: "GET",
+      headers: {},
+    });
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        COURSE_GROUPS.value = data.data;
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {});
+  }
 
   // Check if otp is fully inputted
   const isOtpInputComplete = computed(() => {

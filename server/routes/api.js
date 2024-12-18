@@ -34,7 +34,7 @@ const supabase = createClient(supabaseUrl, serviceRoleKey, {
 // Routes
 
 // Get subtopics route
-router.get("/subtopics", authenticateToken(supabase), async (req, res) => {
+router.get("/subtopics", async (req, res) => {
   try {
     const { data, error } = await supabase
       .from("subtopic")
@@ -82,7 +82,7 @@ router.get("/subtopic", authenticateToken(supabase), async (req, res) => {
 });
 
 // Get all course group route
-router.get("/course_groups", authenticateToken(supabase), async (req, res) => {
+router.get("/course_groups", async (req, res) => {
   try {
     const { data, error } = await supabase
       .from("course_group")

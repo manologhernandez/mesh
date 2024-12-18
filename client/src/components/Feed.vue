@@ -221,6 +221,13 @@
         ","
       )}`;
     }
+    if (
+      props.feedOptions &&
+      props.feedOptions.userFilters &&
+      props.feedOptions.userFilters.length > 0
+    ) {
+      baseUrl += `&user=${props.feedOptions.userFilters.join(",")}`;
+    }
 
     return baseUrl;
   }

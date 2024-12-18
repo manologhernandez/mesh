@@ -5,13 +5,12 @@
       <div class="flex gap-4 items-center p-4">
         <div
           class="rounded-full w-16 h-16"
-          :style="`background-color: ${USER.college.color}`"
+          :style="`background-color: ${userStore.college.color}`"
         ></div>
         <div class="flex flex-col">
-          <div class="text-3xl font-bold">{{ USER.username }}</div>
+          <div class="text-3xl font-bold">{{ userStore.username }}</div>
           <div class="text-sm">
-            {{ USER.college.name }}. Joined
-            {{ dayjs(USER.dateCreated).fromNow() }}
+            {{ userStore.college.name }}
           </div>
         </div>
       </div>
@@ -53,7 +52,11 @@
 
         <!-- Feed -->
         <div v-show="showingPosts">
-          <Feed :posts="USER.posts" />
+          <Feed
+            :feed-options="{
+              userFilters: [userStore.username],
+            }"
+          />
         </div>
 
         <div
@@ -67,23 +70,24 @@
     <div
       class="hidden absolute w-full lg:left-[80%] lg:w-1/5 lg:flex flex-col gap-0 p-2"
     >
-      <AdSquare />
+      <ProfileRightPane />
     </div>
   </div>
 </template>
 
 <script setup>
-  import { USER } from "@/tools/sampledata";
   import { ref } from "vue";
   import Feed from "@/components/Feed.vue";
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
-  import AdSquare from "@/components/AdSquare.vue";
+  import { useUserStore } from "@/stores/user";
+  import ProfileRightPane from "@/components/rightpanes/ProfileRightPane.vue";
 
   dayjs.extend(relativeTime);
 
   const showingPosts = ref(true);
   const showingInfo = ref(false);
+  const userStore = useUserStore();
 
   function showPosts() {
     showingPosts.value = true;

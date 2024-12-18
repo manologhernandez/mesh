@@ -218,11 +218,13 @@ router.get("/posts", authenticateToken(supabase), async (req, res) => {
   var offset = req.query.offset;
   var limit = req.query.limit;
   var sortBy = req.query.sortBy;
+
   const user = req.user;
   const userId = user.id;
   const collegeFilter = req.query.college;
   const courseGroupFilter = req.query.courseGroup;
   const subtopicFilter = req.query.subtopic;
+  const userFilter = req.query.user;
 
   // set defaults
   if (!offset) {
@@ -267,6 +269,10 @@ router.get("/posts", authenticateToken(supabase), async (req, res) => {
 
     if (subtopicFilter) {
       query = query.in("subtopic_id", subtopicFilter.split(","));
+    }
+
+    if (userFilter) {
+      query = query.in("author_username", userFilter.split(","));
     }
 
     const { data, error } = await query;

@@ -249,7 +249,9 @@ router.get("/posts", authenticateToken(supabase), async (req, res) => {
       subtopic(id, name), 
       course_group(id, name),
       user_has_reacted:post_reaction(created_at),
-      total_reactions:post_reaction!inner(count)`
+      total_reactions:post_reaction!inner(count),
+      total_comments:comment!inner(count)
+      `
       )
       .eq("post_reaction.user_id", userId)
       .range(from, to)
@@ -469,6 +471,182 @@ router.post(
       });
     } catch (error) {
       res.status(500).json({ error: error.message });
+    }
+  }
+);
+
+// Get a specific post's comments
+// TODO: Add advanced comment filtering
+router.get("/comment", authenticateToken(supabase), async (req, res) => {
+  const postUuid = req.query.postUuid;
+  const user = req.user;
+  const userId = user.id;
+
+  if (!postUuid) {
+    return res.status(400).json({ message: "Post id required" });
+  }
+
+  try {
+    const { data: comments, error } = await supabase
+      .from("comment")
+      .select(
+        `id, post_uuid, author, text, created_at, reply_to, college(color),
+        user_has_reacted:comment_reaction(created_at),
+        total_reactions:comment_reaction!inner(count)`
+      )
+      .eq("post_uuid", postUuid)
+      .eq("comment_reaction.user_id", userId)
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    console.log("comments:", comments);
+
+    // Step 2: Build a nested comment tree and track the latest reply date
+    const commentMap = {};
+    const rootComments = [];
+
+    // Map all comments by ID
+    comments.forEach((comment) => {
+      commentMap[comment.id] = {
+        ...comment,
+        replies: [],
+        latest_reply_at: comment.created_at,
+      };
+    });
+
+    // Organize comments into a tree structure and update latest reply timestamps
+    comments.forEach((comment) => {
+      if (comment.reply_to === null) {
+        // Root comment
+        rootComments.push(commentMap[comment.id]);
+      } else {
+        // Reply to another comment
+        const parent = commentMap[comment.reply_to];
+        if (parent) {
+          parent.replies.push(commentMap[comment.id]);
+
+          // Update the parent's latest reply timestamp if this reply is newer
+          if (new Date(comment.created_at) > new Date(parent.latest_reply_at)) {
+            parent.latest_reply_at = comment.created_at;
+          }
+        }
+      }
+    });
+
+    // Step 3: Sort root comments by latest reply timestamp (descending)
+    rootComments.sort(
+      (a, b) => new Date(b.latest_reply_at) - new Date(a.latest_reply_at)
+    );
+
+    return res.status(200).json({
+      message: "Comments retrieved.",
+      data: rootComments,
+      count: comments.length,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+});
+
+// Comment to a post route
+router.post("/comment", authenticateToken(supabase), async (req, res) => {
+  const { postUuid, text, replyTo } = req.body;
+  const user = req.user;
+  const username = user.email.split("@")[0];
+  const college = user.user_metadata.college.id;
+
+  if (!postUuid || !text) {
+    return res
+      .status(400)
+      .json({ message: "Comment details are incomplete/invalid." });
+  }
+
+  try {
+    const { error } = await supabase.from("comment").insert({
+      post_uuid: postUuid,
+      author: username,
+      author_college_id: college,
+      text: text,
+      reply_to: replyTo ? parseInt(replyTo) : null,
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    res.status(200).json({ message: "Comment uploaded" });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+});
+
+// React to a comment route
+router.post("/react_comment", authenticateToken(supabase), async (req, res) => {
+  const { reaction, commentId } = req.body;
+  const user = req.user;
+
+  if (!commentId || !reaction) {
+    return res
+      .status(400)
+      .json({ message: "Post reaction details are incomplete/invalid." });
+  }
+
+  try {
+    const { error } = await supabase.from("comment_reaction").insert({
+      user_id: user.id,
+      comment_id: commentId,
+      reaction_type: reaction,
+    });
+
+    if (error) {
+      throw new Error(error.message);
+    }
+
+    res.status(200).json({ message: "Comment liked." });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Internal server error.", error: error.message });
+  }
+});
+
+// Remove react to a comment route
+router.delete(
+  "/react_comment",
+  authenticateToken(supabase),
+  async (req, res) => {
+    const { commentId } = req.body;
+    const user = req.user;
+
+    if (!commentId) {
+      return res
+        .status(400)
+        .json({ message: "Comment reaction details are incomplete/invalid." });
+    }
+
+    try {
+      const { error } = await supabase
+        .from("comment_reaction")
+        .delete()
+        .eq("comment_id", commentId)
+        .eq("user_id", user.id);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      res.status(200).json({ message: "Comment unliked." });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: "Internal server error.", error: error.message });
     }
   }
 );

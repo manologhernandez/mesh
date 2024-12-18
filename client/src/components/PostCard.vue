@@ -126,7 +126,11 @@
         class="flex gap-1 items-center lg:hover:text-red-500 active:text-red-500"
       >
         <CommentIcon />
-        <span>{{ post.commentsCount }}</span>
+        <span>{{
+          post.total_comments && post.total_comments.length > 0
+            ? post.total_comments[0].count
+            : 0
+        }}</span>
       </RouterLink>
     </div>
   </div>

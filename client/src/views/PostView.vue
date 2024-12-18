@@ -131,8 +131,8 @@
             class="flex gap-1 items-center rounded-full pe-2 py-2"
             :likes-count="postLikeCount"
             :liked="hasLikedPost"
-            @increment="postLiked"
-            @decrement="postUnliked"
+            @increment="likePost"
+            @decrement="unlikePost"
           />
           <!-- SHARE -->
           <button
@@ -173,12 +173,15 @@
           </div>
 
           <!-- COMMENTS  -->
-          <h3 class="text font-semibold my-4">Comments</h3>
+          <h3 class="text font-semibold my-4">
+            Comments ({{ postCommentsCount }})
+          </h3>
           <Comment
-            v-for="comment in post.comments"
+            v-for="comment in postComments"
             :key="comment.id"
             :comment="comment"
             :level="0"
+            @reply="getComments(id)"
           />
 
           <div
@@ -306,6 +309,8 @@
   const errors = ref({});
 
   const post = ref(null);
+  const postComments = ref([]);
+  const postCommentsCount = ref(0);
   const hasLikedPost = ref(false);
   const incrementLikeCount = ref(false);
   const decrementLikeCount = ref(false);
@@ -315,7 +320,14 @@
   });
 
   // watch the params of the route to fetch the data again
-  watch(() => props.id, getPost, { immediate: true });
+  watch(
+    () => props.id,
+    (newVal) => {
+      getPost(newVal);
+      getComments(newVal);
+    },
+    { immediate: true }
+  );
 
   // fetch post
   function getPost(id) {
@@ -352,6 +364,46 @@
       .then((data) => {
         post.value = data.data;
         hasLikedPost.value = post.value.user_has_reacted.length > 0;
+      })
+      .catch((e) => {
+        errors.value.post = e.message;
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  }
+
+  // fetch comments
+  function getComments(postUuid) {
+    const request = new Request(`/api/comment?postUuid=${postUuid}`, {
+      method: "GET",
+      headers: {
+        Authorization: userStore.token,
+      },
+    });
+
+    loading.value = true;
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        postComments.value = data.data;
+        postCommentsCount.value = data.count;
       })
       .catch((e) => {
         errors.value.post = e.message;
@@ -413,12 +465,7 @@
   });
 
   const postHasComments = computed(() => {
-    return (
-      post &&
-      post.value &&
-      post.value.comments &&
-      post.value.comments.length > 0
-    );
+    return postComments.value && postComments.value.length > 0;
   });
 
   const postLikeCount = computed(() => {
@@ -432,14 +479,52 @@
   });
 
   function submitComment() {
-    var comment = {
-      value: newComment.value,
+    var reqBody = {
+      text: newComment.value,
+      postUuid: post.value.uuid,
     };
 
-    alert("sending comment: " + JSON.stringify(comment, null, 2));
+    const request = new Request(`/api/comment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: userStore.token,
+      },
+      body: JSON.stringify(reqBody),
+    });
+
+    loading.value = true;
+    fetch(request)
+      .then((response) => {
+        if (!response.ok) {
+          // Check for a 400 error
+          if (response.status === 400) {
+            return response.json().then((errorData) => {
+              throw new Error(`${errorData.message || "Bad Request"}`);
+            });
+          }
+          if (response.status === 401 || response.status === 403) {
+            userStore.clearUser();
+            router.go(0);
+          }
+          // Handle other status codes
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); // Parse JSON if response is ok
+      })
+      .then((data) => {
+        newComment.value = "";
+        getComments(post.value.uuid);
+      })
+      .catch((e) => {
+        errors.value.post = e.message;
+      })
+      .finally(() => {
+        loading.value = false;
+      });
   }
 
-  function postLiked() {
+  function likePost() {
     const reqBody = {
       postUuid: post.value.uuid,
       reaction: "like",
@@ -483,7 +568,7 @@
       .finally(() => {});
   }
 
-  function postUnliked() {
+  function unlikePost() {
     const reqBody = {
       postUuid: post.value.uuid,
     };

@@ -256,8 +256,7 @@ router.get("/posts", authenticateToken(supabase), async (req, res) => {
       `
       )
       .eq("post_reaction.user_id", userId)
-      .range(from, to)
-      .order("created_at", { ascending: sortBy == "asc" });
+      .range(from, to);
 
     if (collegeFilter) {
       query = query.in("college_id", collegeFilter.split(","));
@@ -273,6 +272,17 @@ router.get("/posts", authenticateToken(supabase), async (req, res) => {
 
     if (userFilter) {
       query = query.in("author_username", userFilter.split(","));
+    }
+
+    if (sortBy == "desc") {
+      query = query.order("created_at", { ascending: false });
+    } else if (sortBy == "asc") {
+      query = query.order("created_at", { ascending: true });
+    } else {
+      query = query.order("impressions", {
+        ascending: false,
+        nullsFirst: false,
+      });
     }
 
     const { data, error } = await query;

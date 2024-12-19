@@ -23,7 +23,7 @@
           >
             Latest
           </option>
-          <option value="">Top</option>
+          <option value="top">Top</option>
           <option value="asc">Oldest</option>
         </select>
       </form>
@@ -105,7 +105,6 @@
   function handleSortChange() {
     postOffset.value = 0;
     maxPostsReached.value = false;
-    console.log("handle sort change");
     getPosts();
   }
 

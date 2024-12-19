@@ -12,6 +12,7 @@ import SubtopicView from "@/views/SubtopicView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import SettingsView from "@/views/SettingsView.vue";
 import PremiumView from "@/views/PremiumView.vue";
+import SearchView from "@/views/SearchView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -117,6 +118,15 @@ const router = createRouter({
       path: "/premium",
       name: "Premium",
       component: PremiumView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/search",
+      name: "Search",
+      component: SearchView,
+      props: (route) => ({ query: route.query.q }),
       meta: {
         requiresAuth: true,
       },

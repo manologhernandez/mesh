@@ -1,10 +1,20 @@
 <template>
   <div ref="scrollComponent">
     <!-- sort options -->
-    <div class="flex justify-end items-center px-2 pt-1 pb-2">
-      <!-- <div class="font-bold ps-2">My Feed</div> -->
-      <!-- Sort by widget -->
+    <div class="flex justify-between items-center px-2 pt-1 pb-2">
+      <!-- Search results text -->
+      <div
+        class="text-sm"
+        v-if="props.feedOptions && props.feedOptions.search"
+      >
+        Search results for
+        <strong class="font-semibold">'{{ props.feedOptions.search }}'</strong>
+      </div>
 
+      <!-- Empty Div -->
+      <div v-else></div>
+
+      <!-- Sort by widget -->
       <form class="flex items-center gap-2">
         <label
           for="sortby"
@@ -223,6 +233,15 @@
       props.feedOptions.userFilters.length > 0
     ) {
       baseUrl += `&user=${props.feedOptions.userFilters.join(",")}`;
+    }
+    if (
+      props.feedOptions &&
+      props.feedOptions.search &&
+      props.feedOptions.search.trim() != ""
+    ) {
+      baseUrl += `&search=${encodeURIComponent(
+        props.feedOptions.search.trim()
+      )}`;
     }
 
     return baseUrl;

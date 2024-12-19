@@ -225,6 +225,7 @@ router.get("/posts", authenticateToken(supabase), async (req, res) => {
   const courseGroupFilter = req.query.courseGroup;
   const subtopicFilter = req.query.subtopic;
   const userFilter = req.query.user;
+  const searchString = req.query.search;
 
   // set defaults
   if (!offset) {
@@ -272,6 +273,15 @@ router.get("/posts", authenticateToken(supabase), async (req, res) => {
 
     if (userFilter) {
       query = query.in("author_username", userFilter.split(","));
+    }
+
+    if (searchString) {
+      var searchQuery = "";
+      searchString.split(" ").forEach((word) => {
+        searchQuery += `'${word}' | `;
+      });
+      searchQuery += searchString.replaceAll(" ", "+");
+      query = query.textSearch("fts", searchQuery);
     }
 
     if (sortBy == "desc") {

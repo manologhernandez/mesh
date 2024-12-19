@@ -154,10 +154,15 @@
           <input
             type="text"
             placeholder="Search..."
+            v-model="searchString"
+            @keyup.enter="search"
             id="search"
             class="w-full outline-none border-none bg-transparent focus:outline-none focus:ring-0 dark:text-neutral-100 text-sm py-2"
           />
-          <SearchIcon />
+          <SearchIcon
+            class="cursor-pointer"
+            @click="search"
+          />
         </div>
       </div>
     </div>
@@ -184,10 +189,17 @@
 
   const showSearchbar = ref(false);
   const showDropdownAvatar = ref(false);
+  const searchString = ref("");
 
-  const isMobile = computed(() => {
-    return screen.width <= 1024;
-  });
+  function search() {
+    if (searchString.value.trim() != "") {
+      router.push({
+        path: "/search",
+        query: { q: searchString.value.trim() },
+      });
+      searchString.value = "";
+    }
+  }
 
   function signOutUser() {
     userStore.clearUser();

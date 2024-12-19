@@ -30,12 +30,6 @@
 
           <!-- LOGIN -->
           <div class="flex flex-col gap-8 w-full lg:px-0 mt-4">
-            <Loading
-              :active.sync="loginLoading"
-              :can-cancel="false"
-              loader="dots"
-            />
-
             <form
               @submit.prevent="handleLogin"
               class="flex flex-col gap-4"
@@ -119,12 +113,6 @@
 
         <!-- SIGNUP -->
         <div v-if="showSignupModal">
-          <Loading
-            :active.sync="signupLoading"
-            :can-cancel="false"
-            loader="dots"
-          />
-
           <!-- Step 1: School Email -->
           <div
             class="flex flex-col gap-4 lg:max-w-[450px]"
@@ -604,20 +592,19 @@
 </template>
 
 <script setup>
-  import { ref, computed, onMounted, watch } from "vue";
+  import { ref, computed, onMounted, watch, inject } from "vue";
   import { useRouter } from "vue-router";
   import CloseIcon from "@/components/icons/CloseIcon.vue";
-  import Loading from "vue-loading-overlay";
+
   import { useUserStore } from "@/stores/user";
   import {
     encryptAndStore,
     decryptAndRetrieve,
   } from "@/tools/localStorageUtils";
 
-  const userStore = useUserStore();
+  const loading = inject("$loading");
 
-  const loginLoading = ref(false);
-  const signupLoading = ref(false);
+  const userStore = useUserStore();
 
   const router = useRouter();
   const errors = ref({});
@@ -833,7 +820,7 @@
       body: JSON.stringify(reqBody),
     });
 
-    signupLoading.value = true;
+    const loader = loading.show();
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -869,7 +856,7 @@
         errors.value.signup = e.message;
       })
       .finally(() => {
-        signupLoading.value = false;
+        loader.hide();
       });
   }
 
@@ -901,7 +888,7 @@
         body: JSON.stringify(reqBody),
       });
 
-      loginLoading.value = true;
+      const loader = loading.show();
       fetch(request)
         .then((response) => {
           if (!response.ok) {
@@ -924,7 +911,7 @@
           errors.value.login = e.message;
         })
         .finally(() => {
-          loginLoading.value = false;
+          loader.hide();
         });
     }
   }
@@ -1000,7 +987,7 @@
         body: JSON.stringify(reqBody),
       });
 
-      signupLoading.value = true;
+      const loader = loader.show();
       fetch(request)
         .then((response) => {
           if (!response.ok) {
@@ -1033,7 +1020,7 @@
           errors.value.signup = e.message;
         })
         .finally(() => {
-          signupLoading.value = false;
+          loader.hide();
         });
     }
   }
@@ -1054,7 +1041,7 @@
       body: JSON.stringify(reqBody),
     });
 
-    signupLoading.value = true;
+    const loader = loading.show();
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -1078,7 +1065,7 @@
         errors.value.signup = e.message;
       })
       .finally(() => {
-        signupLoading.value = false;
+        loader.hide();
       });
   }
 
@@ -1102,7 +1089,7 @@
         body: JSON.stringify(reqBody),
       });
 
-      signupLoading.value = true;
+      const loader = loading.show();
       fetch(request)
         .then((response) => {
           if (!response.ok) {
@@ -1125,7 +1112,7 @@
           errors.value.signup = e.message;
         })
         .finally(() => {
-          signupLoading.value = false;
+          loader.hide();
         });
     }
   }
@@ -1144,7 +1131,7 @@
       body: JSON.stringify(reqBody),
     });
 
-    signupLoading.value = true;
+    const loader = loading.show();
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -1168,7 +1155,7 @@
         errors.value.signup = e.message;
       })
       .finally(() => {
-        signupLoading.value = false;
+        loader.hide();
       });
   }
 </script>

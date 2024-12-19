@@ -36,6 +36,7 @@
       <!-- COMMENT INPUT -->
       <div
         class="relative flex flex-col lg:flex-row gap-2 mt-2"
+        ref="commentInputContainer"
         v-if="showReplyCommentInput"
       >
         <textarea
@@ -52,12 +53,6 @@
         >
           Comment
         </button>
-        <Loading
-          :active.sync="loading"
-          :can-cancel="false"
-          loader="dots"
-          :is-full-page="false"
-        />
       </div>
     </div>
 
@@ -106,14 +101,16 @@
 </template>
 
 <script setup>
-  import { ref, computed } from "vue";
+  import { ref, computed, inject } from "vue";
   import Like from "./Like.vue";
   import CommentIcon from "./icons/CommentIcon.vue";
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
-  import Loading from "vue-loading-overlay";
+
   import { useUserStore } from "@/stores/user";
   dayjs.extend(relativeTime);
+
+  const loading = inject("$loading");
 
   // Props
   const props = defineProps({
@@ -132,7 +129,7 @@
   const showAllReplies = ref(false);
   const replyComment = ref("");
   const showReplyCommentInput = ref(false);
-  const loading = ref(false);
+  const commentInputContainer = ref();
   const userStore = useUserStore();
   const hasLikedComment = ref(props.comment.user_has_reacted.length > 0);
 
@@ -180,7 +177,10 @@
       body: JSON.stringify(reqBody),
     });
 
-    loading.value = true;
+    const loader = loading.show({
+      container: commentInputContainer.value,
+      opacity: 0,
+    });
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -208,7 +208,7 @@
         console.error(e);
       })
       .finally(() => {
-        loading.value = false;
+        loader.hide();
       });
   }
 

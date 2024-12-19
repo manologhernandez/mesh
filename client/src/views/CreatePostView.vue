@@ -2,11 +2,6 @@
   <div class="relative">
     <div class="absolute w-full lg:left-[20%] lg:w-3/5 flex flex-col gap-0">
       <div class="px-4 lg:px-8 pt-4 pb-12">
-        <Loading
-          :active.sync="loading"
-          :can-cancel="false"
-          loader="dots"
-        />
         <div class="font-bold text-2xl mb-2 p-2">Create Post</div>
         <form
           @submit.prevent="handlePostSubmit"
@@ -463,12 +458,13 @@
 </template>
 
 <script setup>
-  import { computed, ref, onMounted } from "vue";
+  import { computed, ref, onMounted, inject } from "vue";
   import CloseIcon from "@/components/icons/CloseIcon.vue";
   import InfoIcon from "@/components/icons/InfoIcon.vue";
-  import Loading from "vue-loading-overlay";
   import { useUserStore } from "@/stores/user";
   import { useRouter } from "vue-router";
+
+  const loading = inject("$loading");
 
   const errors = ref({});
   const router = useRouter();
@@ -484,7 +480,6 @@
   const imagePreview = ref(null);
   const isCensorPost = ref(false);
   const isPromotePost = ref(false);
-  const loading = ref(false);
 
   const SUBTOPICS = ref(null);
   const COURSE_GROUPS = ref(null);
@@ -504,7 +499,7 @@
       },
     });
 
-    loading.value = true;
+    const loader = loading.show();
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -531,7 +526,7 @@
         errors.value.createPost = e.message;
       })
       .finally(() => {
-        loading.value = false;
+        loader.hide();
       });
   }
 
@@ -545,7 +540,7 @@
       },
     });
 
-    loading.value = true;
+    const loader = loading.show();
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -571,7 +566,7 @@
         errors.value.createPost = e.message;
       })
       .finally(() => {
-        loading.value = false;
+        loader.hide();
       });
   }
 
@@ -654,7 +649,7 @@
             headers: { Authorization: userStore.token },
             body: formData,
           });
-          loading.value = true;
+          const loader = loading.show();
           fetch(request)
             .then((response) => {
               if (!response.ok) {
@@ -722,14 +717,14 @@
                   errors.value.createPost = e.message;
                 })
                 .finally(() => {
-                  loading.value = false;
+                  loader.hide();
                 });
             })
             .catch((e) => {
               errors.value.createPost = e.message;
             })
             .finally(() => {
-              loading.value = false;
+              loader.hide();
             });
         } catch (error) {
           console.error("Error uploading file:", error);
@@ -755,7 +750,7 @@
           body: JSON.stringify(reqBody),
         });
 
-        loading.value = true;
+        const loader = loading.show();
         fetch(request)
           .then((response) => {
             if (!response.ok) {
@@ -783,7 +778,7 @@
             errors.value.createPost = e.message;
           })
           .finally(() => {
-            loading.value = false;
+            loader.hide();
           });
       }
     }

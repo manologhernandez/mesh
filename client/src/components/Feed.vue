@@ -1,11 +1,5 @@
 <template>
   <div ref="scrollComponent">
-    <Loading
-      :active="loading"
-      :can-cancel="false"
-      loader="dots"
-      :is-full-page="true"
-    />
     <!-- sort options -->
     <div class="flex justify-end items-center px-2 pt-1 pb-2">
       <!-- <div class="font-bold ps-2">My Feed</div> -->
@@ -40,14 +34,10 @@
       <PostCard :post="post" />
       <hr class="my-0 hr-responsive" />
     </div>
-    <div class="relative h-10 my-4">
-      <Loading
-        :active="fetchingMorePosts"
-        :can-cancel="false"
-        loader="dots"
-        :is-full-page="false"
-      />
-
+    <div
+      class="relative h-10 my-4"
+      ref="bottomFeedContainer"
+    >
       <div
         class="text-center pt-4 pb-8"
         v-if="maxPostsReached"
@@ -60,10 +50,11 @@
 
 <script setup>
   import PostCard from "@/components/PostCard.vue";
-  import { ref, onMounted, onUnmounted, watch } from "vue";
+  import { ref, onMounted, onUnmounted, watch, inject } from "vue";
   import { useUserStore } from "@/stores/user";
   import { useRouter } from "vue-router";
-  import Loading from "vue-loading-overlay";
+
+  const loading = inject("$loading");
 
   const sortBy = ref("desc");
   const userStore = useUserStore();
@@ -74,10 +65,9 @@
 
   const errors = ref([]);
 
-  const loading = ref(false);
-
-  const fetchingMorePosts = ref(false);
+  const isLoading = ref(false);
   const maxPostsReached = ref(false);
+  const bottomFeedContainer = ref();
 
   const posts = ref([]);
 
@@ -129,7 +119,8 @@
       headers: { Authorization: userStore.token },
     });
 
-    loading.value = true;
+    const loader = loading.show();
+    isLoading.value = true;
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -154,7 +145,8 @@
         errors.value.feed = e.message;
       })
       .finally(() => {
-        loading.value = false;
+        loader.hide();
+        isLoading.value = false;
       });
   }
 
@@ -165,7 +157,11 @@
       headers: { Authorization: userStore.token },
     });
 
-    fetchingMorePosts.value = true;
+    isLoading.value = true;
+    const loader = loading.show({
+      container: bottomFeedContainer.value,
+      opacity: 0,
+    });
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -191,7 +187,8 @@
         errors.value.feed = e.message;
       })
       .finally(() => {
-        fetchingMorePosts.value = false;
+        isLoading.value = false;
+        loader.hide();
       });
   }
 
@@ -237,8 +234,7 @@
     if (
       element &&
       element.getBoundingClientRect().bottom - 400 < window.innerHeight &&
-      !loading.value &&
-      !fetchingMorePosts.value &&
+      !isLoading.value &&
       !maxPostsReached.value
     ) {
       loadMorePosts();

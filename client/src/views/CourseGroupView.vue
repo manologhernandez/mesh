@@ -1,12 +1,6 @@
 <template>
   <div class="relative">
     <div class="absolute w-full lg:left-[20%] lg:w-3/5 flex flex-col gap-0">
-      <Loading
-        :active.sync="loading"
-        :can-cancel="false"
-        loader="dots"
-        :is-full-page="true"
-      />
       <!-- Header -->
       <div
         class="p-4 flex gap-4 justify-around lg:justify-start items-center lg:items-end text-white dark:text-white"
@@ -86,17 +80,17 @@
 
 <script setup>
   import Feed from "@/components/Feed.vue";
-  import { ref, watch } from "vue";
+  import { ref, watch, inject } from "vue";
   import CourseGroupRightPane from "@/components/rightpanes/CourseGroupRightPane.vue";
-  import Loading from "vue-loading-overlay";
   import { useUserStore } from "@/stores/user";
   import { useRouter } from "vue-router";
+
+  const loading = inject("$loading");
 
   const showingFeed = ref(true);
   const showingInfo = ref(false);
 
   const userStore = useUserStore();
-  const loading = ref(false);
   const courseGroup = ref({});
   const router = useRouter();
 
@@ -122,7 +116,7 @@
       },
     });
 
-    loading.value = true;
+    const loader = loading.show();
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -152,7 +146,7 @@
         console.error(e);
       })
       .finally(() => {
-        loading.value = false;
+        loader.hide();
       });
   }
 

@@ -4,12 +4,6 @@
       <div
         class="absolute w-full lg:left-[20%] lg:w-3/5 flex flex-col gap-0 p-2"
       >
-        <Loading
-          :active="loading"
-          :can-cancel="false"
-          loader="dots"
-          :is-full-page="true"
-        />
         <ThreadlineWidget :threadlines="threadlines" />
         <Feed :feed-options="{ collegeFilters: [] }" />
       </div>
@@ -26,14 +20,13 @@
   import Feed from "@/components/Feed.vue";
   import HomeRightPane from "@/components/rightpanes/HomeRightPane.vue";
   import ThreadlineWidget from "@/components/ThreadlineWidget.vue";
-  import { onMounted, ref } from "vue";
+  import { onMounted, ref, inject } from "vue";
   import { useUserStore } from "@/stores/user";
 
-  import Loading from "vue-loading-overlay";
+  const loading = inject("$loading");
 
   const userStore = useUserStore();
   const threadlines = ref([]);
-  const loading = ref(false);
 
   onMounted(() => {
     fetchThreadlines();
@@ -49,7 +42,7 @@
       headers: { Authorization: userStore.token },
     });
 
-    loading.value = true;
+    const loader = loading.show();
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -72,7 +65,7 @@
         console.error(e);
       })
       .finally(() => {
-        loading.value = false;
+        loader.hide();
       });
   }
 </script>

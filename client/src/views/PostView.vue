@@ -1,11 +1,6 @@
 <template>
   <div class="relative">
     <div class="absolute w-full lg:left-[20%] lg:w-3/5 flex flex-col gap-0 p-2">
-      <Loading
-        :active.sync="loading"
-        :can-cancel="false"
-        loader="dots"
-      />
       <span
         v-if="errors.post"
         class="mt-2 text-sm font-semibold bg-red-700 text-white py-4 px-4 rounded"
@@ -277,7 +272,7 @@
   import Comment from "@/components/Comment.vue";
   import dayjs from "dayjs";
   import relativeTime from "dayjs/plugin/relativeTime";
-  import { computed, ref, onMounted, watch } from "vue";
+  import { computed, ref, onMounted, watch, inject } from "vue";
   import ChevronRightIcon from "@/components/icons/ChevronRightIcon.vue";
   import Like from "@/components/Like.vue";
   import ShareIcon from "@/components/icons/ShareIcon.vue";
@@ -286,10 +281,11 @@
   import { useRouter } from "vue-router";
   import ShareModal from "@/components/ShareModal.vue";
   import ReportModal from "@/components/ReportModal.vue";
-  import Loading from "vue-loading-overlay";
   import { useUserStore } from "@/stores/user";
 
   dayjs.extend(relativeTime);
+
+  const loading = inject("$loading");
 
   const props = defineProps({
     id: String,
@@ -305,7 +301,6 @@
   const isUnblurPost = ref(false);
   const userStore = useUserStore();
 
-  const loading = ref(false);
   const errors = ref({});
 
   const post = ref(null);
@@ -339,7 +334,7 @@
       },
     });
 
-    loading.value = true;
+    const loader = loading.show();
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -369,7 +364,7 @@
         errors.value.post = e.message;
       })
       .finally(() => {
-        loading.value = false;
+        loader.hide();
       });
   }
 
@@ -382,7 +377,7 @@
       },
     });
 
-    loading.value = true;
+    const loader = loading.show();
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -409,7 +404,7 @@
         errors.value.post = e.message;
       })
       .finally(() => {
-        loading.value = false;
+        loader.hide();
       });
   }
 
@@ -493,7 +488,7 @@
       body: JSON.stringify(reqBody),
     });
 
-    loading.value = true;
+    const loader = loading.show();
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -520,7 +515,7 @@
         errors.value.post = e.message;
       })
       .finally(() => {
-        loading.value = false;
+        loader.hide();
       });
   }
 

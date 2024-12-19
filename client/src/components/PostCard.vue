@@ -286,12 +286,21 @@
       `.image-container-${props.post.uuid}`
     );
 
+    // console.log("on mounted fac", container);
+
     if (container && props.post.attachment) {
       fac
-        .getColorAsync(container.querySelector("img"))
+        .getColorAsync(container.querySelector("img"), {
+          defaultColor: [0, 0, 0, 0], // black
+          ignoredColor: [
+            [255, 255, 255, 255], // white
+            [0, 0, 0, 0], // black
+          ],
+        })
         .then((color) => {
           container.style.backgroundColor = color.rgba;
           container.style.color = color.isDark ? "#fff" : "#000";
+          // console.log("setting color, ", color);
         })
         .catch((e) => {
           console.log(e);

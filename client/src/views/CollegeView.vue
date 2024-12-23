@@ -9,7 +9,7 @@
         <div class="text-4xl lg:text-6xl font-bold">
           {{ college.name }}
         </div>
-        <div
+        <!-- <div
           class="flex flex-wrap max-w-[220px] lg:max-w-full lg:flex-nowrap gap-x-4 gap-y-2 text-sm items-center"
         >
           <div class="max-w-1/2 lg:w-auto">
@@ -24,7 +24,7 @@
           >
             Follow
           </div>
-        </div>
+        </div> -->
       </div>
 
       <div class="p-2">

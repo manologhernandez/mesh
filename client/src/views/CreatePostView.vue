@@ -491,13 +491,16 @@
 
   // fetch suptopics
   function getSubtopics() {
-    const request = new Request("/api/subtopics", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userStore.token,
-      },
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/subtopics`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: userStore.token,
+        },
+      }
+    );
 
     const loader = loading.show();
     fetch(request)
@@ -532,13 +535,16 @@
 
   // fetch course groups
   function getCourseGroups() {
-    const request = new Request("/api/course_groups", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userStore.token,
-      },
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/course_groups`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: userStore.token,
+        },
+      }
+    );
 
     const loader = loading.show();
     fetch(request)
@@ -644,11 +650,14 @@
           const formData = new FormData();
           formData.append("file", selectedFile.value);
 
-          const request = new Request("/api/upload", {
-            method: "POST",
-            headers: { Authorization: userStore.token },
-            body: formData,
-          });
+          const request = new Request(
+            `${import.meta.env.VITE_API_BASE_URL}/api/upload`,
+            {
+              method: "POST",
+              headers: { Authorization: userStore.token },
+              body: formData,
+            }
+          );
           const loader = loading.show();
           fetch(request)
             .then((response) => {
@@ -681,14 +690,17 @@
                 attachment: attachmentUrl,
               };
 
-              const request = new Request("/api/create_post", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: userStore.token,
-                },
-                body: JSON.stringify(reqBody),
-              });
+              const request = new Request(
+                `${import.meta.env.VITE_API_BASE_URL}/api/create_post`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: userStore.token,
+                  },
+                  body: JSON.stringify(reqBody),
+                }
+              );
 
               fetch(request)
                 .then((response) => {
@@ -741,14 +753,17 @@
           attachment: null,
         };
 
-        const request = new Request("/api/create_post", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: userStore.token,
-          },
-          body: JSON.stringify(reqBody),
-        });
+        const request = new Request(
+          `${import.meta.env.VITE_API_BASE_URL}/api/create_post`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: userStore.token,
+            },
+            body: JSON.stringify(reqBody),
+          }
+        );
 
         const loader = loading.show();
         fetch(request)

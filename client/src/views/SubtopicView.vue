@@ -108,12 +108,15 @@
 
   // fetch subtopic
   function getSubtopic(id) {
-    const request = new Request(`/api/subtopic?id=${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: userStore.token,
-      },
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/subtopic?id=${id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: userStore.token,
+        },
+      }
+    );
 
     const loader = loading.show();
     fetch(request)

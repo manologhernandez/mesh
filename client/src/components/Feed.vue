@@ -202,7 +202,11 @@
   }
 
   function generateRequestUrl() {
-    var baseUrl = `/api/posts?limit=${POST_COUNT}&offset=${postOffset.value}&sortBy=${sortBy.value}`;
+    var baseUrl = `${
+      import.meta.env.VITE_API_BASE_URL
+    }/api/posts?limit=${POST_COUNT}&offset=${postOffset.value}&sortBy=${
+      sortBy.value
+    }`;
 
     if (
       props.feedOptions &&

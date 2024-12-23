@@ -164,12 +164,15 @@
 
   // fetch suptopics
   function getSubtopics() {
-    const request = new Request("/api/subtopics", {
-      method: "GET",
-      headers: {
-        Authorization: userStore.token,
-      },
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/subtopics`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: userStore.token,
+        },
+      }
+    );
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -200,12 +203,15 @@
 
   // fetch course groups
   function getCourseGroups() {
-    const request = new Request("/api/course_groups", {
-      method: "GET",
-      headers: {
-        Authorization: userStore.token,
-      },
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/course_groups`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: userStore.token,
+        },
+      }
+    );
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -235,12 +241,15 @@
 
   // fetch colleges
   function getColleges() {
-    const request = new Request("/api/colleges", {
-      method: "GET",
-      headers: {
-        Authorization: userStore.token,
-      },
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/colleges`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: userStore.token,
+        },
+      }
+    );
     fetch(request)
       .then((response) => {
         if (!response.ok) {

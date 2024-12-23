@@ -35,7 +35,7 @@
   function fetchThreadlines() {
     threadlines.value = [];
 
-    var url = `/api/threadlines`;
+    var url = `${import.meta.env.VITE_API_BASE_URL}/api/threadlines`;
 
     const request = new Request(url, {
       method: "GET",

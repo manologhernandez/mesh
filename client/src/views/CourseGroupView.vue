@@ -109,12 +109,15 @@
 
   // fetch Course Group
   function getCourseGroup(id) {
-    const request = new Request(`/api/course_group?id=${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: userStore.token,
-      },
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/course_group?id=${id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: userStore.token,
+        },
+      }
+    );
 
     const loader = loading.show();
     fetch(request)

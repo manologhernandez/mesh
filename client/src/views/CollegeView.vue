@@ -138,12 +138,15 @@
 
   // fetch college
   function getCollege(id) {
-    const request = new Request(`/api/college?id=${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: userStore.token,
-      },
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/college?id=${id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: userStore.token,
+        },
+      }
+    );
 
     const loader = loading.show();
     fetch(request)

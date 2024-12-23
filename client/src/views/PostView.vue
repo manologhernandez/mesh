@@ -326,13 +326,16 @@
 
   // fetch post
   function getPost(id) {
-    const request = new Request(`/api/post?id=${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userStore.token,
-      },
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/post?id=${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: userStore.token,
+        },
+      }
+    );
 
     const loader = loading.show();
     fetch(request)
@@ -370,12 +373,15 @@
 
   // fetch comments
   function getComments(postUuid) {
-    const request = new Request(`/api/comment?postUuid=${postUuid}`, {
-      method: "GET",
-      headers: {
-        Authorization: userStore.token,
-      },
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/comment?postUuid=${postUuid}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: userStore.token,
+        },
+      }
+    );
 
     const loader = loading.show();
     fetch(request)
@@ -479,14 +485,17 @@
       postUuid: post.value.uuid,
     };
 
-    const request = new Request(`/api/comment`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userStore.token,
-      },
-      body: JSON.stringify(reqBody),
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/comment`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: userStore.token,
+        },
+        body: JSON.stringify(reqBody),
+      }
+    );
 
     const loader = loading.show();
     fetch(request)
@@ -525,14 +534,17 @@
       reaction: "like",
     };
 
-    const request = new Request("/api/react_post", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userStore.token,
-      },
-      body: JSON.stringify(reqBody),
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/react_post`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: userStore.token,
+        },
+        body: JSON.stringify(reqBody),
+      }
+    );
 
     fetch(request)
       .then((response) => {
@@ -568,14 +580,17 @@
       postUuid: post.value.uuid,
     };
 
-    const request = new Request("/api/react_post", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userStore.token,
-      },
-      body: JSON.stringify(reqBody),
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/react_post`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: userStore.token,
+        },
+        body: JSON.stringify(reqBody),
+      }
+    );
 
     fetch(request)
       .then((response) => {

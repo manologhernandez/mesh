@@ -67,12 +67,15 @@
 
   // fetch colleges
   function getColleges() {
-    const request = new Request("/api/colleges", {
-      method: "GET",
-      headers: {
-        Authorization: userStore.token,
-      },
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/colleges`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: userStore.token,
+        },
+      }
+    );
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -107,7 +110,9 @@
     var today = new Date();
     var lastWeek = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-    var url = `/api/posts?limit=8&offset=0&sortBy=top&startDate=${lastWeek.valueOf()}`;
+    var url = `${
+      import.meta.env.VITE_API_BASE_URL
+    }/api/posts?limit=8&offset=0&sortBy=top&startDate=${lastWeek.valueOf()}`;
 
     const request = new Request(url, {
       method: "GET",

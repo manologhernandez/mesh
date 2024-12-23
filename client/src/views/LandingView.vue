@@ -666,10 +666,13 @@
 
   // fetch suptopics
   function getSubtopics() {
-    const request = new Request("/api/subtopics", {
-      method: "GET",
-      headers: {},
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/subtopics`,
+      {
+        method: "GET",
+        headers: {},
+      }
+    );
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -700,10 +703,13 @@
 
   // fetch course groups
   function getCourseGroups() {
-    const request = new Request("/api/course_groups", {
-      method: "GET",
-      headers: {},
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/course_groups`,
+      {
+        method: "GET",
+        headers: {},
+      }
+    );
     fetch(request)
       .then((response) => {
         if (!response.ok) {
@@ -812,13 +818,16 @@
       uuid: uuid,
     };
 
-    const request = new Request("/auth/rollback", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(reqBody),
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/auth/rollback`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reqBody),
+      }
+    );
 
     const loader = loading.show();
     fetch(request)
@@ -880,13 +889,16 @@
         password: loginData.value.password,
       };
 
-      const request = new Request("/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(reqBody),
-      });
+      const request = new Request(
+        `${import.meta.env.VITE_API_BASE_URL}/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(reqBody),
+        }
+      );
 
       const loader = loading.show();
       fetch(request)
@@ -979,13 +991,16 @@
         email: signupData.value.email,
       };
 
-      const request = new Request("/auth/validate_email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(reqBody),
-      });
+      const request = new Request(
+        `${import.meta.env.VITE_API_BASE_URL}/auth/validate_email`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(reqBody),
+        }
+      );
 
       const loader = loader.show();
       fetch(request)
@@ -1033,13 +1048,16 @@
       email: signupData.value.email,
     };
 
-    const request = new Request("/auth/validate_otp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(reqBody),
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/auth/validate_otp`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reqBody),
+      }
+    );
 
     const loader = loading.show();
     fetch(request)
@@ -1081,13 +1099,16 @@
         college: signupData.value.college,
       };
 
-      const request = new Request("/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(reqBody),
-      });
+      const request = new Request(
+        `${import.meta.env.VITE_API_BASE_URL}/auth/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(reqBody),
+        }
+      );
 
       const loader = loading.show();
       fetch(request)
@@ -1123,13 +1144,16 @@
       email: signupData.value.email,
     };
 
-    const request = new Request("/auth/resend_otp", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(reqBody),
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/auth/resend_otp`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reqBody),
+      }
+    );
 
     const loader = loading.show();
     fetch(request)

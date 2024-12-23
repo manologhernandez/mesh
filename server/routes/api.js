@@ -540,8 +540,6 @@ router.get("/comment", authenticateToken(supabase), async (req, res) => {
       throw new Error(error.message);
     }
 
-    console.log("comments:", comments);
-
     // Step 2: Build a nested comment tree and track the latest reply date
     const commentMap = {};
     const rootComments = [];

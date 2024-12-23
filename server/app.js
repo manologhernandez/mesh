@@ -34,10 +34,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/auth", authRoutes);
 app.use("/api", apiRoutes);
 
-module.exports = app;
-
-// AWS Lambda stuff
-const server = awsServerlessExpress.createServer(app);
-exports.handler = (event, context) => {
-  return awsServerlessExpress.proxy(server, event, context);
-};
+// For local development
+if (process.env.NODE_ENV === "development") {
+  // Run Express app locally
+  console.log("Running in DEV...");
+  module.exports = app;
+} else {
+  console.log("Running in PROD...");
+  // For Lambda environment, use aws-serverless-express
+  const server = awsServerlessExpress.createServer(app);
+  module.exports.handler = (event, context) => {
+    return awsServerlessExpress.proxy(server, event, context);
+  };
+}

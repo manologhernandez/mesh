@@ -168,14 +168,17 @@
       replyTo: props.comment.id,
     };
 
-    const request = new Request(`/api/comment`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userStore.token,
-      },
-      body: JSON.stringify(reqBody),
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/comment`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: userStore.token,
+        },
+        body: JSON.stringify(reqBody),
+      }
+    );
 
     const loader = loading.show({
       container: commentInputContainer.value,
@@ -218,14 +221,17 @@
       commentId: props.comment.id,
     };
 
-    const request = new Request("/api/react_comment", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userStore.token,
-      },
-      body: JSON.stringify(reqBody),
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/react_comment`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: userStore.token,
+        },
+        body: JSON.stringify(reqBody),
+      }
+    );
 
     fetch(request)
       .then((response) => {
@@ -261,14 +267,17 @@
       commentId: props.comment.id,
     };
 
-    const request = new Request("/api/react_comment", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userStore.token,
-      },
-      body: JSON.stringify(reqBody),
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/react_comment`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: userStore.token,
+        },
+        body: JSON.stringify(reqBody),
+      }
+    );
 
     fetch(request)
       .then((response) => {

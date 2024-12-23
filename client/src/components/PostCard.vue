@@ -179,14 +179,17 @@
       reaction: "like",
     };
 
-    const request = new Request("/api/react_post", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userStore.token,
-      },
-      body: JSON.stringify(reqBody),
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/react_post`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: userStore.token,
+        },
+        body: JSON.stringify(reqBody),
+      }
+    );
 
     fetch(request)
       .then((response) => {
@@ -222,14 +225,17 @@
       postUuid: props.post.uuid,
     };
 
-    const request = new Request("/api/react_post", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: userStore.token,
-      },
-      body: JSON.stringify(reqBody),
-    });
+    const request = new Request(
+      `${import.meta.env.VITE_API_BASE_URL}/api/react_post`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: userStore.token,
+        },
+        body: JSON.stringify(reqBody),
+      }
+    );
 
     fetch(request)
       .then((response) => {

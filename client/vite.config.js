@@ -28,4 +28,7 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    "process.env": process.env, // Optional: for direct environment variable access in the code
+  },
 });

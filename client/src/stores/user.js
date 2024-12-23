@@ -10,16 +10,26 @@ export const useUserStore = defineStore("user", () => {
 
   // getters
   const username = computed(() => {
-    if (sessionToken.value) {
-      const tokenPayload = JSON.parse(atob(sessionToken.value.split(".")[1]));
-      return tokenPayload.email.split("@")[0];
+    try {
+      if (sessionToken.value) {
+        const tokenPayload = JSON.parse(atob(sessionToken.value.split(".")[1]));
+        return tokenPayload.email.split("@")[0];
+      }
+    } catch (error) {
+      console.error(error);
+      return "";
     }
   });
 
   const college = computed(() => {
-    if (sessionToken.value) {
-      const tokenPayload = JSON.parse(atob(sessionToken.value.split(".")[1]));
-      return tokenPayload.user_metadata.college;
+    try {
+      if (sessionToken.value) {
+        const tokenPayload = JSON.parse(atob(sessionToken.value.split(".")[1]));
+        return tokenPayload.user_metadata.college;
+      }
+    } catch (error) {
+      console.error(error);
+      return null;
     }
   });
 

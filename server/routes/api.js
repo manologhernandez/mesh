@@ -226,6 +226,8 @@ router.get("/posts", authenticateToken(supabase), async (req, res) => {
   const subtopicFilter = req.query.subtopic;
   const userFilter = req.query.user;
   const searchString = req.query.search;
+  const startDateFilter = req.query.startDate;
+  const endDateFilter = req.query.endDate;
 
   // set defaults
   if (!offset) {
@@ -282,6 +284,16 @@ router.get("/posts", authenticateToken(supabase), async (req, res) => {
       });
       searchQuery += searchString.replaceAll(" ", "+");
       query = query.textSearch("fts", searchQuery);
+    }
+
+    if (startDateFilter) {
+      var startTimestamp = new Date(parseInt(startDateFilter)).toISOString();
+      query = query.gte("created_at", startTimestamp);
+    }
+
+    if (endDateFilter) {
+      var endTimestamp = new Date(parseInt(endDateFilter)).toISOString();
+      query = query.lte("created_at", endTimestamp);
     }
 
     if (sortBy == "desc") {

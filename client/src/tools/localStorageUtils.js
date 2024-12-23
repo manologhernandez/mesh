@@ -44,7 +44,13 @@ async function decryptAndRetrieve(key) {
     return;
   }
 
-  const encryptedData = JSON.parse(atob(localStorage.getItem(key)));
+  var encryptedData = null;
+  try {
+    encryptedData = JSON.parse(atob(localStorage.getItem(key)));
+  } catch (error) {
+    console.error(error);
+    encryptedData = null;
+  }
   if (!encryptedData) {
     return;
   }

@@ -19,7 +19,7 @@
           route="/bulletin-boards"
           @clicked="handleButtonClicked"
         >
-          <DiscoverIcon /> Bulletin Boards
+          <DiscoverIcon /> Bulletin Boards<span class="italic">(WIP)</span>
         </SidebarButton>
       </div>
       <hr class="my-4 hr-responsive" />

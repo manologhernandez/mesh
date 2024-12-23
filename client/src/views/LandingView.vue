@@ -991,8 +991,6 @@
         email: signupData.value.email,
       };
 
-      console.log("reached..");
-
       const request = new Request(
         `${import.meta.env.VITE_API_BASE_URL}/auth/validate_email`,
         {

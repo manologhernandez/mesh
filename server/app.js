@@ -1,4 +1,6 @@
 const express = require("express");
+const awsServerlessExpress = require("aws-serverless-express");
+
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/auth");
 const apiRoutes = require("./routes/api");
@@ -33,3 +35,9 @@ app.use("/auth", authRoutes);
 app.use("/api", apiRoutes);
 
 module.exports = app;
+
+// AWS Lambda stuff
+const server = awsServerlessExpress.createServer(app);
+exports.handler = (event, context) => {
+  return awsServerlessExpress.proxy(server, event, context);
+};

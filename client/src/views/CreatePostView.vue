@@ -173,15 +173,14 @@
                     class="relative w-11 h-6 bg-neutral-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-neutral-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-neutral-600 peer-checked:bg-blue-600"
                   ></div>
                 </label>
-                <span
-                  class="text-xs font-light text-neutral-700 dark:text-neutral-300"
+                <span class="text-xs text-neutral-700 dark:text-neutral-300"
                   >Blur posts that may contain spoilers or sensitive content.
                   NSFW posts are automatically blurred.</span
                 >
               </div>
 
               <!-- PROMOTE POST TOGGLE -->
-              <div class="flex flex-col gap-2">
+              <!-- <div class="flex flex-col gap-2">
                 <label class="inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
@@ -196,12 +195,12 @@
                   ></div>
                 </label>
                 <span
-                  class="text-xs font-light text-neutral-700 dark:text-neutral-300"
+                  class="text-xs text-neutral-700 dark:text-neutral-300"
                 >
                   Promoted posts appear more often on people's feeds. Promoting
                   a post will use up one MeshCredit.
                 </span>
-              </div>
+              </div> -->
             </div>
 
             <!-- POST -->

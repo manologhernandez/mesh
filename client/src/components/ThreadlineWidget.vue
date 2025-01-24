@@ -27,7 +27,7 @@
             >Today's Threadlines:
           </span>
           <RouterLink
-            :to="`/post/${threadline.id}`"
+            :to="`/post/${threadline.uuid}`"
             class="whitespace-nowrap flex"
             v-for="(threadline, index) in threadlines"
             :key="'1-' + index"

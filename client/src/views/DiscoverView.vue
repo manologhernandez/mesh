@@ -5,7 +5,7 @@
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <RouterLink
           :to="`/post/${post.uuid}`"
-          class="h-48 rounded border border-neutral-200 shadow hover:scale-105 transition-all"
+          class="h-48 rounded border border-neutral-200 dark:border-neutral-700 shadow hover:scale-105 transition-all"
           v-for="post in topPosts"
         >
           <div
@@ -29,7 +29,7 @@
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <RouterLink
           :to="`/college/${college.id}`"
-          class="h-30 rounded border border-neutral-200 shadow hover:scale-105 transition-all"
+          class="h-30 rounded border border-neutral-200 dark:border-neutral-700 shadow hover:scale-105 transition-all"
           v-for="college in colleges"
         >
           <div
